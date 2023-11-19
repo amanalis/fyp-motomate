@@ -9,10 +9,10 @@ import 'package:motomate/screens/splash_screen.dart';
 import 'firebase_options.dart';
 
 void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // ).then((value) => Get.put(AuthenticationRepository()));
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ).then((value) => Get.put(AuthenticationRepository()));
 
   runApp(GetMaterialApp(
     title: "MotoMate",
