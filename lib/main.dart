@@ -20,4 +20,6 @@ void main() {
     debugShowCheckedModeBanner: false,
     //theme: ThemeData(colorScheme:ColorScheme.fromSeed(seedColor: Colors.orange)),
   ));
+
+  //Changes are done in the code
 }
