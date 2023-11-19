@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "157121605202",
+    "project_id": "motomate-1b952",
+    "storage_bucket": "motomate-1b952.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:157121605202:android:f246b7e3c2f67cdedd798b",
+        "android_client_info": {
+          "package_name": "com.example.motomate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1O2MGzyXQC1tM1KbWFkr6J8Odm9ktAf0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
