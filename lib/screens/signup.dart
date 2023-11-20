@@ -11,10 +11,6 @@ class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(appTitle),
-      //   centerTitle: true,
-      // ),
 
       body: SingleChildScrollView(
           child: Container(
@@ -240,6 +236,7 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
                                   'We have sent you OTP on the entered email',
                                   context,
                                 );
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

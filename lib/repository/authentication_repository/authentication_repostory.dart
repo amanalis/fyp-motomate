@@ -17,15 +17,15 @@ class AuthenticationRepository extends GetxController{
   late final Rx<User?> firebaseUser;
   var verficationId = ''.obs;
 
-  void onReady(){
-    firebaseUser = Rx<User?>(_auth.currentUser);
-    firebaseUser.bindStream(_auth.userChanges());
-    ever(firebaseUser, _setinitialScreen);
-  }
+  // void onReady(){
+  //   firebaseUser = Rx<User?>(_auth.currentUser);
+  //   firebaseUser.bindStream(_auth.userChanges());
+  //   ever(firebaseUser, _setinitialScreen);
+  // }
 
-  _setinitialScreen(User? user) {
-    user == null ? Get.offAll(() => Login()) : Get.offAll(()=> Dashboard());
-  }
+  // _setinitialScreen(User? user) {
+  //   user == null ? Get.offAll(() => Login()) : Get.offAll(()=> Dashboard());
+  // }
 
   Future<void> phoneAuthentication(String phoneNo) async {
     await _auth.verifyPhoneNumber(
@@ -98,13 +98,13 @@ class AuthenticationRepository extends GetxController{
     // }
   }
 
-  Future<void> loginWithEmailAndPassword(String email, String password) async {
-    try {
-      await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-    } on FirebaseAuthException catch(e){
-    } catch (_){}
-  }
+  // Future<void> loginWithEmailAndPassword(String email, String password) async {
+  //   try {
+  //     await _auth.createUserWithEmailAndPassword(
+  //         email: email, password: password);
+  //   } on FirebaseAuthException catch(e){
+  //   } catch (_){}
+  // }
 
   Future<void> logout() async => await _auth.signOut();
 }

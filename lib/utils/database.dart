@@ -67,7 +67,7 @@ class UserModel {
       String? id;
       await FirebaseFirestore.instance
           .collection('user_data')
-          .where('email', isEqualTo: email)
+          .where('Email', isEqualTo: email)
           .get()
           .then((value) {
         id = value.docs.first.id;

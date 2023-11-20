@@ -5,7 +5,7 @@ import 'package:motomate/repository/authentication_repository/authentication_rep
 import 'package:motomate/screens/dashboard.dart';
 import 'package:motomate/screens/otp_screen.dart';
 import 'package:motomate/screens/splash_screen.dart';
-
+import 'package:motomate/utils/shared_prefs.dart';
 import 'firebase_options.dart';
 
 void main() {
@@ -14,9 +14,11 @@ void main() {
     options: DefaultFirebaseOptions.currentPlatform,
   ).then((value) => Get.put(AuthenticationRepository()));
 
+  Shared_Prefs().SharedPrefsInit();
+
   runApp(GetMaterialApp(
     title: "MotoMate",
-    home: Dashboard(),
+    home: SplashScreen(),
     debugShowCheckedModeBanner: false,
     //theme: ThemeData(colorScheme:ColorScheme.fromSeed(seedColor: Colors.orange)),
   ));

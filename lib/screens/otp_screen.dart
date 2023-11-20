@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:motomate/screens/signup.dart';
 import 'package:motomate/utils/flutter_toast.dart';
+import 'package:motomate/utils/shared_prefs.dart';
 import '../controllers/signup_controller.dart';
 import '../utils/database.dart';
 import 'dashboard.dart';
@@ -95,6 +96,8 @@ class _OTPScreenState extends State<OTPScreen> {
       name: widget.name,
       phone: widget.phone,
     );
+
+    Shared_Prefs().saveUserDataInPrefs(widget.name, userID.toString(), widget.email, widget.password, widget.phone);
 
     // ignore: use_build_context_synchronously
     Navigator.pushAndRemoveUntil(

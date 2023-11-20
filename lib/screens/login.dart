@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:motomate/screens/dashboard.dart';
 import 'package:motomate/screens/forget_password_mail.dart';
 import 'package:motomate/screens/forget_password_phone.dart';
 import 'package:motomate/screens/signup.dart';
+import 'package:motomate/utils/database.dart';
+import 'package:motomate/utils/shared_prefs.dart';
 
 import '../utils/flutter_toast.dart';
 
@@ -40,8 +43,20 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
   final firebaseAuth = FirebaseAuth.instance;
   TextEditingController EmailController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
+  String name = "";
+  String phonenumber = "";
+  String id = "";
 
-  // _LoginData _data = new _LoginData();
+
+  void getData(String email) async {
+    id = (await UserModel().getUserID(email))!;
+    print(id);
+    phonenumber = (await UserModel().getUserData(id, "Phone"))!;
+    print(phonenumber);
+    name = (await UserModel().getUserData(id, "Name"))!;
+    print(name);
+    Shared_Prefs().saveUserDataInPrefs(name, id, EmailController.text, PasswordController.text, phonenumber);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -175,13 +190,15 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                                 .user;
 
                             if (user != null) {
-                              // Navigator.pushAndRemoveUntil(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => HomeScreen(),
-                              //   ),
-                              //   (route) => false,
-                              // );
+                              print("Hello");
+                              getData(EmailController.text);
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Dashboard(),
+                                ),
+                                (route) => false,
+                              );
                               displayToastMessage("Login", context);
                             } else {
                               displayToastMessage("Login failed", context);

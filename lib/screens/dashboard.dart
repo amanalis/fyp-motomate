@@ -3,6 +3,10 @@ import 'package:get/get.dart';
 import 'package:motomate/repository/authentication_repository/authentication_repostory.dart';
 import 'package:motomate/reusablewidgets/posttile.dart';
 import 'package:motomate/reusablewidgets/side_menu.dart';
+import 'package:motomate/utils/shared_prefs.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../utils/database.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
@@ -23,11 +27,30 @@ class Dashboard_Content extends StatefulWidget {
 class _Dashboard extends State<Dashboard_Content> {
   final TextEditingController _searchController = TextEditingController();
   Color _favIconColor = Colors.grey;
+  String name = "";
+  String email = "";
+
+  void getData() async {
+    String tempname = (await Shared_Prefs().getData("name"))!;
+    String tempemail = (await Shared_Prefs().getData("email"))!;
+
+    setState(() {
+      name = tempname;
+      email = tempemail;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Side_Menu(),
+      drawer: Side_Menu(name: name, email: email),
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
         // leading: const IconButton(
@@ -47,7 +70,7 @@ class _Dashboard extends State<Dashboard_Content> {
             margin: EdgeInsets.only(right: 20, left: 7),
             child: IconButton(
               onPressed: () {
-                AuthenticationRepository.instance.logout();
+
               },
               icon: Icon(Icons.person),
               color: Colors.black.withOpacity(0.6),
@@ -128,3 +151,5 @@ class _Dashboard extends State<Dashboard_Content> {
     );
   }
 }
+
+
