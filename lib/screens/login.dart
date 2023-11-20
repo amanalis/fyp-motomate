@@ -16,6 +16,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+          backgroundColor: Colors.white,
           body: SingleChildScrollView(
               child: Container(
             child: CustomLoginForm(),
@@ -60,33 +61,40 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 100,
+            height: size.height * 0.17,
           ),
           Center(
             child: Image.asset(
               "images/motomate.png",
-              width: 300,
+              width: size.width * 0.75,
               // height: 220,
             ),
+          ),
+          SizedBox(
+            height: size.height * 0.01,
           ),
           Center(
             child: Text(
               "Login",
               style: TextStyle(
                 fontFamily: ('GravisPersonal'),
-                fontSize: 24,
+                fontSize: size.width * 0.07,
                 fontWeight: FontWeight.normal,
               ),
             ),
           ),
+          SizedBox(
+            height: size.height * 0.01,
+          ),
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 10),
             child: TextFormField(
                 controller: EmailController,
                 decoration: InputDecoration(
@@ -94,7 +102,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                     labelText: "Email Address",
                     border: OutlineInputBorder(
                         gapPadding: 3.3,
-                        borderRadius: BorderRadius.circular(20))),
+                        borderRadius: BorderRadius.circular(30))),
                 validator: (value) {
                   if (value == null ||
                       value.isEmpty ||
@@ -107,8 +115,11 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                   validateEmail(value);
                 }),
           ),
+          SizedBox(
+            height: size.height * 0.01,
+          ),
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 10),
             child: TextFormField(
                 controller: PasswordController,
                 obscureText: true,
@@ -117,7 +128,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                     labelText: "Password",
                     border: OutlineInputBorder(
                         gapPadding: 1.3,
-                        borderRadius: BorderRadius.circular(20))),
+                        borderRadius: BorderRadius.circular(30))),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter Password";
@@ -126,6 +137,9 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                     // print("Data , ${_data.password}");
                   }
                 }),
+          ),
+          SizedBox(
+            height: size.height*0.01,
           ),
           Container(
             alignment: Alignment(0.80, 0),
@@ -139,14 +153,15 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                       return bottomsheetwidget();
                     });
               },
+
               child: Text(
                 "Forgot Password?",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width * 0.036),
               ),
             ),
           ),
           SizedBox(
-            height: 20,
+            height: size.height*0.03,
           ),
           Container(
             child: Row(
@@ -155,11 +170,12 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SizedBox(
-                    width: 300,
-                    height: 40,
+                    width: size.width * 0.7,
+                    height: 45,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            primary: Colors.deepOrange),
+                            primary: Colors.deepOrange,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             final user = (await firebaseAuth
@@ -190,7 +206,6 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                                 .user;
 
                             if (user != null) {
-                              print("Hello");
                               getData(EmailController.text);
                               Navigator.pushAndRemoveUntil(
                                 context,
@@ -214,7 +229,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
             ),
           ),
           SizedBox(
-            height: 20,
+            height: size.height * 0.01,
           ),
           Center(
             child: TextButton(
