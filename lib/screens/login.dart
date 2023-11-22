@@ -161,7 +161,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
             ),
           ),
           SizedBox(
-            height: size.height*0.03,
+            height: size.height*0.02,
           ),
           Container(
             child: Row(
@@ -170,12 +170,12 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SizedBox(
-                    width: size.width * 0.7,
-                    height: 45,
+                    width: size.width * 0.8,
+                    height: size.height*0.05,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             primary: Colors.deepOrange,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             final user = (await firebaseAuth

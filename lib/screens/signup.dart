@@ -11,7 +11,7 @@ class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
           child: Container(
         decoration: const BoxDecoration(
@@ -52,18 +52,19 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    Size size = MediaQuery.of(context).size;
     return Form(
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 45,
+             SizedBox(
+              height: size.height * 0.12,
             ),
             Center(
               child: Image.asset(
                 "images/motomate.png",
-                width: 200,
+                width: size.width * 0.5
                 // height: 220,
               ),
             ),
@@ -78,7 +79,7 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 0.0),
               child: TextFormField(
                 controller: nameController,
                 decoration: InputDecoration(
@@ -98,7 +99,7 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 0.0),
               child: TextFormField(
                 controller: emailController,
                 decoration: InputDecoration(
@@ -117,7 +118,7 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 0.0),
               child: TextFormField(
                 controller: phoneController,
                 decoration: InputDecoration(
@@ -138,7 +139,7 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 0.0),
               child: TextFormField(
                   controller: passwordController,
                   obscureText: _isObscured,
@@ -172,7 +173,7 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
                   }),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 0.0),
               child: TextFormField(
                   obscureText: _isObscured,
                   controller: confirmPasswordController,
@@ -203,8 +204,8 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
                     return null;
                   }),
             ),
-            const SizedBox(
-              height: 10,
+             SizedBox(
+              height: size.height * 0.03,
             ),
             Container(
               child: Row(
@@ -213,11 +214,14 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
-                      width: 300,
-                      height: 40,
+                      width: size.width * 0.86,
+                      height: size.height * 0.06,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              primary: Colors.deepOrange),
+                              primary: Colors.deepOrange,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                          ),
+                          
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               // SignUpController.instance.registerUser(controller.email.text.trim(), controller.password.text.trim(),context);
@@ -264,14 +268,14 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(40.0, 0.0, 0.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(35.0, 0.0, 0.0, 0.0),
               child: TextButton(
                 onPressed: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => Login()));
                 },
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(70.0, 0.0, 0.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(50.0, 0.0, 0.0, 0.0),
                   child: const Text(
                     "Already have an account? Log-In",
                     style: TextStyle(

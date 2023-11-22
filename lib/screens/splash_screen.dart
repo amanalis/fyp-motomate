@@ -39,6 +39,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -53,8 +54,8 @@ class _SplashScreenState extends State<SplashScreen>
           children: [
             Image.asset(
               "images/motomate.png",
-              width: 190,
-              height: 190,
+              width: size.width*0.65,
+              height: size.height*0.65,
             ),
           ],
         ),

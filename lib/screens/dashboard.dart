@@ -43,12 +43,15 @@ class _Dashboard extends State<Dashboard_Content> {
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
     getData();
   }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       drawer: Side_Menu(name: name, email: email),
       appBar: AppBar(
@@ -60,14 +63,14 @@ class _Dashboard extends State<Dashboard_Content> {
         // ),
         title: Image.asset(
           "images/motomate.png",
-          height: 50,
+          height: size.height * 0.06,
         ),
         elevation: 0,
         backgroundColor: Colors.deepOrange,
         centerTitle: true,
         actions: [
           Container(
-            margin: EdgeInsets.only(right: 20, left: 7),
+            margin: EdgeInsets.only(right: 10, left:20),
             child: IconButton(
               onPressed: () {
 
@@ -80,7 +83,7 @@ class _Dashboard extends State<Dashboard_Content> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(30.0),
+          padding: EdgeInsets.all(12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -125,7 +128,7 @@ class _Dashboard extends State<Dashboard_Content> {
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: size.height * 0.02,
               ),
               Row(
                 children: [
@@ -138,11 +141,12 @@ class _Dashboard extends State<Dashboard_Content> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              SizedBox(height: size.height*0.03),
               PostTile(),
-              SizedBox(height: 20),
+              SizedBox(height: size.height*0.03),
               PostTile(),
-              SizedBox(height: 20),
+              PostTile(),
+              SizedBox(height: size.height*0.03),
               PostTile(),
             ],
           ),
