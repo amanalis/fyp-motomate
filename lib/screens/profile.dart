@@ -17,13 +17,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       body: Container(
         padding: EdgeInsets.only(right: 10, left: 10),
-        // color: Colors.white,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [Colors.white, Colors.orange],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter),
-        ),
+        color: Colors.white,
+        // decoration: BoxDecoration(
+        //   gradient: LinearGradient(
+        //       colors: [Colors.white, Colors.orange],
+        //       begin: Alignment.topCenter,
+        //       end: Alignment.bottomCenter),
+        // ),
         constraints: const BoxConstraints.expand(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -52,10 +52,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Padding(
                             padding: EdgeInsets.only(left: size.width * 0.175)),
-                        Icon(
-                          Icons.shield_sharp,
-                          color: Colors.white,
-                        ),
                         SizedBox(
                           width: size.width * 0.05,
                         ),
@@ -88,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 "You valuable quotes are here xD",
-                style: TextStyle(color: Colors.white, fontSize: 15),
+                style: TextStyle(color: Colors.black54, fontSize: 15),
               ),
             ),
             Row(
