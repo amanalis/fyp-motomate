@@ -47,6 +47,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
   String name = "";
   String phonenumber = "";
   String id = "";
+  bool _isRememberMe = false;
 
 
   void getData(String email) async {
@@ -157,6 +158,27 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
               child: Text(
                 "Forgot Password?",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.width * 0.036),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: size.height*0.02,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 0),
+            child: Container(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Checkbox(onChanged: (value) {
+                    _isRememberMe = value!;
+                  }, value: false, ),
+                  Text("Remember Me.",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                    ),)
+                ],
               ),
             ),
           ),

@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:motomate/screens/account.dart';
+import 'package:motomate/screens/dashboard.dart';
 
 import '../repository/authentication_repository/authentication_repostory.dart';
 
@@ -17,7 +20,7 @@ class _Side_MenuState extends State<Side_Menu> {
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text(widget.name),
+            accountName: Text(widget.name, ),
             accountEmail: Text(widget.email),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
@@ -31,64 +34,26 @@ class _Side_MenuState extends State<Side_Menu> {
           ListTile(
             leading: Icon(Icons.account_circle_outlined),
             title: Text('Account'),
-            onTap: () => print("Tapped Account"),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => Account(),)),
+          ),
+          ListTile(
+            leading: Icon(Icons.home_filled),
+            title: Text('Home'),
+            onTap: () => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Dashboard(),),(route) => false),
           ),
           Divider(),
           ListTile(
             leading: Icon(Icons.settings),
             title: Text('Settings'),
             onTap: () => print("Tapped Settings"),
-          ),ListTile(
+          ),
+          ListTile(
             leading: Icon(Icons.logout),
             title: Text('Log Out'),
-            onTap: () =>  AuthenticationRepository.instance.logout(),
+            onTap: () async => await AuthenticationRepository().logout(),
           ),
         ],
       ),
     );
   }
 }
-
-
-/*class Side_Menu extends StatelessWidget{
-
-  const Side_Menu({super.key, required this.name, required this.email});
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Drawer(
-      child: ListView(
-        children: [
-          UserAccountsDrawerHeader(
-              accountName: Text(name),
-              accountEmail: Text(email),
-              currentAccountPicture: CircleAvatar(
-                child: ClipOval(
-                  child: Image.asset("images/bheem.jpg"),
-                ),
-              ),
-            decoration: BoxDecoration(
-              color:Colors.deepOrangeAccent
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.account_circle_outlined),
-            title: Text('Account'),
-            onTap: () => print("Tapped Account"),
-          ),
-          Divider(),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-            onTap: () => print("Tapped Settings"),
-          ),ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('Log Out'),
-            onTap: () => print("Tapped Log Out"),
-          ),
-        ],
-      ),
-    );
-  }
-
-}*/

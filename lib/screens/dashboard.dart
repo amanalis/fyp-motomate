@@ -73,7 +73,7 @@ class _Dashboard extends State<Dashboard_Content> {
             margin: EdgeInsets.only(right: 10, left:20),
             child: IconButton(
               onPressed: () {
-
+                AuthenticationRepository().logout();
               },
               icon: Icon(Icons.person),
               color: Colors.black.withOpacity(0.6),
@@ -130,24 +130,35 @@ class _Dashboard extends State<Dashboard_Content> {
               SizedBox(
                 height: size.height * 0.02,
               ),
-              Row(
-                children: [
-                  Text(
-                    "Home",
-                    style: TextStyle(
-                      fontFamily: ('GravisPersonal'),
-                      fontSize: 24,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+                child: Row(
+                  children: [
+                    Text(
+                      "Home",
+                      style: TextStyle(
+                        fontFamily: ('GravisPersonal'),
+                        fontSize: 24,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              SizedBox(height: size.height*0.03),
-              PostTile(),
-              SizedBox(height: size.height*0.03),
-              PostTile(),
-              PostTile(),
-              SizedBox(height: size.height*0.03),
-              PostTile(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 18),
+                child: Column(
+                  children: [
+                    SizedBox(height: size.height*0.03),
+                    PostTile(),
+                    SizedBox(height: size.height*0.03),
+                    PostTile(),
+                    SizedBox(height: size.height*0.03),
+                    PostTile(),
+                    SizedBox(height: size.height*0.03),
+                    PostTile(),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -155,5 +166,3 @@ class _Dashboard extends State<Dashboard_Content> {
     );
   }
 }
-
-
