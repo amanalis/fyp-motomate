@@ -5,6 +5,7 @@ import 'package:motomate/repository/authentication_repository/authentication_rep
 import 'package:motomate/screens/account.dart';
 import 'package:motomate/screens/dashboard.dart';
 import 'package:motomate/screens/otp_screen.dart';
+import 'package:motomate/screens/profile.dart';
 import 'package:motomate/screens/splash_screen.dart';
 import 'package:motomate/utils/shared_prefs.dart';
 import 'firebase_options.dart';
@@ -19,7 +20,7 @@ void main() {
 
   runApp(GetMaterialApp(
     title: "MotoMate",
-    home: Account(),
+    home: ProfileScreen(),
     debugShowCheckedModeBanner: false,
     //theme: ThemeData(colorScheme:ColorScheme.fromSeed(seedColor: Colors.orange)),
   ));
