@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:motomate/repository/authentication_repository/authentication_repostory.dart';
 import 'package:motomate/reusablewidgets/posttile.dart';
 import 'package:motomate/reusablewidgets/side_menu.dart';
 import 'package:motomate/utils/shared_prefs.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../utils/database.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
@@ -43,7 +38,6 @@ class _Dashboard extends State<Dashboard_Content> {
   @override
   void initState() {
     // TODO: implement initState
-
     super.initState();
     getData();
   }
@@ -70,11 +64,9 @@ class _Dashboard extends State<Dashboard_Content> {
         centerTitle: true,
         actions: [
           Container(
-            margin: EdgeInsets.only(right: 10, left:20),
+            margin: EdgeInsets.only(right: 10, left: 20),
             child: IconButton(
-              onPressed: () {
-                AuthenticationRepository().logout();
-              },
+              onPressed: () {},
               icon: Icon(Icons.person),
               color: Colors.black.withOpacity(0.6),
             ),
@@ -131,7 +123,8 @@ class _Dashboard extends State<Dashboard_Content> {
                 height: size.height * 0.02,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: Row(
                   children: [
                     Text(
@@ -145,16 +138,17 @@ class _Dashboard extends State<Dashboard_Content> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 18),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 18),
                 child: Column(
                   children: [
-                    SizedBox(height: size.height*0.03),
+                    SizedBox(height: size.height * 0.03),
                     PostTile(),
-                    SizedBox(height: size.height*0.03),
+                    SizedBox(height: size.height * 0.03),
                     PostTile(),
-                    SizedBox(height: size.height*0.03),
+                    SizedBox(height: size.height * 0.03),
                     PostTile(),
-                    SizedBox(height: size.height*0.03),
+                    SizedBox(height: size.height * 0.03),
                     PostTile(),
                   ],
                 ),

@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:motomate/screens/dashboard.dart';
 import 'package:motomate/screens/forget_password_mail.dart';
 import 'package:motomate/screens/forget_password_phone.dart';
@@ -50,7 +49,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
   bool _isRememberMe = false;
 
 
-  void getData(String email) async {
+  Future<void> getData(String email) async {
     id = (await UserModel().getUserID(email))!;
     print(id);
     phonenumber = (await UserModel().getUserData(id, "Phone"))!;
@@ -240,8 +239,10 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                             } else {
                               displayToastMessage("Login failed", context);
                             }
+/*
                             ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text("All is good")));
+*/
                           }
                         },
                         child: Text("Login")),

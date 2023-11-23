@@ -257,8 +257,8 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
                                 displayToastMessage('Try again', context);
                               }
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("All is good")));
+/*                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("All is good")));*/
                             }
                           },
                           child: const Text("Sign-Up")),

@@ -1,3 +1,4 @@
+/*
 
 extension extString on String{
   bool get isValidEmail {
@@ -26,3 +27,4 @@ extension extString on String{
   }
 
 }
+*/

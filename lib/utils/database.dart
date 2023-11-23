@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:motomate/screens/login.dart';
 
 class UserModel {
   Future<String?> addUser(
@@ -115,5 +118,15 @@ class UserModel {
         .get()
         .then((value) => value.size);
     return count;
+  }
+
+  Future<void> signout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Login(),
+        ),
+        (route) => false);
   }
 }

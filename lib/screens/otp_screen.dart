@@ -9,6 +9,7 @@ import 'package:motomate/utils/shared_prefs.dart';
 import '../controllers/signup_controller.dart';
 import '../utils/database.dart';
 import 'dashboard.dart';
+import 'login.dart';
 
 class OTPScreen extends StatefulWidget {
   final String name;
@@ -35,7 +36,7 @@ class _OTPScreenState extends State<OTPScreen> {
   int userID = 0;
   int userIDFromDatabase = 0;
 
-  Future<void> getUserData() async {
+  void getUserData() async {
     userIDFromDatabase = await UserModel().getUsersCount();
     userIDFromDatabase = 101 + userIDFromDatabase;
     setState(() {
@@ -77,7 +78,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   );
                 },
                 pageBuilder: (context, animation, animationTime) {
-                  return SignUp();
+                  return Login();
                 },
               ),
               (route) => false);
@@ -114,7 +115,7 @@ class _OTPScreenState extends State<OTPScreen> {
           );
         },
         pageBuilder: (context, animation, animationTime) {
-          return Dashboard();
+          return const Dashboard();
         },
       ),
       (route) => false,

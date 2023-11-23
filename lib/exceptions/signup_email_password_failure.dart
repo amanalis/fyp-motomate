@@ -1,3 +1,4 @@
+/*
 
 class SignUpWithEmailAndPasswordFailure {
   final String message;
@@ -20,4 +21,4 @@ class SignUpWithEmailAndPasswordFailure {
         return SignUpWithEmailAndPasswordFailure();
     }
   }
-}
+}*/

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:motomate/reusablewidgets/posttile.dart';
-
 import '../reusablewidgets/side_menu.dart';
 import '../utils/shared_prefs.dart';
 
@@ -27,7 +26,6 @@ class _AccountState extends State<Account> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getData();
   }
@@ -82,11 +80,11 @@ class _AccountState extends State<Account> {
             height: size.height * 0.02,
           ),
           Text(
-            "name",
+            name,
             style: TextStyle(color: Colors.orange),
           ),
           Text(
-            "email",
+            email,
             style: TextStyle(color: Colors.orange),
           ),
           Divider(thickness: 0.1),

@@ -5,7 +5,8 @@ class Shared_Prefs{
   SharedPrefsInit() async{
     await SharedPreferences.getInstance();
   }
-  void saveUserDataInPrefs (String name,String id,String email,String password,String phonenumber) async {
+
+  Future<void> saveUserDataInPrefs (String name,String id,String email,String password,String phonenumber) async {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("email", email);
