@@ -145,7 +145,7 @@ class _Dashboard extends State<Dashboard_Content> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 18),
+                padding: const EdgeInsets.symmetric(vertical: 10,),
                 child: Column(
                   children: [
                     SizedBox(height: size.height*0.03),
