@@ -1,8 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Shared_Prefs{
+class SharedPrefs{
 
-  SharedPrefsInit() async{
+  sharedPrefsInit() async{
     await SharedPreferences.getInstance();
   }
 
@@ -15,6 +15,25 @@ class Shared_Prefs{
     prefs.setString("phonenumber", phonenumber);
     prefs.setString("name", name);
   }
+
+  Future<void> updateUserDataInPrefs (String name,String password,String phonenumber) async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("password", password);
+    prefs.setString("phonenumber", phonenumber);
+    prefs.setString("name", name);
+  }
+
+  Future<void> rememberMe (bool rememberMe) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("rememberMe", rememberMe);
+  }
+
+  Future<bool?> isRememberMe () async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool("rememberMe");
+  }
+
 
   Future<String?> getData (String key) async{
 

@@ -8,36 +8,36 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Dashboard_Content(),
+    return const Scaffold(
+      body: DashboardContent(),
     );
   }
 }
 
-class Dashboard_Content extends StatefulWidget {
+class DashboardContent extends StatefulWidget {
+  const DashboardContent({super.key});
+
   @override
   State<StatefulWidget> createState() => _Dashboard();
 }
 
-class _Dashboard extends State<Dashboard_Content> {
+class _Dashboard extends State<DashboardContent> {
   final TextEditingController _searchController = TextEditingController();
-  Color _favIconColor = Colors.grey;
   String name = "";
   String email = "";
 
   void getData() async {
-    String tempname = (await Shared_Prefs().getData("name"))!;
-    String tempemail = (await Shared_Prefs().getData("email"))!;
+    String tempName = (await SharedPrefs().getData("name"))!;
+    String tempEmail = (await SharedPrefs().getData("email"))!;
 
     setState(() {
-      name = tempname;
-      email = tempemail;
+      name = tempName;
+      email = tempEmail;
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getData();
   }
@@ -47,9 +47,9 @@ class _Dashboard extends State<Dashboard_Content> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      drawer: Side_Menu(name: name, email: email),
+      drawer: SideMenu(name: name, email: email),
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
         // leading: const IconButton(
         //   onPressed: null,
         //   icon: Icon(Icons.menu_outlined),
@@ -64,10 +64,10 @@ class _Dashboard extends State<Dashboard_Content> {
         centerTitle: true,
         actions: [
           Container(
-            margin: EdgeInsets.only(right: 10, left: 20),
+            margin: const EdgeInsets.only(right: 10, left: 20),
             child: IconButton(
               onPressed: () {},
-              icon: Icon(Icons.person),
+              icon: const Icon(Icons.person),
               color: Colors.black.withOpacity(0.6),
             ),
           )
@@ -75,7 +75,7 @@ class _Dashboard extends State<Dashboard_Content> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -89,12 +89,12 @@ class _Dashboard extends State<Dashboard_Content> {
                     controller: _searchController,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepOrange),
+                          borderSide: const BorderSide(color: Colors.deepOrange),
                           borderRadius: BorderRadius.circular(20)),
                       hintText: 'Search...',
                       // Add a clear button to the search bar
                       suffixIcon: IconButton(
-                        icon: Icon(Icons.clear),
+                        icon: const Icon(Icons.clear),
                         onPressed: () => _searchController.clear(),
                       ),
                       suffixIconColor: MaterialStateColor.resolveWith(
@@ -103,7 +103,7 @@ class _Dashboard extends State<Dashboard_Content> {
                               : Colors.black),
                       // Add a search icon or button to the search bar
                       prefixIcon: IconButton(
-                        icon: Icon(Icons.search),
+                        icon: const Icon(Icons.search),
                         onPressed: () {
                           // Perform the search here
                         },
@@ -122,9 +122,9 @@ class _Dashboard extends State<Dashboard_Content> {
               SizedBox(
                 height: size.height * 0.02,
               ),
-              Padding(
+              const Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: Row(
                   children: [
                     Text(
@@ -143,13 +143,13 @@ class _Dashboard extends State<Dashboard_Content> {
                 child: Column(
                   children: [
                     SizedBox(height: size.height * 0.03),
-                    PostTile(),
+                    const PostTile(),
                     SizedBox(height: size.height * 0.03),
-                    PostTile(),
+                    const PostTile(),
                     SizedBox(height: size.height * 0.03),
-                    PostTile(),
+                    const PostTile(),
                     SizedBox(height: size.height * 0.03),
-                    PostTile(),
+                    const PostTile(),
                   ],
                 ),
               ),

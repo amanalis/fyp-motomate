@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:motomate/reusablewidgets/posttile.dart';
 import '../reusablewidgets/side_menu.dart';
@@ -15,8 +16,8 @@ class _AccountState extends State<Account> {
   String email = "";
 
   void getData() async {
-    String tempname = (await Shared_Prefs().getData("name"))!;
-    String tempemail = (await Shared_Prefs().getData("email"))!;
+    String tempname = (await SharedPrefs().getData("name"))!;
+    String tempemail = (await SharedPrefs().getData("email"))!;
 
     setState(() {
       name = tempname;
@@ -34,9 +35,9 @@ class _AccountState extends State<Account> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      drawer: Side_Menu(name: name, email: email),
+      drawer: SideMenu(name: name, email: email),
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
         title: Image.asset(
           "images/motomate.png",
           height: size.height * 0.06,
@@ -46,10 +47,10 @@ class _AccountState extends State<Account> {
         centerTitle: true,
         actions: [
           Container(
-            margin: EdgeInsets.only(right: 10, left: 20),
+            margin: const EdgeInsets.only(right: 10, left: 20),
             child: IconButton(
               onPressed: () {},
-              icon: Icon(Icons.settings),
+              icon: const Icon(Icons.settings),
               color: Colors.black.withOpacity(0.6),
             ),
           )
@@ -81,13 +82,13 @@ class _AccountState extends State<Account> {
           ),
           Text(
             name,
-            style: TextStyle(color: Colors.orange),
+            style: const TextStyle(color: Colors.orange),
           ),
           Text(
             email,
-            style: TextStyle(color: Colors.orange),
+            style: const TextStyle(color: Colors.orange),
           ),
-          Divider(thickness: 0.1),
+          const Divider(thickness: 0.1),
           SizedBox(
             height: size.height * 0.5,
             child: ListView.builder(
@@ -95,8 +96,8 @@ class _AccountState extends State<Account> {
               itemBuilder: (context, index) => 
                   Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.all(10),
-                    child: PostTile(),
+                    padding: const EdgeInsets.all(10),
+                    child: const PostTile(),
                   ),
             ),
           )
@@ -105,3 +106,4 @@ class _AccountState extends State<Account> {
     );
   }
 }
+*/

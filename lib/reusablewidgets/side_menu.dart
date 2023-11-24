@@ -3,21 +3,21 @@ import 'package:motomate/screens/dashboard.dart';
 import 'package:motomate/screens/profile.dart';
 import 'package:motomate/utils/database.dart';
 
-class Side_Menu extends StatefulWidget {
+class SideMenu extends StatefulWidget {
   final String name;
   final String email;
 
-  const Side_Menu({
+  const SideMenu({
     super.key,
     required this.name,
     required this.email,
   });
 
   @override
-  State<Side_Menu> createState() => _Side_MenuState();
+  State<SideMenu> createState() => _SideMenuState();
 }
 
-class _Side_MenuState extends State<Side_Menu> {
+class _SideMenuState extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -65,7 +65,7 @@ class _Side_MenuState extends State<Side_Menu> {
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Log Out'),
-            onTap: () async => await UserModel().signout(context),
+            onTap: () async => await UserModel().signOut(context),
           ),
         ],
       ),

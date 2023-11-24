@@ -1,14 +1,14 @@
+// ignore_for_file: use_build_context_synchronously, body_might_complete_normally_catch_error
+
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
-import 'package:motomate/screens/signup.dart';
 import 'package:motomate/utils/flutter_toast.dart';
 import 'package:motomate/utils/shared_prefs.dart';
-import '../controllers/signup_controller.dart';
-import '../utils/database.dart';
-import 'dashboard.dart';
+
+import '../../utils/database.dart';
+import '../dashboard.dart';
 import 'login.dart';
 
 class OTPScreen extends StatefulWidget {
@@ -33,17 +33,20 @@ class OTPScreen extends StatefulWidget {
 
 class _OTPScreenState extends State<OTPScreen> {
   String otpCode = '';
-  int userID = 0;
-  int userIDFromDatabase = 0;
+  late int userID;
+  late int userIDFromDatabase;
 
   void getUserData() async {
     userIDFromDatabase = await UserModel().getUsersCount();
-    userIDFromDatabase = 101 + userIDFromDatabase;
+    print(userIDFromDatabase);
+    userIDFromDatabase = 100 + userIDFromDatabase;
+    print(userIDFromDatabase);
     setState(() {
       userID = userIDFromDatabase;
     });
   }
 
+  // ignore: non_constant_identifier_names
   Future<void> verifyOTP(String OTP) async {
     if (await widget.myAuth.verifyOTP(otp: OTP) == true) {
       displayToastMessage("OTP Verified", context);
@@ -78,7 +81,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   );
                 },
                 pageBuilder: (context, animation, animationTime) {
-                  return Login();
+                  return const Login();
                 },
               ),
               (route) => false);
@@ -98,9 +101,14 @@ class _OTPScreenState extends State<OTPScreen> {
       phone: widget.phone,
     );
 
-    Shared_Prefs().saveUserDataInPrefs(widget.name, userID.toString(), widget.email, widget.password, widget.phone);
+    SharedPrefs().saveUserDataInPrefs(
+      widget.name,
+      userID.toString(),
+      widget.email,
+      widget.password,
+      widget.phone,
+    );
 
-    // ignore: use_build_context_synchronously
     Navigator.pushAndRemoveUntil(
       context,
       PageRouteBuilder(
@@ -138,11 +146,11 @@ class _OTPScreenState extends State<OTPScreen> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter),
         ),
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               "Moto\nMate",
               style: TextStyle(
                 fontFamily: ('GravisPersonal'),
@@ -152,14 +160,14 @@ class _OTPScreenState extends State<OTPScreen> {
             ),
             Text("Verification".toUpperCase(),
                 style: Theme.of(context).textTheme.headlineSmall),
-            SizedBox(
+            const SizedBox(
               height: 40.0,
             ),
-            Text(
+            const Text(
               "Enter the Verification Code sent.",
               textAlign: TextAlign.center,
             ),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
             /*OtpTextField(
@@ -179,21 +187,18 @@ class _OTPScreenState extends State<OTPScreen> {
               keyboardType: TextInputType.number,
               length: 6,
               onCompleted: (String value) {
-                print('onCompleted: $value');
                 otpCode = value;
               },
               onEditing: (bool value) {
-                print('onEditing: $value');
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  print("$otpCode,${otpCode.runtimeType}");
                   // var userId = await UserModel().getUserIdsList();
                   // int _userId = int.parse(userId.last)+1;
                   // await UserModel().addUser(userID: _userId, name: name, email: email, phone: phone);
@@ -201,8 +206,8 @@ class _OTPScreenState extends State<OTPScreen> {
 
                   // verifyingOTP(otp);
                 },
-                child: Text("Next"),
-                style: ElevatedButton.styleFrom(primary: Colors.deepOrange),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange),
+                child: const Text("Next"),
               ),
             )
           ],

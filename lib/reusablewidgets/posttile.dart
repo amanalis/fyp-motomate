@@ -1,17 +1,17 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class PostTile extends StatefulWidget{
+class PostTile extends StatefulWidget {
+  const PostTile({super.key});
+
   @override
   State<StatefulWidget> createState() => _PostTile();
 }
 
-class _PostTile extends State<PostTile>{
+class _PostTile extends State<PostTile> {
   Color _favIconColor = Colors.grey;
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Column(
       children: [
         Row(
@@ -24,8 +24,7 @@ class _PostTile extends State<PostTile>{
                 color: Colors.grey.shade300,
               ),
               child: Padding(
-                padding:
-                const EdgeInsets.fromLTRB(20.0, 20.0, 15.0, 15.0),
+                padding: const EdgeInsets.fromLTRB(20.0, 20.0, 15.0, 15.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -40,32 +39,29 @@ class _PostTile extends State<PostTile>{
                             color: Colors.deepOrange,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Container(
-                          margin: EdgeInsets.only(top: 5),
+                          margin: const EdgeInsets.only(top: 5),
                           child: Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
                                 height: 8,
                                 width: 50,
                                 decoration: BoxDecoration(
-                                  borderRadius:
-                                  BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(10),
                                   color: Colors.white,
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.only(
-                                    top: 5, bottom: 5),
+                                margin:
+                                    const EdgeInsets.only(top: 5, bottom: 5),
                                 height: 8,
                                 width: 75,
                                 decoration: BoxDecoration(
-                                  borderRadius:
-                                  BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(10),
                                   color: Colors.white,
                                 ),
                               ),
@@ -73,79 +69,74 @@ class _PostTile extends State<PostTile>{
                                 height: 8,
                                 width: 50,
                                 decoration: BoxDecoration(
-                                  borderRadius:
-                                  BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(10),
                                   color: Colors.white,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 110,
                         ),
-                        Container(
-                            child: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  if (_favIconColor == Colors.grey) {
-                                    _favIconColor = Colors.deepOrange;
-                                  } else {
-                                    _favIconColor = Colors.grey;
-                                  }
-                                });
-                              },
-                              icon: Icon(Icons.star),
-                              color: _favIconColor,
-                            )),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (_favIconColor == Colors.grey) {
+                                _favIconColor = Colors.deepOrange;
+                              } else {
+                                _favIconColor = Colors.grey;
+                              }
+                            });
+                          },
+                          icon: const Icon(Icons.star),
+                          color: _favIconColor,
+                        ),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                            child: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  if (_favIconColor == Colors.grey) {
-                                    _favIconColor = Colors.deepOrange;
-                                  } else {
-                                    _favIconColor = Colors.grey;
-                                  }
-                                });
-                              },
-                              icon: Icon(Icons.favorite),
-                              color: _favIconColor,
-                            )),
-                        Container(
-                            child: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  if (_favIconColor == Colors.grey) {
-                                    _favIconColor = Colors.deepOrange;
-                                  } else {
-                                    _favIconColor = Colors.grey;
-                                  }
-                                });
-                              },
-                              icon: Icon(Icons.insert_comment_rounded),
-                              color: _favIconColor,
-                            )),
-                        Container(
-                            child: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  if (_favIconColor == Colors.grey) {
-                                    _favIconColor = Colors.deepOrange;
-                                  } else {
-                                    _favIconColor = Colors.grey;
-                                  }
-                                });
-                              },
-                              icon: Icon(Icons.share),
-                              color: _favIconColor,
-                            ))
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (_favIconColor == Colors.grey) {
+                                _favIconColor = Colors.deepOrange;
+                              } else {
+                                _favIconColor = Colors.grey;
+                              }
+                            });
+                          },
+                          icon: const Icon(Icons.favorite),
+                          color: _favIconColor,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (_favIconColor == Colors.grey) {
+                                _favIconColor = Colors.deepOrange;
+                              } else {
+                                _favIconColor = Colors.grey;
+                              }
+                            });
+                          },
+                          icon: const Icon(Icons.insert_comment_rounded),
+                          color: _favIconColor,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (_favIconColor == Colors.grey) {
+                                _favIconColor = Colors.deepOrange;
+                              } else {
+                                _favIconColor = Colors.grey;
+                              }
+                            });
+                          },
+                          icon: const Icon(Icons.share),
+                          color: _favIconColor,
+                        ),
                       ],
                     )
                   ],

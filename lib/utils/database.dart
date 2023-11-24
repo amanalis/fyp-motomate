@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:motomate/screens/login.dart';
+import 'package:motomate/screens/Registration%20Screens/login.dart';
 
 class UserModel {
-  Future<String?> addUser(
-      {required int userID,
-      required String name,
-      required String email,
-      required String phone}) async {
+  Future<String?> addUser({
+    required int userID,
+    required String name,
+    required String email,
+    required String phone,
+  }) async {
     try {
-      print("inside Add USer func");
       CollectionReference users =
           FirebaseFirestore.instance.collection('user_data');
       // Call the user's CollectionReference to add a new user
@@ -98,9 +98,10 @@ class UserModel {
     try {
       final QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('user_data')
-          .where('email',
-              isEqualTo:
-                  email) // Search for documents with email field equal to user's input
+          .where(
+            'email',
+            isEqualTo: email,
+          )
           .get();
 
       if (snapshot.docs.isNotEmpty) {
@@ -120,13 +121,15 @@ class UserModel {
     return count;
   }
 
-  Future<void> signout(BuildContext context) async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Login(),
-        ),
-        (route) => false);
+  Future<void> signOut(BuildContext context) async {
+    await FirebaseAuth.instance.signOut().then(
+          (value) => Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Login(),
+            ),
+            (route) => false,
+          ),
+        );
   }
 }

@@ -3,6 +3,7 @@ import 'package:regexed_validator/regexed_validator.dart';
 
 class ForgetPasswordMailScreen extends StatefulWidget {
   const ForgetPasswordMailScreen({super.key});
+
   @override
   State<ForgetPasswordMailScreen> createState() =>
       _ForgetPasswordMailScreenState();
@@ -10,6 +11,7 @@ class ForgetPasswordMailScreen extends StatefulWidget {
 
 class _ForgetPasswordMailScreenState extends State<ForgetPasswordMailScreen> {
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -17,13 +19,17 @@ class _ForgetPasswordMailScreenState extends State<ForgetPasswordMailScreen> {
       body: SingleChildScrollView(
         child: Container(
           height: size.height,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
-                colors: [Colors.white, Colors.orange],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter),
+              colors: [
+                Colors.white,
+                Colors.orange,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
-          padding: EdgeInsets.all(30.0),
+          padding: const EdgeInsets.all(30.0),
           child: Column(
             children: [
               SizedBox(
@@ -57,21 +63,20 @@ class _ForgetPasswordMailScreenState extends State<ForgetPasswordMailScreen> {
               Form(
                 key: _formKey,
                 child: Container(
-                  constraints: BoxConstraints(minHeight: 50),
+                  constraints: const BoxConstraints(minHeight: 50),
                   child: TextFormField(
                       decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.account_circle_rounded),
+                          prefixIcon: const Icon(Icons.account_circle_rounded),
                           labelText: "Email Address",
                           border: OutlineInputBorder(
                               gapPadding: 3.3,
                               borderRadius: BorderRadius.circular(20))),
                       validator: (value) {
-                        if (!validator.email(value!)){
+                        if (!validator.email(value!)) {
                           return "Please enter valid email address";
                         }
                         return null;
-                      }
-                      ),
+                      }),
                 ),
               ),
               SizedBox(
@@ -95,10 +100,10 @@ class _ForgetPasswordMailScreenState extends State<ForgetPasswordMailScreen> {
                         //   _data.name = _data.name;
                         // });
                         ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("All is good")));
+                            const SnackBar(content: Text("All is good")));
                       }
                     },
-                    child: Text("Submit")),
+                    child: const Text("Submit")),
               )
             ],
           ),
@@ -107,9 +112,7 @@ class _ForgetPasswordMailScreenState extends State<ForgetPasswordMailScreen> {
     );
   }
 
-  String _ErrorMessage = "";
-
-  void validateEmail(String val) {
+  /*void validateEmail(String val) {
     if (val.isEmpty) {
       setState(() {
         _ErrorMessage = "Email cannot be empty";
@@ -123,5 +126,5 @@ class _ForgetPasswordMailScreenState extends State<ForgetPasswordMailScreen> {
         _ErrorMessage = "";
       });
     }
-  }
+  }*/
 }
