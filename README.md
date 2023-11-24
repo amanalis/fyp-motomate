@@ -2,7 +2,6 @@
 # motomate
 
 A new Flutter project.
-building FYP Project.
 
 ## Getting Started
 
