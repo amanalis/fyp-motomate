@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:motomate/reusablewidgets/post_dailog.dart';
 import 'package:motomate/reusablewidgets/posttile.dart';
 import 'package:motomate/reusablewidgets/side_menu.dart';
 import 'package:motomate/utils/shared_prefs.dart';
@@ -47,6 +48,13 @@ class _Dashboard extends State<DashboardContent> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(onPressed: () async {
+        Post_Dialog(context);
+      },
+      child: Icon(Icons.add),
+      backgroundColor: Colors.deepOrange,
+      elevation: 0,),
       drawer: SideMenu(name: name, email: email),
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
@@ -137,22 +145,12 @@ class _Dashboard extends State<DashboardContent> {
                   ],
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 18),
-                child: Column(
-                  children: [
-                    SizedBox(height: size.height * 0.03),
-                    const PostTile(),
-                    SizedBox(height: size.height * 0.03),
-                    const PostTile(),
-                    SizedBox(height: size.height * 0.03),
-                    const PostTile(),
-                    SizedBox(height: size.height * 0.03),
-                    const PostTile(),
-                  ],
-                ),
-              ),
+              SizedBox(height: size.height * 0.05,),
+              PostTile(),
+              SizedBox(height: size.height * 0.05,),
+              PostTile(),
+              SizedBox(height: size.height * 0.05,),
+              PostTile(),
             ],
           ),
         ),

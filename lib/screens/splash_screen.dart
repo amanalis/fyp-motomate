@@ -63,6 +63,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    getRememberMe();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
     Future.delayed(

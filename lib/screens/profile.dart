@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:motomate/reusablewidgets/post_dailog.dart';
 import 'package:motomate/screens/edit_profile.dart';
 import '../reusablewidgets/posttile.dart';
 import '../reusablewidgets/side_menu.dart';
@@ -131,14 +132,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue[500],
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Post_Dialog(context);
+                    },
                     child: Row(
                       children: [
                         const Icon(Icons.add_circle_rounded),
                         SizedBox(
                           width: size.width * 0.01,
                         ),
-                        const Text("Add Thoughts")
+                        const Text("Add Post")
                       ],
                     )),
                 SizedBox(
