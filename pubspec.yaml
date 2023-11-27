@@ -44,6 +44,8 @@ dependencies:
   email_otp: ^2.1.1
   flutter_verification_code: ^1.1.7
   shared_preferences: ^2.2.2
+  image_picker: ^1.0.4
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:
