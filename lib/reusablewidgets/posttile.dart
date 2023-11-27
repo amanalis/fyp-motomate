@@ -9,16 +9,16 @@ class PostTile extends StatefulWidget {
 
 class _PostTile extends State<PostTile> {
   Color _favIconColor = Colors.grey;
-
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Column(
       children: [
         Row(
           children: [
             Container(
-              height: 200,
-              width: 332,
+              height: size.height * 0.25,
+              width: size.width * 0.931,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.grey.shade300,
@@ -32,15 +32,15 @@ class _PostTile extends State<PostTile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          height: 50,
-                          width: 50,
+                          height: size.height * 0.05,
+                          width: size.height * 0.05,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
                             color: Colors.deepOrange,
                           ),
                         ),
-                        const SizedBox(
-                          width: 5,
+                        SizedBox(
+                          width: size.width * 0.01,
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 5),
@@ -48,8 +48,8 @@ class _PostTile extends State<PostTile> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                height: 8,
-                                width: 50,
+                                height: size.height * 0.008,
+                                width: size.width * 0.1,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: Colors.white,
@@ -58,16 +58,16 @@ class _PostTile extends State<PostTile> {
                               Container(
                                 margin:
                                     const EdgeInsets.only(top: 5, bottom: 5),
-                                height: 8,
-                                width: 75,
+                                height: size.height * 0.008,
+                                width: size.width * 0.18,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: Colors.white,
                                 ),
                               ),
                               Container(
-                                height: 8,
-                                width: 50,
+                                height: size.height * 0.008,
+                                width: size.width * 0.1,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: Colors.white,
@@ -76,8 +76,8 @@ class _PostTile extends State<PostTile> {
                             ],
                           ),
                         ),
-                        const SizedBox(
-                          width: 110,
+                        SizedBox(
+                          width: size.width * 0.42,
                         ),
                         IconButton(
                           onPressed: () {

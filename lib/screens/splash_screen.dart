@@ -19,9 +19,11 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   void getRememberMe() async {
     bool rememberMe = (await SharedPrefs().isRememberMe())!;
+    print(rememberMe);
     if (rememberMe == true) {
       String email = (await SharedPrefs().getData('email'))!;
       String password = (await SharedPrefs().getData('password'))!;
+      print(email + password);
       final user = (await FirebaseAuth.instance
               .signInWithEmailAndPassword(
         email: email,
@@ -44,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen>
         },
       ))
           .user;
-
+      print(user);
       if (user != null) {
         Navigator.pushAndRemoveUntil(
           context,

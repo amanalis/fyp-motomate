@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -11,28 +13,28 @@ void Post_Dialog(BuildContext context) async {
             TextEditingController();
 
         return StatefulBuilder(builder: (context, setState) {
-          // File? _image;
-          // Future<void> _getImage() async {
-          //   try {
-          //     final imagePicker = ImagePicker();
-          //     final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
-          //
-          //     setState(() {
-          //       if (pickedFile != null) {
-          //         _image = File(pickedFile.path as List<Object>);
-          //       } else {
-          //         print('No image selected.');
-          //       }
-          //     });
-          //   } catch (e) {
-          //     print('Error picking image: $e');
-          //   }
-          // }
+          File? _image;
+          Future<void> _getImage() async {
+            try {
+              final imagePicker = ImagePicker();
+              final pickedFile =
+                  await imagePicker.pickImage(source: ImageSource.gallery);
+
+              setState(() {
+                if (pickedFile != null) {
+                  _image = File(pickedFile.path);
+                } else {
+                  print('No image selected.');
+                }
+              });
+            } catch (e) {
+              print('Error picking image: $e');
+            }
+          }
 
           return AlertDialog(
             backgroundColor: Colors.transparent,
             content: Container(
-
               key: _formKey,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
@@ -41,7 +43,7 @@ void Post_Dialog(BuildContext context) async {
               child: Stack(
                 children: [
                   Positioned(
-                    width: 28,
+                      width: 28,
                       height: 28,
                       top: 0,
                       right: 0,
@@ -54,7 +56,10 @@ void Post_Dialog(BuildContext context) async {
                             backgroundColor: Color(0xffEC5B5B),
                             shape: CircleBorder(),
                           ),
-                          child: Image.asset("images/close_icon.png",color: Colors.white,))),
+                          child: Image.asset(
+                            "images/close_icon.png",
+                            color: Colors.white,
+                          ))),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -94,30 +99,35 @@ void Post_Dialog(BuildContext context) async {
                         SizedBox(
                           height: 6,
                         ),
-                        // Container(
-                        //   child: GestureDetector(
-                        //     onTap: _getImage,
-                        //     child: Container(
-                        //       width: 200,
-                        //       height: 200,
-                        //       color: Colors.grey,
-                        //       child: _image == null
-                        //           ? Center(
-                        //         child: Icon(
-                        //           Icons.add,
-                        //           size: 50,
-                        //           color: Colors.white,
-                        //         ),
-                        //       )
-                        //           : Image.file(
-                        //         _image as File,
-                        //         width: 200,
-                        //         height: 200,
-                        //         fit: BoxFit.cover,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
+                        Container(
+                          child: GestureDetector(
+                            onTap: _getImage,
+                            child: Container(
+                              width: 200,
+                              height: 200,
+                              color: Colors.grey,
+                              child: _image == null
+                                  ? Center(
+                                      child: Column(
+                                        children: [
+                                          Icon(
+                                            Icons.add,
+                                            size: 50,
+                                            color: Colors.white,
+                                          ),
+                                          Text("Add Images."),
+                                        ],
+                                      ),
+                                    )
+                                  : Image.file(
+                                      _image!,
+                                      width: 200,
+                                      height: 200,
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                          ),
+                        ),
                         SizedBox(
                           height: 10,
                         ),

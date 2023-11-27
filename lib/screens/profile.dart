@@ -137,11 +137,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     },
                     child: Row(
                       children: [
-                        const Icon(Icons.add_circle_rounded),
+                        const Icon(Icons.add_circle_rounded, color: Colors.white,),
                         SizedBox(
                           width: size.width * 0.01,
                         ),
-                        const Text("Add Post")
+                        const Text("Add Post",
+                        style: TextStyle(color: Colors.white),)
                       ],
                     )),
                 SizedBox(
@@ -160,11 +161,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                   child: Row(
                     children: [
-                      const Icon(Icons.edit),
+                      const Icon(Icons.edit,color: Colors.white),
                       SizedBox(
                         width: size.width * 0.01,
                       ),
-                      const Text("Edit Profile")
+                      const Text("Edit Profile",style: TextStyle(color: Colors.white),)
                     ],
                   ),
                 ),
