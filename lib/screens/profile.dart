@@ -1,6 +1,12 @@
+import 'dart:io';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:motomate/reusablewidgets/post_dailog.dart';
 import 'package:motomate/screens/edit_profile.dart';
+import 'package:motomate/utils/database.dart';
 import '../reusablewidgets/posttile.dart';
 import '../reusablewidgets/side_menu.dart';
 import '../utils/shared_prefs.dart';
@@ -15,14 +21,18 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   String name = "";
   String email = "";
+  String imageUrl="https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg";
+  // String tempUrl="";
 
   void getData() async {
     String tempName = (await SharedPrefs().getData("name"))!;
     String tempEmail = (await SharedPrefs().getData("email"))!;
+    String tempURL = (await SharedPrefs().getData("imageURL"))!;
 
     setState(() {
       name = tempName;
       email = tempEmail;
+      imageUrl = tempURL;
     });
   }
 
@@ -39,6 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       drawer: SideMenu(
         name: name,
         email: email,
+          imageUrl: imageUrl,
       ),
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
@@ -72,35 +83,82 @@ class _ProfileScreenState extends State<ProfileScreen> {
               alignment: Alignment.topCenter,
               children: [
                 Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  child: const CircleAvatar(
+                  margin: const EdgeInsets.only(top: 15),
+                  child: CircleAvatar(
                     radius: 74,
+                    // backgroundColor: Colors.white,
                     backgroundColor: Colors.black,
                     child: CircleAvatar(
                       radius: 70,
-                      backgroundImage: AssetImage('images/bheem.jpg'),
+                      backgroundImage: NetworkImage(imageUrl),
                     ),
                   ),
                 ),
+                // Container(
+                //   margin: const EdgeInsets.only(top: 20),
+                //   decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),color: Colors.black),
+                //   height: 160,
+                //   width: 160,
+                //   child: ClipRRect(
+                //     borderRadius: BorderRadius.circular(100),
+                //     // backgroundImage: NetworkImage(imageUrl,),
+                //     child: Image.network(imageUrl,
+                //       height: 140,
+                //       width: 140,
+                //       fit: BoxFit.cover,
+                //     ),
+                //   ),
+                // ),
                 Container(
-                  margin: const EdgeInsets.only(top: 135),
+                  margin: const EdgeInsets.only(top: 120),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
                           padding: EdgeInsets.only(left: size.width * 0.175)),
                       SizedBox(
-                        width: size.width * 0.05,
+                        width: size.width * 0.07,
                       ),
                       Container(
-                        padding: const EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(0.1),
                         decoration: const BoxDecoration(
-                            color: Colors.white,
+                            color: Colors.black,
                             borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        child: const Icon(
-                          Icons.camera_alt,
-                          color: Colors.black,
+                                BorderRadius.all(Radius.circular(100))),
+                        child: IconButton(
+                          onPressed: () async{
+                            ImagePicker imagePiker = ImagePicker();
+                            XFile? file= await imagePiker.pickImage(source: ImageSource.gallery);
+                            print('${file?.path}');
+
+                            if(file == null) return;
+                            String uniqueFileName = DateTime.now().microsecondsSinceEpoch.toString();
+
+                            Reference referenceRoot = FirebaseStorage.instance.ref();
+                            Reference referenceDirImages = referenceRoot.child('images');
+
+                            Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+
+                            try{
+
+                              await referenceImageToUpload.putFile(File(file.path));
+
+                              imageUrl= await referenceImageToUpload.getDownloadURL();
+
+                              String id = (await SharedPrefs().getData('id'))!;
+                              await UserModel().updateUser(userID: id, key: 'ImageURL', data: imageUrl);
+                              await SharedPrefs().updateImageURL(imageUrl);
+                              setState(() {
+                                imageUrl = imageUrl;
+                              });
+
+                            }catch(error){
+
+                            }
+
+                          },
+                          icon: Icon(Icons.camera_alt,),
+                          color: Colors.white,
                         ),
                       ),
                     ],
@@ -153,7 +211,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     backgroundColor: Colors.grey[500],
                   ),
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => EditProfileScreen(),

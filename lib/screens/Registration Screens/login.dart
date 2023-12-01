@@ -64,6 +64,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
       emailController.text,
       passwordController.text,
       phoneNumber,
+        'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg',
     );
     await SharedPrefs().rememberMe(_isRememberMe);
   }

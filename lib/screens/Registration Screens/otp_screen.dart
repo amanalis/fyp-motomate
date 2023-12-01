@@ -99,6 +99,7 @@ class _OTPScreenState extends State<OTPScreen> {
       email: widget.email,
       name: widget.name,
       phone: widget.phone,
+      imageURL: 'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg'
     );
 
     SharedPrefs().saveUserDataInPrefs(
@@ -107,6 +108,7 @@ class _OTPScreenState extends State<OTPScreen> {
       widget.email,
       widget.password,
       widget.phone,
+      'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg',
     );
 
     Navigator.pushAndRemoveUntil(

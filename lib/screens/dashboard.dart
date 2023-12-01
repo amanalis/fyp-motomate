@@ -26,14 +26,17 @@ class _Dashboard extends State<DashboardContent> {
   final TextEditingController _searchController = TextEditingController();
   String name = "";
   String email = "";
+  String imageURL = 'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
 
   void getData() async {
     String tempName = (await SharedPrefs().getData("name"))!;
     String tempEmail = (await SharedPrefs().getData("email"))!;
+    String tempURL = (await SharedPrefs().getData("imageURL"))!;
 
     setState(() {
       name = tempName;
       email = tempEmail;
+      imageURL = tempURL;
     });
   }
 
@@ -55,7 +58,7 @@ class _Dashboard extends State<DashboardContent> {
       child: Icon(Icons.add),
       backgroundColor: Colors.deepOrange,
       elevation: 0,),
-      drawer: SideMenu(name: name, email: email),
+      drawer: SideMenu(name: name, email: email, imageUrl: imageURL,),
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
         // leading: const IconButton(

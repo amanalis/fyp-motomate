@@ -6,11 +6,13 @@ import 'package:motomate/utils/database.dart';
 class SideMenu extends StatefulWidget {
   final String name;
   final String email;
+  final String imageUrl;
 
   const SideMenu({
     super.key,
     required this.name,
     required this.email,
+    required this.imageUrl,
   });
 
   @override
@@ -31,8 +33,11 @@ class _SideMenuState extends State<SideMenu> {
               widget.email,
             ),
             currentAccountPicture: CircleAvatar(
-              child: ClipOval(
-                child: Image.asset("images/bheem.jpg"),
+              radius: 74,
+              backgroundColor: Colors.black,
+              child: CircleAvatar(
+                radius: 70,
+                backgroundImage: NetworkImage(widget.imageUrl),
               ),
             ),
             decoration: const BoxDecoration(color: Colors.deepOrangeAccent),

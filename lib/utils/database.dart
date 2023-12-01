@@ -9,6 +9,7 @@ class UserModel {
     required String name,
     required String email,
     required String phone,
+    required String imageURL,
   }) async {
     try {
       CollectionReference users =
@@ -18,6 +19,7 @@ class UserModel {
         'Email': email,
         'Name': name,
         'Phone': phone,
+        'ImageURL' : imageURL,
       });
       return 'success';
     } catch (e) {
@@ -34,7 +36,7 @@ class UserModel {
       final snapshot = await users.doc(userIDs[i]).get();
       final data = snapshot.data() as Map<String, dynamic>;
       usersList.add(
-        {'userID': userIDs[i], 'name': data['name'], 'email': data['email']},
+        {'userID': userIDs[i], 'name': data['Name'], 'email': data['Email'], 'imageURL' : data['ImageURL'], 'phone': data['Phone']},
       );
     }
     return usersList;
@@ -99,7 +101,7 @@ class UserModel {
       final QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('user_data')
           .where(
-            'email',
+            'Email',
             isEqualTo: email,
           )
           .get();

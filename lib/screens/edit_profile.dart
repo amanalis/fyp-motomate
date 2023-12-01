@@ -1,7 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:motomate/screens/profile.dart';
 import 'package:motomate/utils/database.dart';
 import 'package:motomate/utils/flutter_toast.dart';
@@ -20,6 +24,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController nameController = TextEditingController();
+  String imageUrl="https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg";
   bool _isEditable = false;
   String name = '';
   String email = '';
@@ -31,6 +36,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     String tempEmail = (await SharedPrefs().getData("email"))!;
     String tempPhone = (await SharedPrefs().getData("phonenumber"))!;
     String tempPassword = (await SharedPrefs().getData("password"))!;
+    String tempURL = (await SharedPrefs().getData("imageURL"))!;
 
     setState(() {
       nameController.text = tempName;
@@ -39,6 +45,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       email = tempEmail;
       phoneController.text = tempPhone;
       passwordController.text = tempPassword;
+      imageUrl = tempURL;
     });
   }
 
@@ -58,7 +65,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProfileScreen(),));
           },
           icon: const Icon(
             Icons.arrow_back_ios_new,
@@ -99,18 +106,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   children: [
                     Container(
                       margin: const EdgeInsets.only(top: 15),
-                      child: const CircleAvatar(
+                      child: CircleAvatar(
                         radius: 74,
                         // backgroundColor: Colors.white,
                         backgroundColor: Colors.black,
                         child: CircleAvatar(
                           radius: 70,
-                          backgroundImage: AssetImage('images/bheem.jpg'),
+                          backgroundImage: NetworkImage(imageUrl),
                         ),
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top: 130),
+                      margin: const EdgeInsets.only(top: 120),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -118,19 +125,50 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               padding:
                                   EdgeInsets.only(left: size.width * 0.175)),
                           SizedBox(
-                            width: size.width * 0.05,
+                            width: size.width * 0.07,
                           ),
                           Container(
-                            padding: const EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(0.1),
                             decoration: const BoxDecoration(
-                              color: Colors.white,
+                              color: Colors.black,
                               borderRadius: BorderRadius.all(
-                                Radius.circular(20),
+                                Radius.circular(100),
                               ),
                             ),
-                            child: const Icon(
-                              Icons.camera_alt,
-                              color: Colors.black,
+                            child: IconButton(
+                              onPressed: () async{
+                                ImagePicker imagePiker = ImagePicker();
+                                XFile? file= await imagePiker.pickImage(source: ImageSource.gallery);
+                                print('${file?.path}');
+
+                                if(file == null) return;
+                                String uniqueFileName = DateTime.now().microsecondsSinceEpoch.toString();
+
+                                Reference referenceRoot = FirebaseStorage.instance.ref();
+                                Reference referenceDirImages = referenceRoot.child('images');
+
+                                Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+
+                                try{
+
+                                  await referenceImageToUpload.putFile(File(file.path));
+
+                                  imageUrl= await referenceImageToUpload.getDownloadURL();
+
+                                  String id = (await SharedPrefs().getData('id'))!;
+                                  await UserModel().updateUser(userID: id!, key: 'ImageURL', data: imageUrl);
+                                  await SharedPrefs().updateImageURL(imageUrl);
+                                  setState(() {
+                                    imageUrl = imageUrl;
+                                  });
+
+                                }catch(error){
+
+                                }
+
+                              },
+                              icon: Icon(Icons.camera_alt),
+                              color: Colors.white,
                             ),
                           ),
                         ],
@@ -259,6 +297,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   nameController.text,
                                   passwordController.text,
                                   phoneController.text,
+                                  imageUrl
                                 );
                                 String id =
                                     (await SharedPrefs().getData('id'))!;
