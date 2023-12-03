@@ -135,3 +135,105 @@ class UserModel {
         );
   }
 }
+
+class PostModel{
+
+  Future<String?> addPost({
+    required int postID,
+    required String userID,
+    required String title,
+    required String description,
+    required List imageURL,
+  }) async {
+    try {
+      CollectionReference posts =
+      FirebaseFirestore.instance.collection('posts');
+      // Call the user's CollectionReference to add a new user
+      await posts.doc(postID.toString()).set({
+        'user_id' : userID,
+        'title' : title,
+        'description' : description,
+        'images' : imageURL,
+      });
+      return 'Added post Successfully.';
+    } catch (e) {
+      return 'Error adding post.';
+    }
+  }
+
+  Future<List<String>> getPostIdsList() async {
+    List<String> postIDs = [];
+    QuerySnapshot snapshot =
+    await FirebaseFirestore.instance.collection('posts').get();
+    for (var doc in snapshot.docs) {
+      postIDs.add(doc.id);
+    }
+    return postIDs;
+  }
+
+  // Future<List<Map<String, dynamic>>> usersList() async {
+  //   List<Map<String, dynamic>> usersList = [];
+  //   List<String> postIDs = await getPostIdsList();
+  //   CollectionReference users =
+  //   FirebaseFirestore.instance.collection('posts');
+  //   for (int i = 0; i < postIDs.length; i++) {
+  //     final snapshot = await users.doc(postIDs[i]).get();
+  //     final data = snapshot.data() as Map<String, dynamic>;
+  //     usersList.add(
+  //       {'userID': userIDs[i], 'name': data['Name'], 'email': data['Email'], 'imageURL' : data['ImageURL'], 'phone': data['Phone']},
+  //     );
+  //   }
+  //   return usersList;
+  // }
+
+  Future<String?> updatePost({
+    required String postID,
+    required String key,
+    required String data,
+  }) async {
+    try {
+      FirebaseFirestore.instance.collection('posts').doc(postID).update({
+        key: data,
+      });
+      return 'Post Updated';
+    } catch (e) {
+      return 'Error updating Post';
+    }
+  }
+
+  Future<String?> getPostID(String userID) async {
+    try {
+      String? id;
+      await FirebaseFirestore.instance
+          .collection('posts')
+          .where('user_id', isEqualTo: userID)
+          .get()
+          .then((value) {
+        id = value.docs.first.id;
+      });
+      return id;
+    } catch (e) {
+      return 'Error fetching post';
+    }
+  }
+
+  Future<String?> getPostData(String postID, String key) async {
+    try {
+      CollectionReference users =
+      FirebaseFirestore.instance.collection('posts');
+      final snapshot = await users.doc(postID).get();
+      final data = snapshot.data() as Map<String, dynamic>;
+      return data[key];
+    } catch (e) {
+      return 'Error fetching post';
+    }
+  }
+
+  Future<int> getPostCount() async {
+    int count = await FirebaseFirestore.instance
+        .collection('posts')
+        .get()
+        .then((value) => value.size);
+    return count;
+  }
+}

@@ -1,7 +1,12 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:motomate/utils/database.dart';
+import 'package:motomate/utils/flutter_toast.dart';
+
+import '../utils/shared_prefs.dart';
 
 void Post_Dialog(BuildContext context) async {
   final _formKey = GlobalKey<FormState>();
@@ -9,36 +14,54 @@ void Post_Dialog(BuildContext context) async {
   return await showDialog(
       context: context,
       builder: (context) {
-        final TextEditingController _textEditingController =
-            TextEditingController();
+
+        final TextEditingController titleController = TextEditingController();
+        final TextEditingController descriptionController = TextEditingController();
+        String imageUrl="";
+        List<String> images = [];
 
         return StatefulBuilder(builder: (context, setState) {
+
           File? _image;
           Future<void> _getImage() async {
+            ImagePicker imagePiker = ImagePicker();
+            XFile? file= await imagePiker.pickImage(source: ImageSource.gallery);
+            print('${file?.path}');
+
+            if(file == null) return;
+            String uniqueFileName = DateTime.now().microsecondsSinceEpoch.toString();
+
+            Reference referenceRoot = FirebaseStorage.instance.ref();
+            Reference referenceDirImages = referenceRoot.child('post_images');
+
+            Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
             try {
-              final imagePicker = ImagePicker();
-              final pickedFile =
-                  await imagePicker.pickImage(source: ImageSource.gallery);
+              await referenceImageToUpload.putFile(File(file.path));
+
+              imageUrl= await referenceImageToUpload.getDownloadURL();
+              images.add(imageUrl);
 
               setState(() {
-                if (pickedFile != null) {
-                  _image = File(pickedFile.path);
-                } else {
-                  print('No image selected.');
-                }
-              });
+              //   if (pickedFile != null) {
+              //     _image = File(pickedFile.path);
+              //   } else {
+              //     print('No image selected.');
+              //   }
+                imageUrl = imageUrl;
+               });
             } catch (e) {
               print('Error picking image: $e');
             }
           }
 
           return AlertDialog(
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.deepOrangeAccent.withOpacity(0.6),
             content: Container(
               key: _formKey,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
-                color: Color(0xff2A303E),
+                color: Colors.transparent
+                // Color(0xff2A303E),
               ),
               child: Stack(
                 children: [
@@ -74,7 +97,7 @@ void Post_Dialog(BuildContext context) async {
                           height: 10,
                         ),
                         TextFormField(
-                          controller: _textEditingController,
+                          controller: titleController,
                           validator: (value) {
                             return value!.isNotEmpty ? null : "Invalid Field";
                           },
@@ -87,14 +110,16 @@ void Post_Dialog(BuildContext context) async {
                           height: 6,
                         ),
                         TextFormField(
-                          // controller: _textEditingController,
+                          controller: descriptionController,
                           validator: (value) {
                             return value!.isNotEmpty ? null : "Invaild Feild";
                           },
                           decoration: InputDecoration(
                               hintText: "Please Enter Description",
                               border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10))),
+                                  borderRadius: BorderRadius.circular(10),
+                              ),
+                          ),
                         ),
                         SizedBox(
                           height: 6,
@@ -142,7 +167,11 @@ void Post_Dialog(BuildContext context) async {
                                     ),
                                     foregroundColor: Color(0xffEC5B5B),
                                     side: BorderSide(color: Color(0xffEC5B5B))),
-                                onPressed: () {},
+                                onPressed: () {
+                                  titleController.clear();
+                                  descriptionController.clear();
+                                  images.clear();
+                                },
                                 child: Text("Cancel")),
                             ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -150,7 +179,13 @@ void Post_Dialog(BuildContext context) async {
                                     backgroundColor: Color(0xff5BEC84),
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 32, vertical: 8)),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  String Id = (await SharedPrefs().getData('id'))!;
+                                  int count = await PostModel().getPostCount();
+                                  await PostModel().addPost(postID: count, userID: Id, title: titleController.text, description: descriptionController.text, imageURL: images);
+                                  displayToastMessage("Posted", context);
+                                  Navigator.pop(context);
+                                },
                                 child: Text("Post"))
                           ],
                         ),
