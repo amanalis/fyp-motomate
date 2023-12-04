@@ -129,11 +129,12 @@ void Post_Dialog(BuildContext context) async {
                             onTap: _getImage,
                             child: Container(
                               width: 200,
-                              height: 200,
+                              height: 150,
                               color: Colors.grey,
                               child: _image == null
                                   ? Center(
                                       child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Icon(
                                             Icons.add,

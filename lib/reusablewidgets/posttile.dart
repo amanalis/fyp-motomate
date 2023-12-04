@@ -24,7 +24,7 @@ class _PostTile extends State<PostTile> {
                 color: Colors.grey.shade300,
               ),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20.0, 20.0, 15.0, 15.0),
+                padding: const EdgeInsets.fromLTRB(20.0, 20.0, 7.0, 15.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
