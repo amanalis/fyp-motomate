@@ -40,6 +40,7 @@ void Post_Dialog(BuildContext context) async {
 
               imageUrl= await referenceImageToUpload.getDownloadURL();
               images.add(imageUrl);
+              print(images);
 
               setState(() {
               //   if (pickedFile != null) {
@@ -55,7 +56,7 @@ void Post_Dialog(BuildContext context) async {
           }
 
           return AlertDialog(
-            backgroundColor: Colors.deepOrangeAccent.withOpacity(0.6),
+            backgroundColor: Colors.white.withOpacity(0.8),
             content: Container(
               key: _formKey,
               decoration: BoxDecoration(
@@ -181,6 +182,7 @@ void Post_Dialog(BuildContext context) async {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 32, vertical: 8)),
                                 onPressed: () async {
+                                  print(images);
                                   String Id = (await SharedPrefs().getData('id'))!;
                                   int count = await PostModel().getPostCount();
                                   await PostModel().addPost(postID: count, userID: Id, title: titleController.text, description: descriptionController.text, imageURL: images);

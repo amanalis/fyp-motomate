@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:motomate/reusablewidgets/post_dailog.dart';
 import 'package:motomate/reusablewidgets/posttile.dart';
 import 'package:motomate/reusablewidgets/side_menu.dart';
+import 'package:motomate/utils/database.dart';
 import 'package:motomate/utils/shared_prefs.dart';
 
 class Dashboard extends StatelessWidget {
@@ -26,12 +27,27 @@ class _Dashboard extends State<DashboardContent> {
   final TextEditingController _searchController = TextEditingController();
   String name = "";
   String email = "";
-  String imageURL = 'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
+  String imageURL =
+      'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
+  List<Map<String, dynamic>> Posts = [];
 
   void getData() async {
     String tempName = (await SharedPrefs().getData("name"))!;
     String tempEmail = (await SharedPrefs().getData("email"))!;
     String tempURL = (await SharedPrefs().getData("imageURL"))!;
+    int count = await PostModel().getPostCount();
+    for (int i = 2; i < count; i++) {
+      var doc = await PostModel().getPostDocument(i.toString());
+      String? name = await UserModel().getUserData(doc["user_id"], "Name");
+      Posts.add({
+        "user_id": doc["user_id"],
+        "name": name,
+        "title": doc["title"],
+        'description': doc["description"],
+        "images": doc["images"]
+      });
+    }
+    print(Posts);
 
     setState(() {
       name = tempName;
@@ -52,13 +68,19 @@ class _Dashboard extends State<DashboardContent> {
 
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(onPressed: () async {
-        Post_Dialog(context);
-      },
-      child: Icon(Icons.add),
-      backgroundColor: Colors.deepOrange,
-      elevation: 0,),
-      drawer: SideMenu(name: name, email: email, imageUrl: imageURL,),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          Post_Dialog(context);
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.deepOrange,
+        elevation: 0,
+      ),
+      drawer: SideMenu(
+        name: name,
+        email: email,
+        imageUrl: imageURL,
+      ),
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
         // leading: const IconButton(
@@ -74,14 +96,25 @@ class _Dashboard extends State<DashboardContent> {
         backgroundColor: Colors.deepOrange,
         centerTitle: true,
         actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 10, left: 20),
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.person),
-              color: Colors.black.withOpacity(0.6),
+          Padding(
+            padding: EdgeInsets.only(right: 14),
+            child: CircleAvatar(
+              radius: 18,
+              backgroundColor: Colors.black,
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage(imageURL),
+              ),
             ),
           )
+          // Container(
+          //   margin: const EdgeInsets.only(right: 10, left: 20),
+          //   child: IconButton(
+          //     onPressed: () {},
+          //     icon: const Icon(Icons.person),
+          //     color: Colors.black.withOpacity(0.6),
+          //   ),
+          // )
         ],
       ),
       body: SingleChildScrollView(
@@ -100,7 +133,8 @@ class _Dashboard extends State<DashboardContent> {
                     controller: _searchController,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.deepOrange),
+                          borderSide:
+                              const BorderSide(color: Colors.deepOrange),
                           borderRadius: BorderRadius.circular(20)),
                       hintText: 'Search...',
                       // Add a clear button to the search bar
@@ -134,8 +168,7 @@ class _Dashboard extends State<DashboardContent> {
                 height: size.height * 0.02,
               ),
               const Padding(
-                padding:
-                    EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: Row(
                   children: [
                     Text(
@@ -148,12 +181,19 @@ class _Dashboard extends State<DashboardContent> {
                   ],
                 ),
               ),
-              SizedBox(height: size.height * 0.05,),
-              PostTile(),
-              SizedBox(height: size.height * 0.05,),
-              PostTile(),
-              SizedBox(height: size.height * 0.05,),
-              PostTile(),
+              SizedBox(
+                  width: size.width,
+                  child: ListView.builder(
+                    itemCount: Posts.length,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return PostTile(
+                          imageUrl: Posts[index]["images"],
+                          name: Posts[index]["name"],
+                          date: 'date');
+                    },
+                  ))
             ],
           ),
         ),

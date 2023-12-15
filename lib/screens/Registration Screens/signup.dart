@@ -253,7 +253,11 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
                         }
                       }
                     },
-                    child: const Text("Sign-Up"),
+                    child: const Text("Sign-Up",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),

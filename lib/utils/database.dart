@@ -236,4 +236,15 @@ class PostModel{
         .then((value) => value.size);
     return count;
   }
+
+  Future<dynamic> getPostDocument(String postID) async {
+    try {
+      var collectionReference =
+      FirebaseFirestore.instance.collection('posts');
+      var doc = await collectionReference.doc(postID).get();
+      return doc.data() as Map<String, dynamic>;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

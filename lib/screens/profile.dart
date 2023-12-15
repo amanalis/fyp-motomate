@@ -245,7 +245,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   itemBuilder: (context, index) => Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.all(10),
-                    child: const PostTile(),
+                    // child: const PostTile(),
                   ),
                 ),
               ),

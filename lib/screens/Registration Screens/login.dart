@@ -2,9 +2,9 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:motomate/screens/dashboard.dart';
 import 'package:motomate/screens/Registration%20Screens/forget_password_mail.dart';
 import 'package:motomate/screens/Registration%20Screens/signup.dart';
+import 'package:motomate/screens/dashboard.dart';
 import 'package:motomate/utils/database.dart';
 import 'package:motomate/utils/shared_prefs.dart';
 import 'package:regexed_validator/regexed_validator.dart';
@@ -52,19 +52,21 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
   String name = "";
   String phoneNumber = "";
   String id = "";
+  String imageUrl = "";
   bool _isRememberMe = false;
 
   Future<void> getData(String email) async {
     id = (await UserModel().getUserID(email))!;
     phoneNumber = (await UserModel().getUserData(id, "Phone"))!;
     name = (await UserModel().getUserData(id, "Name"))!;
+    imageUrl = (await UserModel().getUserData(id, "ImageURL"))!;
     await SharedPrefs().saveUserDataInPrefs(
       name,
       id,
       emailController.text,
       passwordController.text,
       phoneNumber,
-        'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg',
+      imageUrl,
     );
     await SharedPrefs().rememberMe(_isRememberMe);
   }
@@ -154,7 +156,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
               vertical: 0,
             ),
             child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -167,7 +169,6 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                         });
                       },
                       value: _isRememberMe,
-
                     ),
                     const Text(
                       "Remember Me.",
