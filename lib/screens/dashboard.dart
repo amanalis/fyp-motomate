@@ -36,15 +36,18 @@ class _Dashboard extends State<DashboardContent> {
     String tempEmail = (await SharedPrefs().getData("email"))!;
     String tempURL = (await SharedPrefs().getData("imageURL"))!;
     int count = await PostModel().getPostCount();
-    for (int i = 2; i < count; i++) {
+    for (int i = 2; i < count+1; i++) {
       var doc = await PostModel().getPostDocument(i.toString());
       String? name = await UserModel().getUserData(doc["user_id"], "Name");
+      String? user_image =
+          await UserModel().getUserData(doc["user_id"], "ImageURL");
       Posts.add({
+        "post_images": doc["images"],
         "user_id": doc["user_id"],
         "name": name,
         "title": doc["title"],
         'description': doc["description"],
-        "images": doc["images"]
+        "user_image": user_image,
       });
     }
     print(Posts);
@@ -189,9 +192,13 @@ class _Dashboard extends State<DashboardContent> {
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return PostTile(
-                          imageUrl: Posts[index]["images"],
-                          name: Posts[index]["name"],
-                          date: 'date');
+                        imageUrl: Posts[index]["post_images"],
+                        name: Posts[index]["name"],
+                        date: 'date',
+                        profileUrl: Posts[index]["user_image"],
+                        title: Posts[index]["title"],
+                        Description: Posts[index]["description"],
+                      );
                     },
                   ))
             ],

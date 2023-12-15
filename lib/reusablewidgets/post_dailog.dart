@@ -23,12 +23,14 @@ void Post_Dialog(BuildContext context) async {
         return StatefulBuilder(builder: (context, setState) {
 
           File? _image;
+          bool Imagepicked = false;
           Future<void> _getImage() async {
-            ImagePicker imagePiker = ImagePicker();
-            XFile? file= await imagePiker.pickImage(source: ImageSource.gallery);
-            print('${file?.path}');
+            final  image = await ImagePicker().pickImage(source: ImageSource.gallery);
 
-            if(file == null) return;
+            // XFile? file= await imagePiker.pickImage(source: ImageSource.gallery);
+            // print('${file?.path}');
+
+            if(image == null) return;
             String uniqueFileName = DateTime.now().microsecondsSinceEpoch.toString();
 
             Reference referenceRoot = FirebaseStorage.instance.ref();
@@ -36,19 +38,21 @@ void Post_Dialog(BuildContext context) async {
 
             Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
             try {
-              await referenceImageToUpload.putFile(File(file.path));
+              await referenceImageToUpload.putFile(File(image.path));
 
-              imageUrl= await referenceImageToUpload.getDownloadURL();
-              images.add(imageUrl);
+              String tempimageUrl= await referenceImageToUpload.getDownloadURL();
+              images.add(tempimageUrl);
               print(images);
-
+              final tempimage = File(image.path);
               setState(() {
+                _image = tempimage;
+                Imagepicked = true;
               //   if (pickedFile != null) {
               //     _image = File(pickedFile.path);
               //   } else {
               //     print('No image selected.');
               //   }
-                imageUrl = imageUrl;
+                imageUrl = tempimageUrl;
                });
             } catch (e) {
               print('Error picking image: $e');
