@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:motomate/reusablewidgets/post_dailog.dart';
 import 'package:motomate/reusablewidgets/posttile.dart';
 import 'package:motomate/reusablewidgets/side_menu.dart';
@@ -26,6 +27,7 @@ class DashboardContent extends StatefulWidget {
 class _Dashboard extends State<DashboardContent> {
   final TextEditingController _searchController = TextEditingController();
   String name = "";
+  String userID = "";
   String email = "";
   String imageURL =
       'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
@@ -35,27 +37,32 @@ class _Dashboard extends State<DashboardContent> {
     String tempName = (await SharedPrefs().getData("name"))!;
     String tempEmail = (await SharedPrefs().getData("email"))!;
     String tempURL = (await SharedPrefs().getData("imageURL"))!;
+    String tempID = (await SharedPrefs().getData("id"))!;
     int count = await PostModel().getPostCount();
-    for (int i = 2; i < count+1; i++) {
-      var doc = await PostModel().getPostDocument(i.toString());
-      String? name = await UserModel().getUserData(doc["user_id"], "Name");
+    for (int i = 0; i < count; i++) {
+      var doc = await PostModel().getPostDocument();
+      String? name =
+          await UserModel().getUserData(doc[i]["user_id"].toString(), "Name");
       String? user_image =
-          await UserModel().getUserData(doc["user_id"], "ImageURL");
+          await UserModel().getUserData(doc[i]["user_id"], "ImageURL");
       Posts.add({
-        "post_images": doc["images"],
-        "user_id": doc["user_id"],
+        "post_images": doc[i]["images"],
+        "user_id": doc[i]["user_id"],
         "name": name,
-        "title": doc["title"],
-        'description': doc["description"],
+        "title": doc[i]["title"],
+        'description': doc[i]["description"],
         "user_image": user_image,
+        "post_id": doc[i]["documentID"],
       });
     }
+    Posts.removeAt(0);
     print(Posts);
 
     setState(() {
       name = tempName;
       email = tempEmail;
       imageURL = tempURL;
+      userID = tempID;
     });
   }
 
@@ -72,8 +79,13 @@ class _Dashboard extends State<DashboardContent> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          Post_Dialog(context);
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PostDailog(),
+            ),
+          );
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.deepOrange,
@@ -198,6 +210,9 @@ class _Dashboard extends State<DashboardContent> {
                         profileUrl: Posts[index]["user_image"],
                         title: Posts[index]["title"],
                         Description: Posts[index]["description"],
+                        isHomeScreen: true,
+                        userID: userID,
+                        post_id: Posts[index]["post_id"],
                       );
                     },
                   ))

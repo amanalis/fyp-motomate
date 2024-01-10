@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +22,14 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   String name = "";
   String email = "";
-  String imageUrl="https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg";
+  String imageUrl =
+      "https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg";
+  String PostimageURL =
+      'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
+  String userID = "";
+
   // String tempUrl="";
+  int tab = 0;
 
   void getData() async {
     String tempName = (await SharedPrefs().getData("name"))!;
@@ -40,6 +47,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     getData();
+    getPostData();
+  }
+
+  List<Map<String, dynamic>> Posts = [];
+  List<Map<String, dynamic>> User_Posts = [];
+  List<Map<String, dynamic>> User_LikedPosts = [];
+
+  void getPostData() async {
+    String tempName = (await SharedPrefs().getData("name"))!;
+    String tempEmail = (await SharedPrefs().getData("email"))!;
+    String tempURL = (await SharedPrefs().getData("imageURL"))!;
+    String tempID = (await SharedPrefs().getData("id"))!;
+    int count = await PostModel().getPostCount();
+    for (int i = 0; i < count; i++) {
+      var doc = await PostModel().getPostDocument();
+      String? name =
+          await UserModel().getUserData(doc[i]["user_id"].toString(), "Name");
+      String? user_image =
+          await UserModel().getUserData(doc[i]["user_id"], "ImageURL");
+      Posts.add({
+        "post_images": doc[i]["images"],
+        "user_id": doc[i]["user_id"],
+        "name": name,
+        "title": doc[i]["title"],
+        'description': doc[i]["description"],
+        "user_image": user_image,
+        "post_id": doc[i]["documentID"],
+      });
+    }
+    Posts.removeAt(0);
+    print(tempID);
+    for (int i = 0; i < Posts.length; i++) {
+      if (Posts[i]["user_id"] == tempID) {
+        User_Posts.add(Posts[i]);
+        print(Posts[i]["user_id"]);
+      }
+    }
+    List id = await UserModel().getLikedPost(tempID);
+      print(id);
+      for(int i =0; i< Posts.length;i++){
+       for(int j=0 ; j<id.length;j++){
+         if(Posts[i]["post_id"]== id[j]){
+           User_LikedPosts.add(Posts[i]);
+         }
+
+       }
+      }
+      setState(() {
+        name = tempName;
+        email = tempEmail;
+        PostimageURL = tempURL;
+        userID = tempID;
+      });
+
   }
 
   @override
@@ -49,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       drawer: SideMenu(
         name: name,
         email: email,
-          imageUrl: imageUrl,
+        imageUrl: imageUrl,
       ),
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
@@ -126,38 +187,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(100))),
                         child: IconButton(
-                          onPressed: () async{
+                          onPressed: () async {
                             ImagePicker imagePiker = ImagePicker();
-                            XFile? file= await imagePiker.pickImage(source: ImageSource.gallery);
+                            XFile? file = await imagePiker.pickImage(
+                                source: ImageSource.gallery);
                             print('${file?.path}');
 
-                            if(file == null) return;
-                            String uniqueFileName = DateTime.now().microsecondsSinceEpoch.toString();
+                            if (file == null) return;
+                            String uniqueFileName = DateTime.now()
+                                .microsecondsSinceEpoch
+                                .toString();
 
-                            Reference referenceRoot = FirebaseStorage.instance.ref();
-                            Reference referenceDirImages = referenceRoot.child('images');
+                            Reference referenceRoot =
+                                FirebaseStorage.instance.ref();
+                            Reference referenceDirImages =
+                                referenceRoot.child('images');
 
-                            Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+                            Reference referenceImageToUpload =
+                                referenceDirImages.child(uniqueFileName);
 
-                            try{
+                            try {
+                              await referenceImageToUpload
+                                  .putFile(File(file.path));
 
-                              await referenceImageToUpload.putFile(File(file.path));
-
-                              imageUrl= await referenceImageToUpload.getDownloadURL();
+                              imageUrl =
+                                  await referenceImageToUpload.getDownloadURL();
 
                               String id = (await SharedPrefs().getData('id'))!;
-                              await UserModel().updateUser(userID: id, key: 'ImageURL', data: imageUrl);
+                              await UserModel().updateUser(
+                                  userID: id, key: 'ImageURL', data: imageUrl);
                               await SharedPrefs().updateImageURL(imageUrl);
                               setState(() {
                                 imageUrl = imageUrl;
                               });
-
-                            }catch(error){
-
-                            }
-
+                            } catch (error) {}
                           },
-                          icon: Icon(Icons.camera_alt,),
+                          icon: Icon(
+                            Icons.camera_alt,
+                          ),
                           color: Colors.white,
                         ),
                       ),
@@ -195,12 +262,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     },
                     child: Row(
                       children: [
-                        const Icon(Icons.add_circle_rounded, color: Colors.white,),
+                        const Icon(
+                          Icons.add_circle_rounded,
+                          color: Colors.white,
+                        ),
                         SizedBox(
                           width: size.width * 0.01,
                         ),
-                        const Text("Add Post",
-                        style: TextStyle(color: Colors.white),)
+                        const Text(
+                          "Add Post",
+                          style: TextStyle(color: Colors.white),
+                        )
                       ],
                     )),
                 SizedBox(
@@ -219,11 +291,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                   child: Row(
                     children: [
-                      const Icon(Icons.edit,color: Colors.white),
+                      const Icon(Icons.edit, color: Colors.white),
                       SizedBox(
                         width: size.width * 0.01,
                       ),
-                      const Text("Edit Profile",style: TextStyle(color: Colors.white),)
+                      const Text(
+                        "Edit Profile",
+                        style: TextStyle(color: Colors.white),
+                      )
                     ],
                   ),
                 ),
@@ -236,6 +311,128 @@ class _ProfileScreenState extends State<ProfileScreen> {
               height: size.height * 0.02,
               thickness: 0.1,
               color: Colors.orange[700],
+            ),
+            DefaultTabController(
+              initialIndex: 0,
+              length: 2,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: size.width,
+                    height: size.height * 0.065,
+                    color: Colors.transparent,
+                    child: TabBar(
+                      onTap: (index) {
+                        setState(() {
+                          tab = index;
+                        });
+                      },
+                      //dividerColor: const Color(0XFF797979),
+                      labelColor: const Color(0XFFF9622E),
+                      unselectedLabelColor: const Color(0XFF797979),
+                      indicatorColor: const Color(0XFFF9622E),
+                      labelStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0XFFF9622E),
+                        fontFamily: 'Inter',
+                        letterSpacing: 0.75,
+                      ),
+                      tabs: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.widgets),
+                            SizedBox(
+                              width: size.width * 0.025,
+                            ),
+                            const Text(
+                              'My Feeds',
+                            ),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.favorite),
+                            SizedBox(
+                              width: size.width * 0.025,
+                            ),
+                            const Text(
+                              'Liked',
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Builder(
+                    builder: (_) {
+                      if (tab == 0) {
+                        return SizedBox(
+                          width: size.width,
+                          child: ListView.builder(
+                            // padding: EdgeInsets.symmetric(vertical: 10,horizontal: 50),
+                            itemCount: User_Posts.length,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (BuildContext context, int index) {
+                              return Container(
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 7, horizontal: 10),
+                                child: PostTile(
+                                  imageUrl: User_Posts[index]["post_images"],
+                                  name: User_Posts[index]["name"],
+                                  date: 'date',
+                                  profileUrl: User_Posts[index]["user_image"],
+                                  title: User_Posts[index]["title"],
+                                  Description: User_Posts[index]["description"],
+                                  isHomeScreen: false,
+                                  userID: userID,
+                                  post_id: User_Posts[index]["post_id"],
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      } else if (tab == 1) {
+                        return SizedBox(
+                          width: size.width,
+                          child: ListView.builder(
+                            itemCount: User_LikedPosts.length,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (BuildContext context, int index) {
+                              return Container(
+                                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                                child: PostTile(
+                                  imageUrl: User_LikedPosts[index]["post_images"],
+                                  name: User_LikedPosts[index]["name"],
+                                  date: 'date',
+                                  profileUrl: User_LikedPosts[index]["user_image"],
+                                  title: User_LikedPosts[index]["title"],
+                                  Description: User_LikedPosts[index]["description"],
+                                  isHomeScreen: true,
+                                  userID: userID,
+                                  post_id: User_LikedPosts[index]["post_id"],
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        return const SizedBox(
+                          width: 0,
+                          height: 0,
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
             SingleChildScrollView(
               child: SizedBox(

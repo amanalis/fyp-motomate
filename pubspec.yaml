@@ -48,6 +48,7 @@ dependencies:
   get: ^4.6.6
   firebase_storage: ^11.5.3
   flutter_custom_carousel_slider: ^1.2.0
+  image: ^3.0.1
 
 dev_dependencies:
   flutter_test:

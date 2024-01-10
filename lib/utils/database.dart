@@ -19,7 +19,8 @@ class UserModel {
         'Email': email,
         'Name': name,
         'Phone': phone,
-        'ImageURL' : imageURL,
+        'ImageURL': imageURL,
+        "liked_post_id": []
       });
       return 'success';
     } catch (e) {
@@ -36,7 +37,13 @@ class UserModel {
       final snapshot = await users.doc(userIDs[i]).get();
       final data = snapshot.data() as Map<String, dynamic>;
       usersList.add(
-        {'userID': userIDs[i], 'name': data['Name'], 'email': data['Email'], 'imageURL' : data['ImageURL'], 'phone': data['Phone']},
+        {
+          'userID': userIDs[i],
+          'name': data['Name'],
+          'email': data['Email'],
+          'imageURL': data['ImageURL'],
+          'phone': data['Phone']
+        },
       );
     }
     return usersList;
@@ -61,6 +68,64 @@ class UserModel {
       FirebaseFirestore.instance.collection('user_data').doc(userID).update({
         key: data,
       });
+      return 'success';
+    } catch (e) {
+      return 'Error adding user';
+    }
+  }
+
+
+  Future<String?> updateLikedPostId({
+    required String postId,
+    required String userID,
+  }) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> res = await FirebaseFirestore
+          .instance
+          .collection("user_data")
+          .doc(userID)
+          .get();
+
+      final tempData = res.data();
+      List<dynamic> likedPostIds = tempData?['liked_post_id'] ?? [];
+
+      // Check if the post ID already exists in the list
+      if (!likedPostIds.contains(postId)) {
+        likedPostIds.add(postId);
+
+        await FirebaseFirestore.instance.collection('user_data').doc(userID).update({
+          "liked_post_id": likedPostIds,
+        });
+
+        return 'success';
+      } else {
+        // If the post ID already exists, you can return a message or handle it accordingly
+        return 'Post ID already exists in the liked list';
+      }
+    } catch (e) {
+      return 'Error adding user';
+    }
+  }
+
+  Future<String?> delete_liked_post_id({
+    required String post_id,
+    required String userID,
+  }) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> res = await FirebaseFirestore
+          .instance
+          .collection("user_data")
+          .doc(userID)
+          .get();
+
+      final tempdata = res.data();
+      List Post_id = tempdata!['liked_post_id'];
+      print(Post_id);
+      Post_id.remove(post_id);
+      FirebaseFirestore.instance.collection('user_data').doc(userID).update({
+        "liked_post_id": Post_id,
+      });
+      print(Post_id);
       return 'success';
     } catch (e) {
       return 'Error adding user';
@@ -92,6 +157,20 @@ class UserModel {
       return data[key];
     } catch (e) {
       return 'Error fetching user';
+    }
+  }
+
+  Future<List> getLikedPost(
+    String userID,
+  ) async {
+    try {
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('user_data');
+      final snapshot = await users.doc(userID).get();
+      final data = snapshot.data() as Map<String, dynamic>;
+      return data["liked_post_id"];
+    } catch (e) {
+      return [];
     }
   }
 
@@ -136,8 +215,7 @@ class UserModel {
   }
 }
 
-class PostModel{
-
+class PostModel {
   Future<String?> addPost({
     required int postID,
     required String userID,
@@ -147,13 +225,13 @@ class PostModel{
   }) async {
     try {
       CollectionReference posts =
-      FirebaseFirestore.instance.collection('posts');
+          FirebaseFirestore.instance.collection('posts');
       // Call the user's CollectionReference to add a new user
       await posts.doc(postID.toString()).set({
-        'user_id' : userID,
-        'title' : title,
-        'description' : description,
-        'images' : imageURL,
+        'user_id': userID,
+        'title': title,
+        'description': description,
+        'images': imageURL,
       });
       return 'Added post Successfully.';
     } catch (e) {
@@ -164,11 +242,16 @@ class PostModel{
   Future<List<String>> getPostIdsList() async {
     List<String> postIDs = [];
     QuerySnapshot snapshot =
-    await FirebaseFirestore.instance.collection('posts').get();
+        await FirebaseFirestore.instance.collection('posts').get();
     for (var doc in snapshot.docs) {
       postIDs.add(doc.id);
     }
     return postIDs;
+  }
+
+  void delete_post(String id) async {
+    await FirebaseFirestore.instance.collection("posts").doc(id).delete();
+    // UserModel().update_liked_post_id(post_id: post_id, userID: userID)
   }
 
   // Future<List<Map<String, dynamic>>> usersList() async {
@@ -220,7 +303,7 @@ class PostModel{
   Future<String?> getPostData(String postID, String key) async {
     try {
       CollectionReference users =
-      FirebaseFirestore.instance.collection('posts');
+          FirebaseFirestore.instance.collection('posts');
       final snapshot = await users.doc(postID).get();
       final data = snapshot.data() as Map<String, dynamic>;
       return data[key];
@@ -237,14 +320,28 @@ class PostModel{
     return count;
   }
 
-  Future<dynamic> getPostDocument(String postID) async {
-    try {
-      var collectionReference =
-      FirebaseFirestore.instance.collection('posts');
-      var doc = await collectionReference.doc(postID).get();
-      return doc.data() as Map<String, dynamic>;
-    } catch (e) {
-      rethrow;
-    }
+  // Future<dynamic> getPostDocument(String postID) async {
+  //   try {
+  //     var collectionReference =
+  //     FirebaseFirestore.instance.collection('posts');
+  //     var doc = await collectionReference.doc(postID).get();
+  //     return doc.data() as Map<String, dynamic>;
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  Future<List<Map<String, dynamic>>> getPostDocument() async {
+    // Replace 'yourCollection' with the actual name of your Firestore collection
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await FirebaseFirestore.instance.collection('posts').get();
+
+    List<Map<String, dynamic>> dataList = [];
+
+    querySnapshot.docs.forEach((DocumentSnapshot<Map<String, dynamic>> doc) {
+      Map<String, dynamic> data = doc.data()!;
+      // Add document ID to the data
+      data['documentID'] = doc.id;
+      dataList.add(data);
+    });
+    return dataList;
   }
 }

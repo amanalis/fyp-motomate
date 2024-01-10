@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_carousel_slider/flutter_custom_carousel_slider.dart';
+import 'package:motomate/reusablewidgets/post_dailog.dart';
+import 'package:motomate/screens/profile.dart';
+import 'package:motomate/utils/database.dart';
 import 'package:motomate/utils/shared_prefs.dart';
 
 class PostTile extends StatefulWidget {
@@ -10,7 +14,10 @@ class PostTile extends StatefulWidget {
       required this.date,
       required this.profileUrl,
       required this.title,
-      required this.Description});
+      required this.Description,
+      required this.isHomeScreen,
+      required this.userID,
+      required this.post_id});
 
   final List imageUrl;
   final String name;
@@ -18,6 +25,9 @@ class PostTile extends StatefulWidget {
   final String profileUrl;
   final String title;
   final String Description;
+  final bool isHomeScreen;
+  final String userID;
+  final String post_id;
 
   @override
   State<StatefulWidget> createState() => _PostTile();
@@ -66,77 +76,89 @@ class _PostTile extends State<PostTile> {
                 SizedBox(
                   width: size.width * 0.01,
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Column(
-                          children: [
-                            Text(
-                              widget.name,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Column(
+                            children: [
+                              Text(
+                                widget.name,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                            Text(
-                              widget.date,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                              Text(
+                                widget.date,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      // Container(
-                      //   height: size.height * 0.008,
-                      //   width: size.width * 0.1,
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.circular(10),
-                      //     color: Colors.white,
-                      //   ),
-                      // ),
-                      // Container(
-                      //   margin:
-                      //       const EdgeInsets.only(top: 5, bottom: 5),
-                      //   height: size.height * 0.008,
-                      //   width: size.width * 0.18,
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.circular(10),
-                      //     color: Colors.white,
-                      //   ),
-                      // ),
-                      // Container(
-                      //   height: size.height * 0.008,
-                      //   width: size.width * 0.1,
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.circular(10),
-                      //     color: Colors.white,
-                      //   ),
-                      // ),
-                    ],
+                        // Container(
+                        //   height: size.height * 0.008,
+                        //   width: size.width * 0.1,
+                        //   decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.circular(10),
+                        //     color: Colors.white,
+                        //   ),
+                        // ),
+                        // Container(
+                        //   margin:
+                        //       const EdgeInsets.only(top: 5, bottom: 5),
+                        //   height: size.height * 0.008,
+                        //   width: size.width * 0.18,
+                        //   decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.circular(10),
+                        //     color: Colors.white,
+                        //   ),
+                        // ),
+                        // Container(
+                        //   height: size.height * 0.008,
+                        //   width: size.width * 0.1,
+                        //   decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.circular(10),
+                        //     color: Colors.white,
+                        //   ),
+                        // ),
+                      ],
+                    ),
                   ),
                 ),
-                SizedBox(
-                  width: size.width * 0.42,
-                ),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (_favIconColor == Colors.grey) {
-                        _favIconColor = Colors.deepOrange;
-                      } else {
-                        _favIconColor = Colors.grey;
-                      }
-                    });
-                  },
-                  icon: const Icon(Icons.more_vert_rounded),
-                  color: _favIconColor,
-                ),
+                widget.isHomeScreen
+                    ? SizedBox(width: 0, height: 0)
+                    : Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => PostDailog(),),);
+                            },
+                            icon: const Icon(Icons.edit),
+                            color: _favIconColor,
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              UserModel().delete_liked_post_id(post_id: widget.post_id, userID: widget.userID);
+                              PostModel().delete_post(widget.post_id);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProfileScreen(),
+                                  ));
+                            },
+                            icon: const Icon(Icons.delete_outline),
+                            color: _favIconColor,
+                          )
+                        ],
+                      ),
               ],
             ),
             Text(widget.title),
@@ -153,7 +175,8 @@ class _PostTile extends State<PostTile> {
                 items: List.generate(
                     widget.imageUrl.length,
                     (index) => CarouselItem(
-                      boxDecoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                          boxDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15)),
                           image: NetworkImage(
                             widget.imageUrl[index],
                             // width: size.width * 0.9,
@@ -170,40 +193,30 @@ class _PostTile extends State<PostTile> {
                   onPressed: () {
                     setState(() {
                       if (_favIconColor == Colors.grey) {
-                        _favIconColor = Colors.deepOrange;
+                        _favIconColor = Color(0xffFC0202);
                       } else {
                         _favIconColor = Colors.grey;
                       }
                     });
+                    print(
+                      widget.post_id,
+                    );
+                    print(widget.userID);
+                    UserModel().updateLikedPostId(
+                        postId: widget.post_id, userID: widget.userID);
                   },
                   icon: const Icon(Icons.favorite),
                   color: _favIconColor,
                 ),
                 IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (_favIconColor == Colors.grey) {
-                        _favIconColor = Colors.deepOrange;
-                      } else {
-                        _favIconColor = Colors.grey;
-                      }
-                    });
-                  },
+                  onPressed: () {},
                   icon: const Icon(Icons.insert_comment_rounded),
-                  color: _favIconColor,
+                  color: Colors.grey,
                 ),
                 IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (_favIconColor == Colors.grey) {
-                        _favIconColor = Colors.deepOrange;
-                      } else {
-                        _favIconColor = Colors.grey;
-                      }
-                    });
-                  },
+                  onPressed: () {},
                   icon: const Icon(Icons.share),
-                  color: _favIconColor,
+                  color: Colors.grey,
                 ),
               ],
             )
