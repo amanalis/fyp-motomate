@@ -53,9 +53,20 @@ class _Dashboard extends State<DashboardContent> {
         'description': doc[i]["description"],
         "user_image": user_image,
         "post_id": doc[i]["documentID"],
+        "date":doc[i]["date"],
       });
     }
     Posts.removeAt(0);
+    List id = await UserModel().getLikedPost(tempID);
+    for (int i = 0; i < Posts.length; i++) {
+      for (int j = 0; j < id.length; j++) {
+        if (Posts[i]["post_id"] == id[j]) {
+          Posts[i]["isLiked"] = true;
+        } else {
+          Posts[i]["isLiked"] = false;
+        }
+      }
+    }
     print(Posts);
 
     setState(() {
@@ -83,7 +94,7 @@ class _Dashboard extends State<DashboardContent> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => PostDailog(),
+              builder: (context) => PostDailog(isEdit: false,),
             ),
           );
         },
@@ -204,15 +215,17 @@ class _Dashboard extends State<DashboardContent> {
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return PostTile(
+
                         imageUrl: Posts[index]["post_images"],
                         name: Posts[index]["name"],
-                        date: 'date',
+                        date:Posts[index]['date'],
                         profileUrl: Posts[index]["user_image"],
                         title: Posts[index]["title"],
                         Description: Posts[index]["description"],
                         isHomeScreen: true,
                         userID: userID,
                         post_id: Posts[index]["post_id"],
+                          isLiked: Posts[index]["isLiked"]
                       );
                     },
                   ))

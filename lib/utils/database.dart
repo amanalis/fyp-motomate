@@ -217,6 +217,7 @@ class UserModel {
 
 class PostModel {
   Future<String?> addPost({
+    required String date,
     required int postID,
     required String userID,
     required String title,
@@ -232,6 +233,7 @@ class PostModel {
         'title': title,
         'description': description,
         'images': imageURL,
+        'date':date,
       });
       return 'Added post Successfully.';
     } catch (e) {
@@ -270,13 +272,15 @@ class PostModel {
   // }
 
   Future<String?> updatePost({
+    required String date,
     required String postID,
-    required String key,
-    required String data,
+    required String title,
+    required String description,
+    required List imageURL,
   }) async {
     try {
       FirebaseFirestore.instance.collection('posts').doc(postID).update({
-        key: data,
+        'title': title,'description': description,'images':imageURL,'date':date
       });
       return 'Post Updated';
     } catch (e) {

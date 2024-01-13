@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_custom_carousel_slider/flutter_custom_carousel_slider.dart';
 import 'package:motomate/reusablewidgets/post_dailog.dart';
 import 'package:motomate/screens/profile.dart';
@@ -7,27 +9,29 @@ import 'package:motomate/utils/database.dart';
 import 'package:motomate/utils/shared_prefs.dart';
 
 class PostTile extends StatefulWidget {
-  const PostTile(
+  PostTile(
       {super.key,
       required this.imageUrl,
       required this.name,
-      required this.date,
       required this.profileUrl,
       required this.title,
       required this.Description,
       required this.isHomeScreen,
       required this.userID,
-      required this.post_id});
+      required this.post_id,
+      required this.date,
+      required this.isLiked});
 
   final List imageUrl;
   final String name;
-  final String date;
   final String profileUrl;
   final String title;
+  final String date;
   final String Description;
   final bool isHomeScreen;
   final String userID;
   final String post_id;
+  final bool isLiked;
 
   @override
   State<StatefulWidget> createState() => _PostTile();
@@ -56,23 +60,16 @@ class _PostTile extends State<PostTile> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  // height: size.height * 0.05,
-                  width: size.height * 0.05,
-                  //profile picture
+                CircleAvatar(
+                  radius: 25,
+                  backgroundColor: Colors.black,
                   child: CircleAvatar(
+                    radius: 23,
+                    backgroundColor: Colors.white,
                     backgroundImage: NetworkImage(widget.profileUrl),
-                    // child: Image.network(profileUrl,
-                    //   height: size.height * 0.04,
-                    //   width: size.height * 0.04,
-                    //   fit: BoxFit.cover,
-                    // ),
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    color: Colors.deepOrange,
                   ),
                 ),
+                // ),
                 SizedBox(
                   width: size.width * 0.01,
                 ),
@@ -83,8 +80,9 @@ class _PostTile extends State<PostTile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(left: 10),
+                          padding: EdgeInsets.only(left: 12),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 widget.name,
@@ -139,14 +137,26 @@ class _PostTile extends State<PostTile> {
                         children: [
                           IconButton(
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => PostDailog(),),);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PostDailog(
+                                      title: widget.title,
+                                      Description: widget.Description,
+                                      Image: widget.imageUrl,
+                                      isEdit: true,
+                                      post_id: widget.post_id),
+                                ),
+                              );
                             },
                             icon: const Icon(Icons.edit),
                             color: _favIconColor,
                           ),
                           IconButton(
                             onPressed: () {
-                              UserModel().delete_liked_post_id(post_id: widget.post_id, userID: widget.userID);
+                              UserModel().delete_liked_post_id(
+                                  post_id: widget.post_id,
+                                  userID: widget.userID);
                               PostModel().delete_post(widget.post_id);
                               Navigator.pushReplacement(
                                   context,
@@ -163,27 +173,41 @@ class _PostTile extends State<PostTile> {
             ),
             Text(widget.title),
             Text(widget.Description),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 1.5,
-                  ),
-                  borderRadius: BorderRadius.circular(10)),
-              child: CustomCarouselSlider(
-                autoplay: false,
-                items: List.generate(
-                    widget.imageUrl.length,
-                    (index) => CarouselItem(
-                          boxDecoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15)),
-                          image: NetworkImage(
-                            widget.imageUrl[index],
-                            // width: size.width * 0.9,
-                            // fit: BoxFit.cover,
-                          ),
-                        )),
+            FlutterCarousel(
+              options: CarouselOptions(
+                height: size.height * 0.2,
+                initialPage: 0,
+                viewportFraction: 1.0,
+                enlargeCenterPage: false,
+                autoPlay: false,
+                enableInfiniteScroll: true,
+                showIndicator: true,
+                autoPlayInterval: const Duration(seconds: 2),
+                slideIndicator: const CircularSlideIndicator(
+                  currentIndicatorColor: Color(0XFF00B251),
+                  indicatorBackgroundColor: Colors.white,
+                  itemSpacing: 17.5,
+                ),
               ),
+              items: widget.imageUrl
+                  .map(
+                    (item) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 1),
+                      child: ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(15)),
+                        child: SizedBox(
+                          width: size.width,
+                          height: size.height * 0.2,
+                          child: Image.network(
+                            item,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -206,7 +230,7 @@ class _PostTile extends State<PostTile> {
                         postId: widget.post_id, userID: widget.userID);
                   },
                   icon: const Icon(Icons.favorite),
-                  color: _favIconColor,
+                  color: widget.isLiked ? Color(0xffFC0202):_favIconColor,
                 ),
                 IconButton(
                   onPressed: () {},

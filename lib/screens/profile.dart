@@ -74,9 +74,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'description': doc[i]["description"],
         "user_image": user_image,
         "post_id": doc[i]["documentID"],
+        "date": doc[i]["date"],
       });
     }
     Posts.removeAt(0);
+    List id = await UserModel().getLikedPost(tempID);
+    for (int i = 0; i < Posts.length; i++) {
+      for (int j = 0; j < id.length; j++) {
+        if (Posts[i]["post_id"] == id[j]) {
+          Posts[i]["isLiked"] = true;
+        } else {
+          Posts[i]["isLiked"] = false;
+        }
+      }
+    }
     print(tempID);
     for (int i = 0; i < Posts.length; i++) {
       if (Posts[i]["user_id"] == tempID) {
@@ -84,23 +95,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
         print(Posts[i]["user_id"]);
       }
     }
-    List id = await UserModel().getLikedPost(tempID);
-      print(id);
-      for(int i =0; i< Posts.length;i++){
-       for(int j=0 ; j<id.length;j++){
-         if(Posts[i]["post_id"]== id[j]){
-           User_LikedPosts.add(Posts[i]);
-         }
 
-       }
+    print(id);
+    for (int i = 0; i < Posts.length; i++) {
+      for (int j = 0; j < id.length; j++) {
+        if (Posts[i]["post_id"] == id[j]) {
+          User_LikedPosts.add(Posts[i]);
+        }
       }
-      setState(() {
-        name = tempName;
-        email = tempEmail;
-        PostimageURL = tempURL;
-        userID = tempID;
-      });
-
+    }
+    setState(() {
+      name = tempName;
+      email = tempEmail;
+      PostimageURL = tempURL;
+      userID = tempID;
+    });
   }
 
   @override
@@ -386,13 +395,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: PostTile(
                                   imageUrl: User_Posts[index]["post_images"],
                                   name: User_Posts[index]["name"],
-                                  date: 'date',
+                                  date: User_Posts[index]['date'],
                                   profileUrl: User_Posts[index]["user_image"],
                                   title: User_Posts[index]["title"],
                                   Description: User_Posts[index]["description"],
                                   isHomeScreen: false,
                                   userID: userID,
                                   post_id: User_Posts[index]["post_id"],
+                                  isLiked: User_Posts[index]["isLiked"],
                                 ),
                               );
                             },
@@ -407,18 +417,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (BuildContext context, int index) {
                               return Container(
-                                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 7),
                                 child: PostTile(
-                                  imageUrl: User_LikedPosts[index]["post_images"],
-                                  name: User_LikedPosts[index]["name"],
-                                  date: 'date',
-                                  profileUrl: User_LikedPosts[index]["user_image"],
-                                  title: User_LikedPosts[index]["title"],
-                                  Description: User_LikedPosts[index]["description"],
-                                  isHomeScreen: true,
-                                  userID: userID,
-                                  post_id: User_LikedPosts[index]["post_id"],
-                                ),
+                                    imageUrl: User_LikedPosts[index]
+                                        ["post_images"],
+                                    name: User_LikedPosts[index]["name"],
+                                    date: User_LikedPosts[index]["date"],
+                                    profileUrl: User_LikedPosts[index]
+                                        ["user_image"],
+                                    title: User_LikedPosts[index]["title"],
+                                    Description: User_LikedPosts[index]
+                                        ["description"],
+                                    isHomeScreen: true,
+                                    userID: userID,
+                                    post_id: User_LikedPosts[index]["post_id"],
+                                    isLiked: User_LikedPosts[index]["isLiked"]),
                               );
                             },
                           ),
