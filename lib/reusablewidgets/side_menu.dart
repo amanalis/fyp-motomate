@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:motomate/screens/chats_menu.dart';
 import 'package:motomate/screens/dashboard.dart';
 import 'package:motomate/screens/profile.dart';
 import 'package:motomate/utils/database.dart';
@@ -60,6 +61,16 @@ class _SideMenuState extends State<SideMenu> {
                   builder: (context) => const Dashboard(),
                 ),
                 (route) => false),
+          ),
+          ListTile(
+            leading: const Icon(Icons.chat),
+            title: const Text('Chats'),
+            onTap: () => Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ChatMenu(),
+                ),
+                    (route) => false),
           ),
           const Divider(),
           ListTile(
