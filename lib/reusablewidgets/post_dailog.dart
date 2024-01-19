@@ -203,13 +203,15 @@ Future Post_Dialog(BuildContext context) {
                                       (await SharedPrefs().getData('id'))!;
                                   int count = await PostModel().getPostCount();
                                   DateTime now = DateTime.now();
-                                  String date = DateFormat("yyyy/MM/dd HH:mm").format(now);
+                                  String date = DateFormat("yyyy/MM/dd HH:mm")
+                                      .format(now);
                                   await PostModel().addPost(
                                       postID: count,
                                       userID: Id,
                                       title: titleController.text,
                                       description: descriptionController.text,
-                                      imageURL: images, date: date );
+                                      imageURL: images,
+                                      date: date);
                                   displayToastMessage("Posted", context);
                                   Navigator.pop(context);
                                 },
@@ -251,7 +253,7 @@ class _PostDailogState extends State<PostDailog> {
   TextEditingController descriptioncontroller = TextEditingController();
   List? pickedImage;
   List images = [];
-  List Db_images=[];
+  List Db_images = [];
 
   void getdata() {
     if (widget.isEdit == true) {
@@ -278,8 +280,7 @@ class _PostDailogState extends State<PostDailog> {
     setState(() {});
   }
 
-  void  pickImage() async {
-
+  void pickImage() async {
     try {
       final List selectedimage = await ImagePicker().pickMultiImage();
 
@@ -288,25 +289,22 @@ class _PostDailogState extends State<PostDailog> {
 
         try {
           for (int i = 0; i < selectedimage.length; i++) {
-
             String uniqueFileName =
-            DateTime.now().microsecondsSinceEpoch.toString();
+                DateTime.now().microsecondsSinceEpoch.toString();
 
             Reference referenceRoot = FirebaseStorage.instance.ref();
             Reference referenceDirImages = referenceRoot.child('post_images');
 
             Reference referenceImageToUpload =
-            referenceDirImages.child(uniqueFileName);
+                referenceDirImages.child(uniqueFileName);
             await referenceImageToUpload.putFile(File(selectedimage[i].path));
             print(selectedimage[i].path);
 
             String tempimageUrl = await referenceImageToUpload.getDownloadURL();
             Db_images.add(tempimageUrl);
-
-
           }
           setState(() {
-            images=Db_images;
+            images = Db_images;
           });
         } catch (e) {
           print('Error picking image: $e');
@@ -389,112 +387,113 @@ class _PostDailogState extends State<PostDailog> {
                     const SizedBox(
                       height: 6,
                     ),
+
                     // widget.Image == null || widget.Image!.isEmpty
 
-                        images.isEmpty
-                            ? InkWell(
-                                onTap: () => pickImage(),
-                                child: Container(
-                                    width: 200,
-                                    height: 150,
-                                    color: Colors.grey,
-                                    // child: _image == null
-                                    //     ?
-                                    child: const Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.add,
-                                            size: 50,
-                                            color: Colors.white,
-                                          ),
-                                          Text("Add Images."),
-                                        ],
+                    images.isEmpty
+                        ? InkWell(
+                            onTap: () => pickImage(),
+                            child: Container(
+                                width: 200,
+                                height: 150,
+                                color: Colors.grey,
+                                // child: _image == null
+                                //     ?
+                                child: const Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.add,
+                                        size: 50,
+                                        color: Colors.white,
                                       ),
-                                    )
-                                    //     : Image.file(
-                                    //   _image!,
-                                    //   width: 200,
-                                    //   height: 200,
-                                    //   fit: BoxFit.cover,
-                                    // ),
-                                    ),
-                              ): FlutterCarousel(
-                          options: CarouselOptions(
-                            height: size.height * 0.2,
-                            initialPage: 0,
-                            viewportFraction: 1.0,
-                            enlargeCenterPage: false,
-                            autoPlay: false,
-                            enableInfiniteScroll: true,
-                            showIndicator: true,
-                            autoPlayInterval: const Duration(seconds: 2),
-                            slideIndicator: const CircularSlideIndicator(
-                              currentIndicatorColor: Color(0XFF00B251),
-                              indicatorBackgroundColor: Colors.white,
-                              itemSpacing: 17.5,
-                            ),
-                          ),
-                          items: images
-                              .map(
-                                (item) => Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 1),
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(15)),
-                                child: SizedBox(
-                                  width: size.width,
-                                  height: size.height * 0.2,
-                                  child: Image.network(
-                                    item,
-                                    fit: BoxFit.cover,
+                                      Text("Add Images."),
+                                    ],
                                   ),
+                                )
+                                //     : Image.file(
+                                //   _image!,
+                                //   width: 200,
+                                //   height: 200,
+                                //   fit: BoxFit.cover,
+                                // ),
                                 ),
+                          )
+                        : FlutterCarousel(
+                            options: CarouselOptions(
+                              height: size.height * 0.2,
+                              initialPage: 0,
+                              viewportFraction: 1.0,
+                              enlargeCenterPage: false,
+                              autoPlay: false,
+                              enableInfiniteScroll: true,
+                              showIndicator: true,
+                              autoPlayInterval: const Duration(seconds: 2),
+                              slideIndicator: const CircularSlideIndicator(
+                                currentIndicatorColor: Color(0XFF00B251),
+                                indicatorBackgroundColor: Colors.white,
+                                itemSpacing: 17.5,
                               ),
                             ),
-                          )
-                              .toList(),
-                        ),
-                            // : FlutterCarousel(
-                            //     options: CarouselOptions(
-                            //       height: size.height * 0.2,
-                            //       initialPage: 0,
-                            //       viewportFraction: 1.0,
-                            //       enlargeCenterPage: false,
-                            //       autoPlay: false,
-                            //       enableInfiniteScroll: true,
-                            //       showIndicator: true,
-                            //       autoPlayInterval: const Duration(seconds: 2),
-                            //       slideIndicator: const CircularSlideIndicator(
-                            //         currentIndicatorColor: Color(0XFF00B251),
-                            //         indicatorBackgroundColor: Colors.white,
-                            //         itemSpacing: 17.5,
-                            //       ),
-                            //     ),
-                            //     items: images
-                            //         .map(
-                            //           (item) => Padding(
-                            //             padding: const EdgeInsets.symmetric(
-                            //                 horizontal: 1),
-                            //             child: ClipRRect(
-                            //               borderRadius: const BorderRadius.all(
-                            //                   Radius.circular(15)),
-                            //               child: SizedBox(
-                            //                 width: size.width,
-                            //                 height: size.height * 0.2,
-                            //                 child: Image.file(
-                            //                   File(item.path),
-                            //                   fit: BoxFit.cover,
-                            //                 ),
-                            //               ),
-                            //             ),
-                            //           ),
-                            //         )
-                            //         .toList(),
-                            //   ),
+                            items: images
+                                .map(
+                                  (item) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 1),
+                                    child: ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(15)),
+                                      child: SizedBox(
+                                        width: size.width,
+                                        height: size.height * 0.2,
+                                        child: Image.network(
+                                          item,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                    // : FlutterCarousel(
+                    //     options: CarouselOptions(
+                    //       height: size.height * 0.2,
+                    //       initialPage: 0,
+                    //       viewportFraction: 1.0,
+                    //       enlargeCenterPage: false,
+                    //       autoPlay: false,
+                    //       enableInfiniteScroll: true,
+                    //       showIndicator: true,
+                    //       autoPlayInterval: const Duration(seconds: 2),
+                    //       slideIndicator: const CircularSlideIndicator(
+                    //         currentIndicatorColor: Color(0XFF00B251),
+                    //         indicatorBackgroundColor: Colors.white,
+                    //         itemSpacing: 17.5,
+                    //       ),
+                    //     ),
+                    //     items: images
+                    //         .map(
+                    //           (item) => Padding(
+                    //             padding: const EdgeInsets.symmetric(
+                    //                 horizontal: 1),
+                    //             child: ClipRRect(
+                    //               borderRadius: const BorderRadius.all(
+                    //                   Radius.circular(15)),
+                    //               child: SizedBox(
+                    //                 width: size.width,
+                    //                 height: size.height * 0.2,
+                    //                 child: Image.file(
+                    //                   File(item.path),
+                    //                   fit: BoxFit.cover,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         )
+                    //         .toList(),
+                    //   ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -529,12 +528,14 @@ class _PostDailogState extends State<PostDailog> {
                             onPressed: () async {
                               if (widget.isEdit == true) {
                                 DateTime now = DateTime.now();
-                                String date = DateFormat("yyyy/MM/dd HH:mm").format(now);
+                                String date =
+                                    DateFormat("yyyy/MM/dd HH:mm").format(now);
                                 await PostModel().updatePost(
                                     postID: widget.post_id!,
                                     title: titlecontroller.text,
                                     description: descriptioncontroller.text,
-                                    imageURL: Db_images, date: date);
+                                    imageURL: Db_images,
+                                    date: date);
 
                                 Navigator.pushAndRemoveUntil(
                                   context,
@@ -543,10 +544,10 @@ class _PostDailogState extends State<PostDailog> {
                                   ),
                                   (route) => false,
                                 );
-
                               } else {
                                 DateTime now = DateTime.now();
-                                String date = DateFormat("yyyy/MM/dd HH:mm").format(now);
+                                String date =
+                                    DateFormat("yyyy/MM/dd HH:mm").format(now);
                                 String Id =
                                     (await SharedPrefs().getData('id'))!;
                                 int count = await PostModel().getPostCount();
@@ -555,13 +556,14 @@ class _PostDailogState extends State<PostDailog> {
                                     userID: Id,
                                     title: titlecontroller.text,
                                     description: descriptioncontroller.text,
-                                    imageURL: Db_images, date: date);
+                                    imageURL: Db_images,
+                                    date: date);
 
                                 displayToastMessage("Posted", context);
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const Dashboard(),
+                                    builder: (context) => const DashBoard(),
                                   ),
                                   (route) => false,
                                 );

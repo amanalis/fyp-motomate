@@ -5,7 +5,7 @@ import 'package:motomate/screens/Registration%20Screens/login.dart';
 
 class UserModel {
   Future<String?> addUser({
-    required int userID,
+    required String userID,
     required String name,
     required String email,
     required String phone,
@@ -20,7 +20,8 @@ class UserModel {
         'Name': name,
         'Phone': phone,
         'ImageURL': imageURL,
-        "liked_post_id": []
+        "liked_post_id": [],
+        "userID": userID
       });
       return 'success';
     } catch (e) {
@@ -229,7 +230,7 @@ class PostModel {
           FirebaseFirestore.instance.collection('posts');
       // Call the user's CollectionReference to add a new user
       await posts.doc(postID.toString()).set({
-        'user_id': userID,
+        'userID': userID,
         'title': title,
         'description': description,
         'images': imageURL,
@@ -293,7 +294,7 @@ class PostModel {
       String? id;
       await FirebaseFirestore.instance
           .collection('posts')
-          .where('user_id', isEqualTo: userID)
+          .where('userID', isEqualTo: userID)
           .get()
           .then((value) {
         id = value.docs.first.id;

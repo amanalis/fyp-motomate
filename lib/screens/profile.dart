@@ -63,12 +63,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     for (int i = 0; i < count; i++) {
       var doc = await PostModel().getPostDocument();
       String? name =
-          await UserModel().getUserData(doc[i]["user_id"].toString(), "Name");
+          await UserModel().getUserData(doc[i]["userID"].toString(), "Name");
       String? user_image =
-          await UserModel().getUserData(doc[i]["user_id"], "ImageURL");
+          await UserModel().getUserData(doc[i]["userID"], "ImageURL");
       Posts.add({
         "post_images": doc[i]["images"],
-        "user_id": doc[i]["user_id"],
+        "userID": doc[i]["userID"],
         "name": name,
         "title": doc[i]["title"],
         'description': doc[i]["description"],
@@ -77,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         "date": doc[i]["date"],
       });
     }
-    Posts.removeAt(0);
+    // Posts.removeAt(0);
     List id = await UserModel().getLikedPost(tempID);
     for (int i = 0; i < Posts.length; i++) {
       for (int j = 0; j < id.length; j++) {
@@ -90,9 +90,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     print(tempID);
     for (int i = 0; i < Posts.length; i++) {
-      if (Posts[i]["user_id"] == tempID) {
+      if (Posts[i]["userID"] == tempID) {
         User_Posts.add(Posts[i]);
-        print(Posts[i]["user_id"]);
+        print(Posts[i]["userID"]);
       }
     }
 

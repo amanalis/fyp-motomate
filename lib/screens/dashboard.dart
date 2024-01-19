@@ -6,29 +6,18 @@ import 'package:motomate/reusablewidgets/side_menu.dart';
 import 'package:motomate/utils/database.dart';
 import 'package:motomate/utils/shared_prefs.dart';
 
-class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
+class DashBoard extends StatefulWidget {
+  const DashBoard({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: DashboardContent(),
-    );
-  }
+  State<DashBoard> createState() => _DashBoardState();
 }
 
-class DashboardContent extends StatefulWidget {
-  const DashboardContent({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _Dashboard();
-}
-
-class _Dashboard extends State<DashboardContent> {
+class _DashBoardState extends State<DashBoard> {
   final TextEditingController _searchController = TextEditingController();
-  String name = "";
-  String userID = "";
-  String email = "";
+  String name = "Loading...";
+  String userID = "Loading...";
+  String email = "Loading...";
   String imageURL =
       'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
   List<Map<String, dynamic>> Posts = [];
@@ -36,18 +25,26 @@ class _Dashboard extends State<DashboardContent> {
   void getData() async {
     String tempName = (await SharedPrefs().getData("name"))!;
     String tempEmail = (await SharedPrefs().getData("email"))!;
-    String tempURL = (await SharedPrefs().getData("imageURL"))!;
+    String  tempURL = (await SharedPrefs().getData("imageURL"))!;
     String tempID = (await SharedPrefs().getData("id"))!;
+    setState(() {
+      name = tempName;
+      email = tempEmail;
+      imageURL = tempURL;
+      userID = tempID;
+    });
     int count = await PostModel().getPostCount();
+
     for (int i = 0; i < count; i++) {
       var doc = await PostModel().getPostDocument();
+
       String? name =
-          await UserModel().getUserData(doc[i]["user_id"].toString(), "Name");
+      await UserModel().getUserData(doc[i]["userID"].toString(), "Name");
       String? user_image =
-          await UserModel().getUserData(doc[i]["user_id"], "ImageURL");
+      await UserModel().getUserData(doc[i]["userID"], "ImageURL");
       Posts.add({
         "post_images": doc[i]["images"],
-        "user_id": doc[i]["user_id"],
+        "userID": doc[i]["userID"],
         "name": name,
         "title": doc[i]["title"],
         'description': doc[i]["description"],
@@ -56,25 +53,27 @@ class _Dashboard extends State<DashboardContent> {
         "date":doc[i]["date"],
       });
     }
-    Posts.removeAt(0);
+    // Posts.removeAt(0);
     List id = await UserModel().getLikedPost(tempID);
+    print(id);
+
     for (int i = 0; i < Posts.length; i++) {
-      for (int j = 0; j < id.length; j++) {
-        if (Posts[i]["post_id"] == id[j]) {
-          Posts[i]["isLiked"] = true;
-        } else {
-          Posts[i]["isLiked"] = false;
+      if (id.isEmpty) {
+        Posts[i]["isLiked"] = false;
+      }
+      else {
+        for (int j = 0; j < id.length; j++) {
+          if (Posts[i]["post_id"] == id[j]) {
+            Posts[i]["isLiked"] = true;
+          } else {
+            Posts[i]["isLiked"] = false;
+          }
         }
+
       }
     }
-    print(Posts);
 
-    setState(() {
-      name = tempName;
-      email = tempEmail;
-      imageURL = tempURL;
-      userID = tempID;
-    });
+
   }
 
   @override
@@ -160,7 +159,7 @@ class _Dashboard extends State<DashboardContent> {
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                           borderSide:
-                              const BorderSide(color: Colors.deepOrange),
+                          const BorderSide(color: Colors.deepOrange),
                           borderRadius: BorderRadius.circular(20)),
                       hintText: 'Search...',
                       // Add a clear button to the search bar
@@ -169,7 +168,7 @@ class _Dashboard extends State<DashboardContent> {
                         onPressed: () => _searchController.clear(),
                       ),
                       suffixIconColor: MaterialStateColor.resolveWith(
-                          (states) => states.contains(MaterialState.focused)
+                              (states) => states.contains(MaterialState.focused)
                               ? Colors.deepOrange
                               : Colors.black),
                       // Add a search icon or button to the search bar
@@ -180,7 +179,7 @@ class _Dashboard extends State<DashboardContent> {
                         },
                       ),
                       prefixIconColor: MaterialStateColor.resolveWith(
-                          (states) => states.contains(MaterialState.focused)
+                              (states) => states.contains(MaterialState.focused)
                               ? Colors.deepOrange
                               : Colors.black),
                       border: OutlineInputBorder(
@@ -216,15 +215,15 @@ class _Dashboard extends State<DashboardContent> {
                     itemBuilder: (context, index) {
                       return PostTile(
 
-                        imageUrl: Posts[index]["post_images"],
-                        name: Posts[index]["name"],
-                        date:Posts[index]['date'],
-                        profileUrl: Posts[index]["user_image"],
-                        title: Posts[index]["title"],
-                        Description: Posts[index]["description"],
-                        isHomeScreen: true,
-                        userID: userID,
-                        post_id: Posts[index]["post_id"],
+                          imageUrl: Posts[index]["post_images"],
+                          name: Posts[index]["name"],
+                          date:Posts[index]['date'],
+                          profileUrl: Posts[index]["user_image"],
+                          title: Posts[index]["title"],
+                          Description: Posts[index]["description"],
+                          isHomeScreen: true,
+                          userID: userID,
+                          post_id: Posts[index]["post_id"],
                           isLiked: Posts[index]["isLiked"]
                       );
                     },
@@ -236,3 +235,6 @@ class _Dashboard extends State<DashboardContent> {
     );
   }
 }
+
+
+

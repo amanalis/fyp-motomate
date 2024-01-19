@@ -256,7 +256,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const Dashboard(),
+                              builder: (context) => const DashBoard(),
                             ),
                             (route) => false,
                           );

@@ -23,7 +23,7 @@ class _ChatMenuState extends State<ChatMenu> {
           leading: IconButton(onPressed: () => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => const Dashboard(),
+                builder: (context) => const DashBoard(),
               ),
                   (route) => false), icon: Icon(Icons.arrow_back),),
           title: Text(

@@ -1,5 +1,8 @@
 // ignore_for_file: use_build_context_synchronously, body_might_complete_normally_catch_error
 
+// import 'package:email_otp/email_otp.dart';
+// import 'package:auth_handler/auth_handler.dart';
+// import 'package:email_auth/email_auth.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +19,9 @@ class OTPScreen extends StatefulWidget {
   final String phone;
   final String email;
   final String password;
+  // final EmailAuth Auth;
   final EmailOTP myAuth;
+  // final AuthHandler authHandler;
 
   const OTPScreen({
     super.key,
@@ -24,7 +29,7 @@ class OTPScreen extends StatefulWidget {
     required this.phone,
     required this.email,
     required this.password,
-    required this.myAuth,
+     required this.myAuth,
   });
 
   @override
@@ -33,22 +38,23 @@ class OTPScreen extends StatefulWidget {
 
 class _OTPScreenState extends State<OTPScreen> {
   String otpCode = '';
-  late int userID;
+
   late int userIDFromDatabase;
 
-  void getUserData() async {
-    userIDFromDatabase = await UserModel().getUsersCount();
-    print(userIDFromDatabase);
-    userIDFromDatabase = 100 + userIDFromDatabase;
-    print(userIDFromDatabase);
-    setState(() {
-      userID = userIDFromDatabase;
-    });
-  }
+  // void getUserData() async {
+  //   userIDFromDatabase = await UserModel().getUsersCount();
+  //   print(userIDFromDatabase);
+  //   userIDFromDatabase = 100 + userIDFromDatabase;
+  //   print(userIDFromDatabase);
+  //   setState(() {
+  //
+  //   });
+  // }
 
   // ignore: non_constant_identifier_names
   Future<void> verifyOTP(String OTP) async {
-    if (await widget.myAuth.verifyOTP(otp: OTP) == true) {
+    if (await widget.myAuth.verifyOTP(otp: OTP)) {
+
       displayToastMessage("OTP Verified", context);
       signup();
     } else {
@@ -57,6 +63,7 @@ class _OTPScreenState extends State<OTPScreen> {
         context,
       );
     }
+
   }
 
   void signup() async {
@@ -95,16 +102,16 @@ class _OTPScreenState extends State<OTPScreen> {
 
     //Save user information into Database
     await UserModel().addUser(
-      userID: userID,
-      email: widget.email,
-      name: widget.name,
-      phone: widget.phone,
-      imageURL: 'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg'
-    );
+        userID: await FirebaseAuth.instance.currentUser!.uid,
+        email: widget.email,
+        name: widget.name,
+        phone: widget.phone,
+        imageURL:
+            'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg');
 
     SharedPrefs().saveUserDataInPrefs(
       widget.name,
-      userID.toString(),
+      await FirebaseAuth.instance.currentUser!.uid,
       widget.email,
       widget.password,
       widget.phone,
@@ -125,18 +132,14 @@ class _OTPScreenState extends State<OTPScreen> {
           );
         },
         pageBuilder: (context, animation, animationTime) {
-          return const Dashboard();
+          return const DashBoard();
         },
       ),
       (route) => false,
     );
   }
 
-  @override
-  void initState() {
-    getUserData();
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -191,8 +194,7 @@ class _OTPScreenState extends State<OTPScreen> {
               onCompleted: (String value) {
                 otpCode = value;
               },
-              onEditing: (bool value) {
-              },
+              onEditing: (bool value) {},
             ),
             const SizedBox(
               height: 20.0,
@@ -208,7 +210,8 @@ class _OTPScreenState extends State<OTPScreen> {
 
                   // verifyingOTP(otp);
                 },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepOrange),
                 child: const Text("Next"),
               ),
             )

@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+// import 'package:auth_handler/auth_handler.dart';
+// import 'package:email_auth/email_auth.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +51,8 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
   TextEditingController confirmPasswordController = TextEditingController();
   final firebaseAuth = FirebaseAuth.instance;
   EmailOTP myAuth = EmailOTP();
+  // AuthHandler authHandler = AuthHandler();
+  // EmailAuth Auth = new EmailAuth(sessionName: 'MotoMate');
   bool _isObscured = false;
 
   @override
@@ -231,7 +235,8 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
                           otpLength: 6,
                           otpType: OTPType.digitsOnly,
                         );
-                        if (await myAuth.sendOTP() == true) {
+                        bool res = await myAuth.sendOTP();
+                        if (res==true){
                           displayToastMessage(
                             'We have sent you OTP on the entered email',
                             context,
@@ -244,13 +249,14 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
                                 phone: phoneController.text,
                                 email: emailController.text,
                                 password: passwordController.text,
+                                // authHandler: authHandler,
                                 myAuth: myAuth,
                               ),
                             ),
                           );
-                        } else {
-                          displayToastMessage('Try again', context);
                         }
+
+
                       }
                     },
                     child: const Text("Sign-Up",

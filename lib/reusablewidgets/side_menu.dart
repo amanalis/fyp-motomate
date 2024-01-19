@@ -58,7 +58,7 @@ class _SideMenuState extends State<SideMenu> {
             onTap: () => Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const Dashboard(),
+                  builder: (context) => const DashBoard(),
                 ),
                 (route) => false),
           ),
