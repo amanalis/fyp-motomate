@@ -660,8 +660,8 @@ class _PostDailogState extends State<PostDailog> {
                                     email: email,
                                     companyname: _companyname);
 
-                                displayToastMessage(
-                                    "Post Send For Approval.", context);
+                                // displayToastMessage(
+                                //     "Post Send For Approval.", context);
                                 NotificationService().pushNotification(
                                     'Your post has been sent for Verification.');
                                 Navigator.pushAndRemoveUntil(

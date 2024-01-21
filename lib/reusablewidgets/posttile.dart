@@ -273,13 +273,16 @@ class _PostTile extends State<PostTile> {
                   color: widget.isLiked ? Color(0xffFC0202) : _favIconColor,
                 ),
                 IconButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    String? id = await UserModel().getUserID(widget.email);
+                    print(id);
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => ChatPage(
                           recieveruserEmail: widget.email,
-                          recieverUserId: widget.userID,
+                          recieverUserId: id.toString(),
                           recieverName: widget.name,
                           recieverProfilePic: widget.profileUrl,
                         ),
