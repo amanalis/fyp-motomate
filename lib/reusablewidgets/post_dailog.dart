@@ -233,6 +233,9 @@ class PostDailog extends StatefulWidget {
   final bool isEdit;
   final String? post_id;
   final bool? isApproved;
+  final String? YOM;
+  final String? CC;
+  final String? companyname;
 
   const PostDailog(
       {super.key,
@@ -241,7 +244,10 @@ class PostDailog extends StatefulWidget {
       this.Image,
       required this.isEdit,
       this.post_id,
-      this.isApproved});
+      this.isApproved,
+      this.YOM,
+      this.CC,
+      this.companyname});
 
   @override
   State<PostDailog> createState() => _PostDailogState();
@@ -319,8 +325,12 @@ class _PostDailogState extends State<PostDailog> {
 
   //Year of Manufacturing of bike
   String _YOM = "";
+
   //CC of Bike
   String _CC = "";
+
+  //company name
+  String _companyname = "";
 
   @override
   Widget build(BuildContext context) {
@@ -394,7 +404,34 @@ class _PostDailogState extends State<PostDailog> {
                     // widget.Image == null || widget.Image!.isEmpty
 
                     DropdownButton<String>(
-                      hint: _YOM == null
+                      hint: _companyname == ""
+                          ? Text("Company Name")
+                          : Text(_companyname),
+                      isExpanded: true,
+                      items: <String>[
+                        'Suzuki',
+                        'Honda',
+                        'Unique',
+                        'Yamaha',
+                        'Crown',
+                        'SuperPower',
+                        'SuperStar',
+                        'Others',
+
+                      ].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _companyname = value!;
+                        });
+                      },
+                    ),
+                    DropdownButton<String>(
+                      hint: _YOM == ""
                           ? Text("Year of Manufactured")
                           : Text(_YOM),
                       isExpanded: true,
@@ -405,7 +442,7 @@ class _PostDailogState extends State<PostDailog> {
                         '2021',
                         '2022',
                         '2023',
-                        '2024'
+                        '2024',
                       ].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -419,9 +456,8 @@ class _PostDailogState extends State<PostDailog> {
                       },
                     ),
                     DropdownButton<String>(
-                      hint: _CC == null
-                          ? Text("Year of Manufactured")
-                          : Text(_CC),
+                      hint:
+                          _CC == "" ? Text("Year of Manufactured") : Text(_CC),
                       isExpanded: true,
                       items: <String>[
                         '70CC',
@@ -589,6 +625,9 @@ class _PostDailogState extends State<PostDailog> {
                                   imageURL: Db_images,
                                   date: date,
                                   isApproved: widget.isApproved!,
+                                  YOM: widget.YOM!,
+                                  CC: widget.CC!,
+                                  companyname: widget.companyname!,
                                 );
 
                                 Navigator.pushAndRemoveUntil(
@@ -604,6 +643,8 @@ class _PostDailogState extends State<PostDailog> {
                                     DateFormat("yyyy/MM/dd HH:mm").format(now);
                                 String Id =
                                     (await SharedPrefs().getData('id'))!;
+                                String email =
+                                    (await SharedPrefs().getData('email'))!;
                                 int count = await PostModel().getPostCount();
                                 await PostModel().addPost(
                                     postID: count,
@@ -612,7 +653,11 @@ class _PostDailogState extends State<PostDailog> {
                                     description: descriptioncontroller.text,
                                     imageURL: Db_images,
                                     date: date,
-                                    isApproved: false);
+                                    isApproved: false,
+                                    YOM: _YOM,
+                                    CC: _CC,
+                                    email: email,
+                                    companyname: _companyname);
 
                                 displayToastMessage(
                                     "Post Send For Approval.", context);

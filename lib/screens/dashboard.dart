@@ -71,6 +71,10 @@ class _DashBoardState extends State<DashBoard> {
           "post_id": doc[i]["documentID"],
           "date": doc[i]["date"],
           "isApproved": doc[i]["isApproved"],
+          "YOM": doc[i]["YOM"],
+          "CC" : doc[i]["CC"],
+          "email": doc[i]["email"],
+          "companyname": doc[i]["companyname"],
         });
       }
     }
@@ -247,6 +251,10 @@ class _DashBoardState extends State<DashBoard> {
                         post_id: Posts[index]["post_id"],
                         isLiked: Posts[index]["isLiked"],
                         isApproved: Posts[index]["isApproved"],
+                        YOM: Posts[index]["YOM"],
+                        CC: Posts[index]["CC"],
+                        email: Posts[index]["email"],
+                        companyname: Posts[index]["companyname"],
                       );
                     },
                   ))

@@ -71,6 +71,10 @@ class _PostToApproveState extends State<PostToApprove> {
           "post_id": doc[i]["documentID"],
           "date": doc[i]["date"],
           "isApproved": doc[i]["isApproved"],
+          "YOM": doc[i]["YOM"],
+          "CC" : doc[i]["CC"],
+          "companyname": doc[i]["companyname"],
+          "email": doc[i]["email"],
         });
       }
     }
@@ -140,6 +144,10 @@ class _PostToApproveState extends State<PostToApprove> {
                         post_id: Posts[index]["post_id"],
                         isApproved: Posts[index]["isApproved"],
                         isApprovingPost: true,
+                        YOM: Posts[index]["YOM"],
+                        CC: Posts[index]['CC'],
+                        companyname: Posts[index]['companyname'],
+                        email: Posts[index]['email'],
                       );
                     },
                   ))

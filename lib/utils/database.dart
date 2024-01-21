@@ -227,6 +227,10 @@ class PostModel {
     required String description,
     required List imageURL,
     required bool isApproved,
+    required String YOM,
+    required String CC,
+    required String companyname,
+    required String email,
   }) async {
     try {
       CollectionReference posts =
@@ -239,6 +243,10 @@ class PostModel {
         'images': imageURL,
         'date': date,
         'isApproved': isApproved,
+        'YOM': YOM,
+        'CC': CC,
+        'companyname':companyname,
+        'email': email,
       });
       return 'Added post Successfully.';
     } catch (e) {
@@ -283,6 +291,10 @@ class PostModel {
     required String description,
     required List imageURL,
     required bool isApproved,
+    required String YOM,
+    required String CC,
+    required String companyname,
+
   }) async {
     try {
       FirebaseFirestore.instance.collection('posts').doc(postID).update({
@@ -290,7 +302,10 @@ class PostModel {
         'description': description,
         'images': imageURL,
         'date': date,
-        'isApproved': isApproved
+        'isApproved': isApproved,
+        'YOM': YOM,
+        'CC': CC,
+        'companyname':companyname,
       });
       return 'Post Updated';
     } catch (e) {

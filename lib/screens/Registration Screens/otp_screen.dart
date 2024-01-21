@@ -212,7 +212,10 @@ class _OTPScreenState extends State<OTPScreen> {
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepOrange),
-                child: const Text("Next"),
+                child: const Text("Next",
+                style: TextStyle(
+                  color: Colors.white,
+                ),),
               ),
             )
           ],

@@ -9,19 +9,24 @@ import 'package:motomate/utils/database.dart';
 import 'package:motomate/utils/shared_prefs.dart';
 
 class PostTile extends StatefulWidget {
-  PostTile(
-      {super.key,
-      required this.imageUrl,
-      required this.name,
-      required this.profileUrl,
-      required this.title,
-      required this.Description,
-      required this.isHomeScreen,
-      required this.userID,
-      required this.post_id,
-      required this.date,
-      required this.isLiked,
-      required this.isApproved});
+  PostTile({
+    super.key,
+    required this.imageUrl,
+    required this.name,
+    required this.profileUrl,
+    required this.title,
+    required this.Description,
+    required this.isHomeScreen,
+    required this.userID,
+    required this.post_id,
+    required this.date,
+    required this.isLiked,
+    required this.isApproved,
+    required this.YOM,
+    required this.CC,
+    required this.companyname,
+    required this.email,
+  });
 
   final List imageUrl;
   final String name;
@@ -34,6 +39,10 @@ class PostTile extends StatefulWidget {
   final String post_id;
   final bool isLiked;
   final bool isApproved;
+  final String YOM;
+  final String CC;
+  final String companyname;
+  final String email;
 
   @override
   State<StatefulWidget> createState() => _PostTile();
@@ -178,8 +187,30 @@ class _PostTile extends State<PostTile> {
                       ),
               ],
             ),
-            Text(widget.title),
-            Text(widget.Description),
+            Text(
+              widget.title,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  decoration: TextDecoration.underline),
+            ),
+            Text(
+              widget.Description,
+              style: TextStyle(fontSize: 16),
+            ),
+            Row(
+              children: [
+                Text("CompanyName ${widget.companyname} ",
+                    style:
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                Text("Year ${widget.YOM} ",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(widget.CC,
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              ],
+            ),
             FlutterCarousel(
               options: CarouselOptions(
                 height: size.height * 0.2,
@@ -189,6 +220,7 @@ class _PostTile extends State<PostTile> {
                 autoPlay: false,
                 enableInfiniteScroll: true,
                 showIndicator: true,
+                allowImplicitScrolling: false,
                 autoPlayInterval: const Duration(seconds: 2),
                 slideIndicator: const CircularSlideIndicator(
                   currentIndicatorColor: Color(0XFF00B251),

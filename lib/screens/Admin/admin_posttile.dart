@@ -19,7 +19,10 @@ class AdminPosttile extends StatefulWidget {
       required this.userID,
       required this.post_id,
       this.isLiked,
-      required this.isApproved, required this.isApprovingPost});
+      required this.isApproved,
+      required this.isApprovingPost,
+      required this.YOM,
+      required this.CC, required this.companyname, required this.email});
 
   final List imageUrl;
   final String name;
@@ -33,6 +36,11 @@ class AdminPosttile extends StatefulWidget {
   final bool? isLiked;
   final bool isApproved;
   final bool isApprovingPost;
+  final String YOM;
+  final String CC;
+  final String companyname;
+  final String email;
+
   @override
   State<AdminPosttile> createState() => _AdminPosttileState();
 }
@@ -103,30 +111,46 @@ class _AdminPosttileState extends State<AdminPosttile> {
                     ),
                   ),
                 ),
-                widget.isApprovingPost == true?
-                IconButton(
-                  onPressed: () async {
-                    await PostModel().updatePost(
-                        date: widget.date,
-                        postID: widget.post_id,
-                        title: widget.title,
-                        description: widget.Description,
-                        imageURL: widget.imageUrl,
-                        isApproved: true);
-                    displayToastMessage("Post Approved!", context);
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PostToApprove(),));
-                  },
-                  icon: Icon(
-                    Icons.check_circle_outline_outlined,
-                    color: Colors.green,
-                    size: 35,
-                  ),
-                ):SizedBox(width: 0,height: 0,),
+                widget.isApprovingPost == true
+                    ? IconButton(
+                        onPressed: () async {
+                          await PostModel().updatePost(
+                            date: widget.date,
+                            postID: widget.post_id,
+                            title: widget.title,
+                            description: widget.Description,
+                            imageURL: widget.imageUrl,
+                            isApproved: true,
+                            YOM: widget.YOM,
+                            CC: widget.CC,
+                            companyname: widget.companyname
+                          );
+                          displayToastMessage("Post Approved!", context);
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PostToApprove(),
+                              ));
+                        },
+                        icon: Icon(
+                          Icons.check_circle_outline_outlined,
+                          color: Colors.green,
+                          size: 35,
+                        ),
+                      )
+                    : SizedBox(
+                        width: 0,
+                        height: 0,
+                      ),
                 IconButton(
                   onPressed: () async {
                     await PostModel().delete_post(widget.post_id);
                     displayToastMessage("Post Deleted!", context);
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PostToApprove(),));
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PostToApprove(),
+                        ));
                   },
                   icon: Icon(
                     Icons.cancel_outlined,
@@ -136,8 +160,16 @@ class _AdminPosttileState extends State<AdminPosttile> {
                 )
               ],
             ),
-            Text(widget.title),
-            Text(widget.Description),
+            Text(widget.title,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,decoration: TextDecoration.underline),),
+            Text(widget.Description,
+              style: TextStyle(fontSize: 16),),
+            Row(
+              children: [
+                Text("Year ${widget.YOM} ",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(widget.CC,style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              ],
+            ),
             FlutterCarousel(
               options: CarouselOptions(
                 height: size.height * 0.3,
@@ -147,6 +179,7 @@ class _AdminPosttileState extends State<AdminPosttile> {
                 autoPlay: false,
                 enableInfiniteScroll: true,
                 showIndicator: true,
+                allowImplicitScrolling: false,
                 autoPlayInterval: const Duration(seconds: 2),
                 slideIndicator: const CircularSlideIndicator(
                   currentIndicatorColor: Color(0XFF00B251),
