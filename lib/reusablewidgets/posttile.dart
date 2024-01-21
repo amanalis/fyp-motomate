@@ -20,7 +20,8 @@ class PostTile extends StatefulWidget {
       required this.userID,
       required this.post_id,
       required this.date,
-      required this.isLiked});
+      required this.isLiked,
+      required this.isApproved});
 
   final List imageUrl;
   final String name;
@@ -32,6 +33,7 @@ class PostTile extends StatefulWidget {
   final String userID;
   final String post_id;
   final bool isLiked;
+  final bool isApproved;
 
   @override
   State<StatefulWidget> createState() => _PostTile();
@@ -131,6 +133,10 @@ class _PostTile extends State<PostTile> {
                     ),
                   ),
                 ),
+                PopupMenuButton(
+                  itemBuilder: (context) =>
+                      [PopupMenuItem(child: Text("Report the post."))],
+                ),
                 widget.isHomeScreen
                     ? SizedBox(width: 0, height: 0)
                     : Row(
@@ -145,7 +151,8 @@ class _PostTile extends State<PostTile> {
                                       Description: widget.Description,
                                       Image: widget.imageUrl,
                                       isEdit: true,
-                                      post_id: widget.post_id),
+                                      post_id: widget.post_id,
+                                      isApproved: widget.isApproved),
                                 ),
                               );
                             },
@@ -166,7 +173,7 @@ class _PostTile extends State<PostTile> {
                             },
                             icon: const Icon(Icons.delete_outline),
                             color: _favIconColor,
-                          )
+                          ),
                         ],
                       ),
               ],
@@ -230,7 +237,7 @@ class _PostTile extends State<PostTile> {
                         postId: widget.post_id, userID: widget.userID);
                   },
                   icon: const Icon(Icons.favorite),
-                  color: widget.isLiked ? Color(0xffFC0202):_favIconColor,
+                  color: widget.isLiked ? Color(0xffFC0202) : _favIconColor,
                 ),
                 IconButton(
                   onPressed: () {},

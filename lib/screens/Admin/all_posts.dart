@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:motomate/reusablewidgets/post_dailog.dart';
 import 'package:motomate/reusablewidgets/posttile.dart';
-import 'package:motomate/reusablewidgets/side_menu.dart';
-import 'package:motomate/utils/database.dart';
+import 'package:motomate/screens/Admin/admin_posttile.dart';
 import 'package:motomate/utils/shared_prefs.dart';
+import '../../utils/database.dart';
 
-class DashBoard extends StatefulWidget {
-  const DashBoard({super.key});
+class AllPosts extends StatefulWidget {
+  const AllPosts({super.key});
 
   @override
-  State<DashBoard> createState() => _DashBoardState();
+  State<AllPosts> createState() => _AllPostsState();
 }
 
-class _DashBoardState extends State<DashBoard> {
-  final TextEditingController _searchController = TextEditingController();
+class _AllPostsState extends State<AllPosts> {
   String name = "Loading...";
   String userID = "Loading...";
   String email = "Loading...";
@@ -41,6 +38,7 @@ class _DashBoardState extends State<DashBoard> {
         },
       );
     });
+
     String tempName = (await SharedPrefs().getData("name"))!;
     String tempEmail = (await SharedPrefs().getData("email"))!;
     String tempURL = (await SharedPrefs().getData("imageURL"))!;
@@ -91,8 +89,7 @@ class _DashBoardState extends State<DashBoard> {
         }
       }
     }
-    setState(() {
-    });
+    setState(() {});
     Navigator.pop(context);
   }
 
@@ -105,36 +102,9 @@ class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PostDailog(
-                isEdit: false,
-              ),
-            ),
-          );
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.deepOrange,
-        elevation: 0,
-      ),
-      drawer: SideMenu(
-        name: name,
-        email: email,
-        imageUrl: imageURL,
-      ),
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
-        // leading: const IconButton(
-        //   onPressed: null,
-        //   icon: Icon(Icons.menu_outlined),
-        //   color: Colors.black,
-        // ),
         title: Image.asset(
           "images/motomate.png",
           height: size.height * 0.06,
@@ -142,27 +112,6 @@ class _DashBoardState extends State<DashBoard> {
         elevation: 0,
         backgroundColor: Colors.deepOrange,
         centerTitle: true,
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 14),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundColor: Colors.black,
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: NetworkImage(imageURL),
-              ),
-            ),
-          )
-          // Container(
-          //   margin: const EdgeInsets.only(right: 10, left: 20),
-          //   child: IconButton(
-          //     onPressed: () {},
-          //     icon: const Icon(Icons.person),
-          //     color: Colors.black.withOpacity(0.6),
-          //   ),
-          // )
-        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -170,47 +119,6 @@ class _DashBoardState extends State<DashBoard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  // Add padding around the search bar
-                  padding: const EdgeInsets.symmetric(horizontal: 1.0),
-                  // Use a Material design search bar
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.deepOrange),
-                          borderRadius: BorderRadius.circular(20)),
-                      hintText: 'Search...',
-                      // Add a clear button to the search bar
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () => _searchController.clear(),
-                      ),
-                      suffixIconColor: MaterialStateColor.resolveWith(
-                          (states) => states.contains(MaterialState.focused)
-                              ? Colors.deepOrange
-                              : Colors.black),
-                      // Add a search icon or button to the search bar
-                      prefixIcon: IconButton(
-                        icon: const Icon(Icons.search),
-                        onPressed: () {
-                          // Perform the search here
-                        },
-                      ),
-                      prefixIconColor: MaterialStateColor.resolveWith(
-                          (states) => states.contains(MaterialState.focused)
-                              ? Colors.deepOrange
-                              : Colors.black),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
               SizedBox(
                 height: size.height * 0.02,
               ),
@@ -219,7 +127,7 @@ class _DashBoardState extends State<DashBoard> {
                 child: Row(
                   children: [
                     Text(
-                      "Home",
+                      "All Approved Posts",
                       style: TextStyle(
                         fontFamily: ('GravisPersonal'),
                         fontSize: 24,
@@ -235,7 +143,7 @@ class _DashBoardState extends State<DashBoard> {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
-                      return PostTile(
+                      return AdminPosttile(
                         imageUrl: Posts[index]["post_images"],
                         name: Posts[index]["name"],
                         date: Posts[index]['date'],
@@ -247,6 +155,7 @@ class _DashBoardState extends State<DashBoard> {
                         post_id: Posts[index]["post_id"],
                         isLiked: Posts[index]["isLiked"],
                         isApproved: Posts[index]["isApproved"],
+                        isApprovingPost: false,
                       );
                     },
                   ))

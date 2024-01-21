@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'dart:ui';
-import 'dart:typed_data';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,222 +10,221 @@ import 'package:motomate/screens/dashboard.dart';
 import 'package:motomate/screens/profile.dart';
 import 'package:motomate/utils/database.dart';
 import 'package:motomate/utils/flutter_toast.dart';
-
 import '../utils/shared_prefs.dart';
 
-Future Post_Dialog(BuildContext context) {
-  final _formKey = GlobalKey<FormState>();
-
-  return showDialog(
-      context: context,
-      builder: (context) {
-        final TextEditingController titleController = TextEditingController();
-        final TextEditingController descriptionController =
-            TextEditingController();
-        String imageUrl = "";
-        List<String> images = [];
-
-        return StatefulBuilder(builder: (context, setState) {
-          File? _image;
-          bool Imagepicked = false;
-          Future<void> _getImage() async {
-            final image =
-                await ImagePicker().pickImage(source: ImageSource.gallery);
-
-            // XFile? file= await imagePiker.pickImage(source: ImageSource.gallery);
-            // print('${file?.path}');
-
-            if (image == null) return;
-            String uniqueFileName =
-                DateTime.now().microsecondsSinceEpoch.toString();
-
-            Reference referenceRoot = FirebaseStorage.instance.ref();
-            Reference referenceDirImages = referenceRoot.child('post_images');
-
-            Reference referenceImageToUpload =
-                referenceDirImages.child(uniqueFileName);
-            try {
-              await referenceImageToUpload.putFile(File(image.path));
-
-              String tempimageUrl =
-                  await referenceImageToUpload.getDownloadURL();
-              images.add(tempimageUrl);
-              print(images);
-              final tempimage = File(image.path);
-              setState(() {
-                _image = tempimage;
-                Imagepicked = true;
-                //   if (pickedFile != null) {
-                //     _image = File(pickedFile.path);
-                //   } else {
-                //     print('No image selected.');
-                //   }
-                imageUrl = tempimageUrl;
-              });
-            } catch (e) {
-              print('Error picking image: $e');
-            }
-          }
-
-          return AlertDialog(
-            backgroundColor: Colors.white.withOpacity(0.8),
-            content: Container(
-              key: _formKey,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
-                  color: Colors.transparent
-                  // Color(0xff2A303E),
-                  ),
-              child: Stack(
-                children: [
-                  Positioned(
-                      width: 28,
-                      height: 28,
-                      top: 0,
-                      right: 0,
-                      child: OutlinedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.all(8),
-                            backgroundColor: const Color(0xffEC5B5B),
-                            shape: const CircleBorder(),
-                          ),
-                          child: Image.asset(
-                            "images/close_icon.png",
-                            color: Colors.white,
-                          ))),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset(
-                          "images/motomate.png",
-                          width: 75,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFormField(
-                          controller: titleController,
-                          validator: (value) {
-                            return value!.isNotEmpty ? null : "Invalid Field";
-                          },
-                          decoration: InputDecoration(
-                              hintText: "Please Enter Your Title",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10))),
-                        ),
-                        const SizedBox(
-                          height: 6,
-                        ),
-                        TextFormField(
-                          controller: descriptionController,
-                          validator: (value) {
-                            return value!.isNotEmpty ? null : "Invaild Feild";
-                          },
-                          decoration: InputDecoration(
-                            hintText: "Please Enter Description",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 6,
-                        ),
-                        Container(
-                          child: GestureDetector(
-                            onTap: _getImage,
-                            child: Container(
-                              width: 200,
-                              height: 150,
-                              color: Colors.grey,
-                              child: _image == null
-                                  ? const Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.add,
-                                            size: 50,
-                                            color: Colors.white,
-                                          ),
-                                          Text("Add Images."),
-                                        ],
-                                      ),
-                                    )
-                                  : Image.file(
-                                      _image!,
-                                      width: 200,
-                                      height: 200,
-                                      fit: BoxFit.cover,
-                                    ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 8,
-                                      horizontal: 32,
-                                    ),
-                                    foregroundColor: const Color(0xffEC5B5B),
-                                    side: const BorderSide(
-                                        color: Color(0xffEC5B5B))),
-                                onPressed: () {
-                                  titleController.clear();
-                                  descriptionController.clear();
-                                  images.clear();
-                                },
-                                child: const Text("Cancel")),
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    foregroundColor: const Color(0xff2A303E),
-                                    backgroundColor: const Color(0xff5BEC84),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 32, vertical: 8)),
-                                onPressed: () async {
-                                  print(images);
-                                  String Id =
-                                      (await SharedPrefs().getData('id'))!;
-                                  int count = await PostModel().getPostCount();
-                                  DateTime now = DateTime.now();
-                                  String date = DateFormat("yyyy/MM/dd HH:mm")
-                                      .format(now);
-                                  await PostModel().addPost(
-                                      postID: count,
-                                      userID: Id,
-                                      title: titleController.text,
-                                      description: descriptionController.text,
-                                      imageURL: images,
-                                      date: date);
-                                  displayToastMessage("Posted", context);
-                                  Navigator.pop(context);
-                                },
-                                child: const Text("Post"))
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-      });
-}
+// Future Post_Dialog(BuildContext context) {
+//   final _formKey = GlobalKey<FormState>();
+//
+//   return showDialog(
+//       context: context,
+//       builder: (context) {
+//         final TextEditingController titleController = TextEditingController();
+//         final TextEditingController descriptionController =
+//             TextEditingController();
+//         String imageUrl = "";
+//         List<String> images = [];
+//
+//         return StatefulBuilder(builder: (context, setState) {
+//           File? _image;
+//           bool Imagepicked = false;
+//           Future<void> _getImage() async {
+//             final image =
+//                 await ImagePicker().pickImage(source: ImageSource.gallery);
+//
+//             // XFile? file= await imagePiker.pickImage(source: ImageSource.gallery);
+//             // print('${file?.path}');
+//
+//             if (image == null) return;
+//             String uniqueFileName =
+//                 DateTime.now().microsecondsSinceEpoch.toString();
+//
+//             Reference referenceRoot = FirebaseStorage.instance.ref();
+//             Reference referenceDirImages = referenceRoot.child('post_images');
+//
+//             Reference referenceImageToUpload =
+//                 referenceDirImages.child(uniqueFileName);
+//             try {
+//               await referenceImageToUpload.putFile(File(image.path));
+//
+//               String tempimageUrl =
+//                   await referenceImageToUpload.getDownloadURL();
+//               images.add(tempimageUrl);
+//               print(images);
+//               final tempimage = File(image.path);
+//               setState(() {
+//                 _image = tempimage;
+//                 Imagepicked = true;
+//                 //   if (pickedFile != null) {
+//                 //     _image = File(pickedFile.path);
+//                 //   } else {
+//                 //     print('No image selected.');
+//                 //   }
+//                 imageUrl = tempimageUrl;
+//               });
+//             } catch (e) {
+//               print('Error picking image: $e');
+//             }
+//           }
+//
+//           return AlertDialog(
+//             backgroundColor: Colors.white.withOpacity(0.8),
+//             content: Container(
+//               key: _formKey,
+//               decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(14),
+//                   color: Colors.transparent
+//                   // Color(0xff2A303E),
+//                   ),
+//               child: Stack(
+//                 children: [
+//                   Positioned(
+//                       width: 28,
+//                       height: 28,
+//                       top: 0,
+//                       right: 0,
+//                       child: OutlinedButton(
+//                           onPressed: () {
+//                             Navigator.of(context).pop();
+//                           },
+//                           style: OutlinedButton.styleFrom(
+//                             padding: const EdgeInsets.all(8),
+//                             backgroundColor: const Color(0xffEC5B5B),
+//                             shape: const CircleBorder(),
+//                           ),
+//                           child: Image.asset(
+//                             "images/close_icon.png",
+//                             color: Colors.white,
+//                           ))),
+//                   Padding(
+//                     padding: const EdgeInsets.all(10.0),
+//                     child: Column(
+//                       crossAxisAlignment: CrossAxisAlignment.center,
+//                       mainAxisSize: MainAxisSize.min,
+//                       children: [
+//                         Image.asset(
+//                           "images/motomate.png",
+//                           width: 75,
+//                         ),
+//                         const SizedBox(
+//                           height: 10,
+//                         ),
+//                         TextFormField(
+//                           controller: titleController,
+//                           validator: (value) {
+//                             return value!.isNotEmpty ? null : "Invalid Field";
+//                           },
+//                           decoration: InputDecoration(
+//                               hintText: "Please Enter Your Title",
+//                               border: OutlineInputBorder(
+//                                   borderRadius: BorderRadius.circular(10))),
+//                         ),
+//                         const SizedBox(
+//                           height: 6,
+//                         ),
+//                         TextFormField(
+//                           controller: descriptionController,
+//                           validator: (value) {
+//                             return value!.isNotEmpty ? null : "Invaild Feild";
+//                           },
+//                           decoration: InputDecoration(
+//                             hintText: "Please Enter Description",
+//                             border: OutlineInputBorder(
+//                               borderRadius: BorderRadius.circular(10),
+//                             ),
+//                           ),
+//                         ),
+//                         const SizedBox(
+//                           height: 6,
+//                         ),
+//                         Container(
+//                           child: GestureDetector(
+//                             onTap: _getImage,
+//                             child: Container(
+//                               width: 200,
+//                               height: 150,
+//                               color: Colors.grey,
+//                               child: _image == null
+//                                   ? const Center(
+//                                       child: Column(
+//                                         mainAxisAlignment:
+//                                             MainAxisAlignment.center,
+//                                         children: [
+//                                           Icon(
+//                                             Icons.add,
+//                                             size: 50,
+//                                             color: Colors.white,
+//                                           ),
+//                                           Text("Add Images."),
+//                                         ],
+//                                       ),
+//                                     )
+//                                   : Image.file(
+//                                       _image!,
+//                                       width: 200,
+//                                       height: 200,
+//                                       fit: BoxFit.cover,
+//                                     ),
+//                             ),
+//                           ),
+//                         ),
+//                         const SizedBox(
+//                           height: 10,
+//                         ),
+//                         Row(
+//                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                           children: [
+//                             OutlinedButton(
+//                                 style: OutlinedButton.styleFrom(
+//                                     padding: const EdgeInsets.symmetric(
+//                                       vertical: 8,
+//                                       horizontal: 32,
+//                                     ),
+//                                     foregroundColor: const Color(0xffEC5B5B),
+//                                     side: const BorderSide(
+//                                         color: Color(0xffEC5B5B))),
+//                                 onPressed: () {
+//                                   titleController.clear();
+//                                   descriptionController.clear();
+//                                   images.clear();
+//                                 },
+//                                 child: const Text("Cancel")),
+//                             ElevatedButton(
+//                                 style: ElevatedButton.styleFrom(
+//                                     foregroundColor: const Color(0xff2A303E),
+//                                     backgroundColor: const Color(0xff5BEC84),
+//                                     padding: const EdgeInsets.symmetric(
+//                                         horizontal: 32, vertical: 8)),
+//                                 onPressed: () async {
+//                                   print(images);
+//                                   String Id =
+//                                       (await SharedPrefs().getData('id'))!;
+//                                   int count = await PostModel().getPostCount();
+//                                   DateTime now = DateTime.now();
+//                                   String date = DateFormat("yyyy/MM/dd HH:mm")
+//                                       .format(now);
+//                                   await PostModel().addPost(
+//                                       postID: count,
+//                                       userID: Id,
+//                                       title: titleController.text,
+//                                       description: descriptionController.text,
+//                                       imageURL: images,
+//                                       date: date);
+//                                   displayToastMessage("Posted", context);
+//                                   Navigator.pop(context);
+//                                 },
+//                                 child: const Text("Post"))
+//                           ],
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           );
+//         });
+//       });
+// }
 
 class PostDailog extends StatefulWidget {
   final String? title;
@@ -235,6 +232,7 @@ class PostDailog extends StatefulWidget {
   final List? Image;
   final bool isEdit;
   final String? post_id;
+  final bool? isApproved;
 
   const PostDailog(
       {super.key,
@@ -242,7 +240,8 @@ class PostDailog extends StatefulWidget {
       this.Description,
       this.Image,
       required this.isEdit,
-      this.post_id});
+      this.post_id,
+      this.isApproved});
 
   @override
   State<PostDailog> createState() => _PostDailogState();
@@ -318,6 +317,11 @@ class _PostDailogState extends State<PostDailog> {
     }
   }
 
+  //Year of Manufacturing of bike
+  String _YOM = "";
+  //CC of Bike
+  String _CC = "";
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -387,9 +391,57 @@ class _PostDailogState extends State<PostDailog> {
                     const SizedBox(
                       height: 6,
                     ),
-
                     // widget.Image == null || widget.Image!.isEmpty
 
+                    DropdownButton<String>(
+                      hint: _YOM == null
+                          ? Text("Year of Manufactured")
+                          : Text(_YOM),
+                      isExpanded: true,
+                      items: <String>[
+                        '2018',
+                        '2019',
+                        '2020',
+                        '2021',
+                        '2022',
+                        '2023',
+                        '2024'
+                      ].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _YOM = value!;
+                        });
+                      },
+                    ),
+                    DropdownButton<String>(
+                      hint: _CC == null
+                          ? Text("Year of Manufactured")
+                          : Text(_CC),
+                      isExpanded: true,
+                      items: <String>[
+                        '70CC',
+                        '100CC',
+                        '110CC',
+                        '125CC',
+                        '150CC',
+                        '200CC',
+                      ].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _CC = value!;
+                        });
+                      },
+                    ),
                     images.isEmpty
                         ? InkWell(
                             onTap: () => pickImage(),
@@ -531,11 +583,13 @@ class _PostDailogState extends State<PostDailog> {
                                 String date =
                                     DateFormat("yyyy/MM/dd HH:mm").format(now);
                                 await PostModel().updatePost(
-                                    postID: widget.post_id!,
-                                    title: titlecontroller.text,
-                                    description: descriptioncontroller.text,
-                                    imageURL: Db_images,
-                                    date: date);
+                                  postID: widget.post_id!,
+                                  title: titlecontroller.text,
+                                  description: descriptioncontroller.text,
+                                  imageURL: Db_images,
+                                  date: date,
+                                  isApproved: widget.isApproved!,
+                                );
 
                                 Navigator.pushAndRemoveUntil(
                                   context,
@@ -557,9 +611,11 @@ class _PostDailogState extends State<PostDailog> {
                                     title: titlecontroller.text,
                                     description: descriptioncontroller.text,
                                     imageURL: Db_images,
-                                    date: date);
+                                    date: date,
+                                    isApproved: false);
 
-                                displayToastMessage("Posted", context);
+                                displayToastMessage(
+                                    "Post Send For Approval.", context);
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(

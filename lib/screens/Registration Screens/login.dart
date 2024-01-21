@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:motomate/screens/Admin/admin_dashboard.dart';
 import 'package:motomate/screens/Registration%20Screens/forget_password_mail.dart';
 import 'package:motomate/screens/Registration%20Screens/signup.dart';
 import 'package:motomate/screens/dashboard.dart';
@@ -252,17 +253,29 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                             .user;
 
                         if (user != null) {
-                          getData(emailController.text);
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const DashBoard(),
-                            ),
-                            (route) => false,
-                          );
-                          displayToastMessage("Login", context);
+                          if ((emailController.text == "motomate@gmail.com") &&
+                              (passwordController.text == "motomate123")) {
+                            print("asaf");
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AdminDashBoard()),
+                                (route) => false);
+                            displayToastMessage("Welcome Admin!", context);
+                          }
+                          else {
+                            getData(emailController.text);
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const DashBoard(),
+                              ),
+                              (route) => false,
+                            );
+                            displayToastMessage("Login", context);
+                          }
                         } else {
-                          displayToastMessage("Login failed", context);
+                          displayToastMessage("Login Fail", context);
                         }
                       }
                     },

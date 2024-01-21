@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:motomate/utils/shared_prefs.dart';
 import '../utils/flutter_toast.dart';
+import 'Admin/admin_dashboard.dart';
 import 'Registration Screens/login.dart';
 import 'dashboard.dart';
 
@@ -48,15 +49,27 @@ class _SplashScreenState extends State<SplashScreen>
           .user;
       print(user);
       if (user != null) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const DashBoard(),
-          ),
-          (route) => false,
-        );
-        displayToastMessage("Login", context);
-      } else {
+        if ((email == "motomate@gmail.com") &&
+            (password == "motomate123")) {
+          print("asaf");
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AdminDashBoard()),
+                  (route) => false);
+          displayToastMessage("Welcome Admin!", context);
+        }
+        else {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const DashBoard(),
+            ),
+                (route) => false,
+          );
+          displayToastMessage("Login", context);
+        }
+      }  else {
         displayToastMessage("Login failed", context);
       }
     }

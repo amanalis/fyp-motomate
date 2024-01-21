@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:motomate/reusablewidgets/post_dailog.dart';
 import 'package:motomate/screens/edit_profile.dart';
 import 'package:motomate/utils/database.dart';
@@ -55,40 +56,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<Map<String, dynamic>> User_LikedPosts = [];
 
   void getPostData() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: LoadingAnimationWidget.discreteCircle(
+              color: const Color(0XFF00B251),
+              size: 50,
+              secondRingColor: const Color(0XFFF8B32B),
+              thirdRingColor: const Color(0XFFF72A37),
+            ),
+          );
+        },
+      );
+    });
     String tempName = (await SharedPrefs().getData("name"))!;
     String tempEmail = (await SharedPrefs().getData("email"))!;
     String tempURL = (await SharedPrefs().getData("imageURL"))!;
     String tempID = (await SharedPrefs().getData("id"))!;
     int count = await PostModel().getPostCount();
-    for (int i = 0; i < count; i++) {
+    for (int i = count-1; i >= 0; i--) {
       var doc = await PostModel().getPostDocument();
       String? name =
           await UserModel().getUserData(doc[i]["userID"].toString(), "Name");
       String? user_image =
           await UserModel().getUserData(doc[i]["userID"], "ImageURL");
-      Posts.add({
-        "post_images": doc[i]["images"],
-        "userID": doc[i]["userID"],
-        "name": name,
-        "title": doc[i]["title"],
-        'description': doc[i]["description"],
-        "user_image": user_image,
-        "post_id": doc[i]["documentID"],
-        "date": doc[i]["date"],
-      });
+      if (doc[i]["isApproved"] == true) {
+        Posts.add({
+          "post_images": doc[i]["images"],
+          "userID": doc[i]["userID"],
+          "name": name,
+          "title": doc[i]["title"],
+          'description': doc[i]["description"],
+          "user_image": user_image,
+          "post_id": doc[i]["documentID"],
+          "date": doc[i]["date"],
+          "isApproved": doc[i]["isApproved"],
+        });
+      }
     }
     // Posts.removeAt(0);
     List id = await UserModel().getLikedPost(tempID);
     for (int i = 0; i < Posts.length; i++) {
-      for (int j = 0; j < id.length; j++) {
-        if (Posts[i]["post_id"] == id[j]) {
-          Posts[i]["isLiked"] = true;
-        } else {
-          Posts[i]["isLiked"] = false;
+     print(id);
+      if(id.isEmpty){
+        Posts[i]["isLiked"]=false;
+      }
+      else{
+        for (int j = 0; j < id.length; j++) {
+          if (Posts[i]["post_id"] == id[j]) {
+            Posts[i]["isLiked"] = true;
+          } else {
+            Posts[i]["isLiked"] = false;
+          }
         }
       }
     }
+    print(Posts);
     print(tempID);
+    print(Posts.length);
     for (int i = 0; i < Posts.length; i++) {
       if (Posts[i]["userID"] == tempID) {
         User_Posts.add(Posts[i]);
@@ -110,6 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       PostimageURL = tempURL;
       userID = tempID;
     });
+    Navigator.pop(context);
   }
 
   @override
@@ -267,7 +296,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundColor: Colors.blue[500],
                     ),
                     onPressed: () {
-                      Post_Dialog(context);
+                      PostDailog(isEdit: false,);
                     },
                     child: Row(
                       children: [
@@ -403,6 +432,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   userID: userID,
                                   post_id: User_Posts[index]["post_id"],
                                   isLiked: User_Posts[index]["isLiked"],
+                                  isApproved: User_Posts[index]["isApproved"],
                                 ),
                               );
                             },
@@ -432,7 +462,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     isHomeScreen: true,
                                     userID: userID,
                                     post_id: User_LikedPosts[index]["post_id"],
-                                    isLiked: User_LikedPosts[index]["isLiked"]),
+                                    isLiked: User_LikedPosts[index]["isLiked"],
+                                    isApproved: User_LikedPosts[index]["isApproved"]
+                                ),
                               );
                             },
                           ),

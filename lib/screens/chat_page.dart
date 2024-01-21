@@ -9,11 +9,15 @@ import '../services/chat/chat_service.dart';
 class ChatPage extends StatefulWidget {
   final String recieveruserEmail;
   final String recieverUserId;
+  final String recieverName;
+  final String recieverProfilePic;
 
   const ChatPage(
       {super.key,
       required this.recieveruserEmail,
-      required this.recieverUserId});
+      required this.recieverUserId,
+      required this.recieverName,
+      required this.recieverProfilePic});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -38,7 +42,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.recieveruserEmail),
+        title: Text(widget.recieverName),
       ),
       body: Column(
         children: [
@@ -50,7 +54,9 @@ class _ChatPageState extends State<ChatPage> {
           // user input
           _buildMessageInput(),
 
-          SizedBox(height: 25,)
+          SizedBox(
+            height: 25,
+          )
         ],
       ),
     );
@@ -96,16 +102,18 @@ class _ChatPageState extends State<ChatPage> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment:
-          (data['senderId'] == _firebaseAuth.currentUser!.uid)
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
+              (data['senderId'] == _firebaseAuth.currentUser!.uid)
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
           mainAxisAlignment:
-          (data['senderId'] == _firebaseAuth.currentUser!.uid)
-              ? MainAxisAlignment.end
-              : MainAxisAlignment.start,
+              (data['senderId'] == _firebaseAuth.currentUser!.uid)
+                  ? MainAxisAlignment.end
+                  : MainAxisAlignment.start,
           children: [
             Text(data['senderEmail']),
-            SizedBox(height: 5,),
+            SizedBox(
+              height: 5,
+            ),
             ChatBubble(messages: data['message']),
           ],
         ),

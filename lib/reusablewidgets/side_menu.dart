@@ -65,12 +65,11 @@ class _SideMenuState extends State<SideMenu> {
           ListTile(
             leading: const Icon(Icons.chat),
             title: const Text('Chats'),
-            onTap: () => Navigator.pushAndRemoveUntil(
+            onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const ChatMenu(),
-                ),
-                    (route) => false),
+                ),),
           ),
           const Divider(),
           ListTile(

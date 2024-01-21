@@ -2,17 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'chat_page.dart';
-import 'dashboard.dart';
+import '../chat_page.dart';
 
-class ChatMenu extends StatefulWidget {
-  const ChatMenu({super.key});
+class AllUsers extends StatefulWidget {
+  const AllUsers({super.key});
 
   @override
-  State<ChatMenu> createState() => _ChatMenuState();
+  State<AllUsers> createState() => _AllUsersState();
 }
 
-class _ChatMenuState extends State<ChatMenu> {
+class _AllUsersState extends State<AllUsers> {
   // instance of auth
   final FirebaseAuth _auth = FirebaseAuth.instance;
   //profile picture
@@ -22,25 +21,19 @@ class _ChatMenuState extends State<ChatMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(onPressed: () => Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const DashBoard(),
-              ),
-                  (route) => false), icon: Icon(Icons.arrow_back),),
-          title: Text(
-            "Chats",
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold
-            ),
+      appBar: AppBar(
+        title: Text(
+          "Chats",
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold
           ),
-          elevation: 0,
-          backgroundColor: Colors.deepOrange,
-          centerTitle: true,
         ),
-        body: _buildUserList());
+        elevation: 0,
+        backgroundColor: Colors.deepOrange,
+        centerTitle: true,
+      ),
+      body: _buildUserList());
   }
 
   // build a list of user except for the current logged in user
@@ -80,10 +73,6 @@ class _ChatMenuState extends State<ChatMenu> {
             backgroundImage: NetworkImage(data['ImageURL']),
           ),
         ),
-        // Icon(
-        //   Icons.account_circle_outlined,
-        //   color: Colors.deepOrangeAccent,
-        // ),
         title: Text(data['Name']),
         onTap: () {
           // pass the clicked user's UID to the chat page
@@ -99,6 +88,12 @@ class _ChatMenuState extends State<ChatMenu> {
             ),
           );
         },
+        trailing: IconButton(
+            icon: Icon(Icons.delete),
+          onPressed: () {
+
+          },
+        ),
       );
     } else {
       //return empty container

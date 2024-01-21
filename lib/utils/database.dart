@@ -75,7 +75,6 @@ class UserModel {
     }
   }
 
-
   Future<String?> updateLikedPostId({
     required String postId,
     required String userID,
@@ -94,7 +93,10 @@ class UserModel {
       if (!likedPostIds.contains(postId)) {
         likedPostIds.add(postId);
 
-        await FirebaseFirestore.instance.collection('user_data').doc(userID).update({
+        await FirebaseFirestore.instance
+            .collection('user_data')
+            .doc(userID)
+            .update({
           "liked_post_id": likedPostIds,
         });
 
@@ -224,6 +226,7 @@ class PostModel {
     required String title,
     required String description,
     required List imageURL,
+    required bool isApproved,
   }) async {
     try {
       CollectionReference posts =
@@ -234,7 +237,8 @@ class PostModel {
         'title': title,
         'description': description,
         'images': imageURL,
-        'date':date,
+        'date': date,
+        'isApproved': isApproved,
       });
       return 'Added post Successfully.';
     } catch (e) {
@@ -252,7 +256,7 @@ class PostModel {
     return postIDs;
   }
 
-  void delete_post(String id) async {
+  Future<void> delete_post(String id) async {
     await FirebaseFirestore.instance.collection("posts").doc(id).delete();
     // UserModel().update_liked_post_id(post_id: post_id, userID: userID)
   }
@@ -278,10 +282,15 @@ class PostModel {
     required String title,
     required String description,
     required List imageURL,
+    required bool isApproved,
   }) async {
     try {
       FirebaseFirestore.instance.collection('posts').doc(postID).update({
-        'title': title,'description': description,'images':imageURL,'date':date
+        'title': title,
+        'description': description,
+        'images': imageURL,
+        'date': date,
+        'isApproved': isApproved
       });
       return 'Post Updated';
     } catch (e) {
@@ -351,32 +360,3 @@ class PostModel {
   }
 }
 
-// message
-
-// class Message {
-//   final String senderId;
-//   final String senderEmail;
-//   final String receiverId;
-//   final String message;
-//   final Timestamp timestamp;
-//
-//   Message({
-//     required this.senderId,
-//     required this.senderEmail,
-//     required this.receiverId,
-//     required this.message,
-//     required this.timestamp,
-//   });
-//
-//   //convert to a map
-//   Map<String, dynamic> toMap(){
-//     return {
-//       'senderId' : senderId,
-//       'senderEmail' : senderEmail,
-//       'receiverId' : receiverId,
-//       'message' : message,
-//       'timestamp' : timestamp
-//     };
-//   }
-//
-// }
