@@ -1,5 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:motomate/utils/flutter_toast.dart';
 import 'package:regexed_validator/regexed_validator.dart';
+
+import '../../utils/notification.dart';
+import 'login.dart';
 
 class ForgetPasswordMailScreen extends StatefulWidget {
   const ForgetPasswordMailScreen({super.key});
@@ -11,6 +16,7 @@ class ForgetPasswordMailScreen extends StatefulWidget {
 
 class _ForgetPasswordMailScreenState extends State<ForgetPasswordMailScreen> {
   final _formKey = GlobalKey<FormState>();
+  TextEditingController emailcontroller =TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +71,7 @@ class _ForgetPasswordMailScreenState extends State<ForgetPasswordMailScreen> {
                 child: Container(
                   constraints: const BoxConstraints(minHeight: 50),
                   child: TextFormField(
+                    controller: emailcontroller,
                       decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.account_circle_rounded),
                           labelText: "Email Address",
@@ -99,8 +106,8 @@ class _ForgetPasswordMailScreenState extends State<ForgetPasswordMailScreen> {
                         // setState(() {
                         //   _data.name = _data.name;
                         // });
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("All is good")));
+                        resetPassword(context, emailcontroller.text);
+
                       }
                     },
                     child: const Text("Submit")),
@@ -112,19 +119,40 @@ class _ForgetPasswordMailScreenState extends State<ForgetPasswordMailScreen> {
     );
   }
 
-  /*void validateEmail(String val) {
-    if (val.isEmpty) {
-      setState(() {
-        _ErrorMessage = "Email cannot be empty";
-      });
-    } else if (!RegExp(r"\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b").hasMatch(val)) {
-      setState(() {
-        _ErrorMessage = "Invalid Email Address";
-      });
-    } else {
-      setState(() {
-        _ErrorMessage = "";
-      });
+  void resetPassword(BuildContext context, String email) async {
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: email)
+          .then(
+            (value) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              PageRouteBuilder(
+                transitionDuration: const Duration(seconds: 1),
+                transitionsBuilder: (context, animation, animationTime, child) {
+                  animation = CurvedAnimation(
+                      parent: animation, curve: Curves.fastLinearToSlowEaseIn);
+                  return ScaleTransition(
+                    scale: animation,
+                    alignment: Alignment.center,
+                    child: child,
+                  );
+                },
+                pageBuilder: (context, animation, animationTime) {
+                  return const Login();
+                },
+              ),
+                  (route) => false);
+          NotificationService().pushNotification(
+              'Reset password link has been send to your given Email.');
+        },
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        displayToastMessage("User not exist",context,);
+      } else if (e.code == 'invalid-email') {
+        displayToastMessage("Invalid email",context,);
+      }
     }
-  }*/
+  }
 }

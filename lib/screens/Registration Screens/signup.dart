@@ -6,6 +6,7 @@ import 'package:email_otp/email_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:motomate/utils/flutter_toast.dart';
+import 'package:motomate/utils/notification.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 import 'login.dart';
 import 'otp_screen.dart';
@@ -237,10 +238,12 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
                         );
                         bool res = await myAuth.sendOTP();
                         if (res==true){
-                          displayToastMessage(
-                            'We have sent you OTP on the entered email',
-                            context,
-                          );
+                          NotificationService().pushNotification(
+                              'We have sent you a OTP code. Please check your email.');
+                          // displayToastMessage(
+                          //   'We have sent you OTP on the entered email',
+                          //   context,
+                          // );
                           Navigator.push(
                             context,
                             MaterialPageRoute(

@@ -23,7 +23,7 @@ class _AllUsersState extends State<AllUsers> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Chats",
+          "All Users",
           style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold
@@ -88,12 +88,6 @@ class _AllUsersState extends State<AllUsers> {
             ),
           );
         },
-        trailing: IconButton(
-            icon: Icon(Icons.delete),
-          onPressed: () {
-
-          },
-        ),
       );
     } else {
       //return empty container

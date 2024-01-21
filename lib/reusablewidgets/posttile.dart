@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_custom_carousel_slider/flutter_custom_carousel_slider.dart';
 import 'package:motomate/reusablewidgets/post_dailog.dart';
+import 'package:motomate/screens/chat_page.dart';
 import 'package:motomate/screens/profile.dart';
 import 'package:motomate/utils/database.dart';
 import 'package:motomate/utils/shared_prefs.dart';
@@ -272,7 +273,19 @@ class _PostTile extends State<PostTile> {
                   color: widget.isLiked ? Color(0xffFC0202) : _favIconColor,
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatPage(
+                          recieveruserEmail: widget.email,
+                          recieverUserId: widget.userID,
+                          recieverName: widget.name,
+                          recieverProfilePic: widget.profileUrl,
+                        ),
+                      ),
+                    );
+                  },
                   icon: const Icon(Icons.insert_comment_rounded),
                   color: Colors.grey,
                 ),

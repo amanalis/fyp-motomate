@@ -10,6 +10,7 @@ import 'package:motomate/screens/dashboard.dart';
 import 'package:motomate/screens/profile.dart';
 import 'package:motomate/utils/database.dart';
 import 'package:motomate/utils/flutter_toast.dart';
+import '../utils/notification.dart';
 import '../utils/shared_prefs.dart';
 
 // Future Post_Dialog(BuildContext context) {
@@ -661,6 +662,8 @@ class _PostDailogState extends State<PostDailog> {
 
                                 displayToastMessage(
                                     "Post Send For Approval.", context);
+                                NotificationService().pushNotification(
+                                    'Your post has been sent for Verification.');
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(

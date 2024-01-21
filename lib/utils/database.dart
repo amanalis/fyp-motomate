@@ -205,6 +205,7 @@ class UserModel {
     return count;
   }
 
+
   Future<void> signOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut().then(
           (value) => Navigator.pushAndRemoveUntil(
