@@ -162,7 +162,11 @@ class _PostTile extends State<PostTile> {
                                       Image: widget.imageUrl,
                                       isEdit: true,
                                       post_id: widget.post_id,
-                                      isApproved: widget.isApproved),
+                                      isApproved: widget.isApproved,
+                                    YOM: widget.YOM,
+                                    CC: widget.CC,
+                                    companyname: widget.companyname,
+                                  ),
                                 ),
                               );
                             },
@@ -201,10 +205,10 @@ class _PostTile extends State<PostTile> {
             ),
             Row(
               children: [
-                Text("CompanyName ${widget.companyname} ",
+                Text("CompanyName: ${widget.companyname} ",
                     style:
                     TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                Text("Year ${widget.YOM} ",
+                Text("Year: ${widget.YOM} ",
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 Text(widget.CC,

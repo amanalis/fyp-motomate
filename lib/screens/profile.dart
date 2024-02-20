@@ -303,7 +303,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundColor: Colors.blue[500],
                     ),
                     onPressed: () {
-                      PostDailog(isEdit: false,);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PostDailog(
+                            isEdit: false,
+                          ),
+                        ),
+                      );
                     },
                     child: Row(
                       children: [

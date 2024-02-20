@@ -166,6 +166,9 @@ class _AdminPosttileState extends State<AdminPosttile> {
               style: TextStyle(fontSize: 16),),
             Row(
               children: [
+                Text("CompanyName: ${widget.companyname} ",
+                    style:
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 Text("Year ${widget.YOM} ",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 Text(widget.CC,style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               ],

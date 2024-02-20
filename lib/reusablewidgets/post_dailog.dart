@@ -418,7 +418,6 @@ class _PostDailogState extends State<PostDailog> {
                         'SuperPower',
                         'SuperStar',
                         'Others',
-
                       ].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -457,8 +456,8 @@ class _PostDailogState extends State<PostDailog> {
                       },
                     ),
                     DropdownButton<String>(
-                      hint:
-                          _CC == "" ? Text("Year of Manufactured") : Text(_CC),
+                      hint: _CC == ""
+                          ? Text("Engine CC") : Text(_CC),
                       isExpanded: true,
                       items: <String>[
                         '70CC',
