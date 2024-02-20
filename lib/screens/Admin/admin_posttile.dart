@@ -22,7 +22,9 @@ class AdminPosttile extends StatefulWidget {
       required this.isApproved,
       required this.isApprovingPost,
       required this.YOM,
-      required this.CC, required this.companyname, required this.email});
+      required this.CC,
+      required this.companyname,
+      required this.email});
 
   final List imageUrl;
   final String name;
@@ -115,16 +117,15 @@ class _AdminPosttileState extends State<AdminPosttile> {
                     ? IconButton(
                         onPressed: () async {
                           await PostModel().updatePost(
-                            date: widget.date,
-                            postID: widget.post_id,
-                            title: widget.title,
-                            description: widget.Description,
-                            imageURL: widget.imageUrl,
-                            isApproved: true,
-                            YOM: widget.YOM,
-                            CC: widget.CC,
-                            companyname: widget.companyname
-                          );
+                              date: widget.date,
+                              postID: widget.post_id,
+                              title: widget.title,
+                              description: widget.Description,
+                              imageURL: widget.imageUrl,
+                              isApproved: true,
+                              YOM: widget.YOM,
+                              CC: widget.CC,
+                              companyname: widget.companyname);
                           displayToastMessage("Post Approved!", context);
                           Navigator.pushReplacement(
                               context,
@@ -144,8 +145,24 @@ class _AdminPosttileState extends State<AdminPosttile> {
                       ),
                 IconButton(
                   onPressed: () async {
-                    await PostModel().delete_post(widget.post_id);
-                    displayToastMessage("Post Deleted!", context);
+                    // await PostModel().delete_post(widget.post_id);
+                    // displayToastMessage("Post Deleted!", context);
+                    // Navigator.pushReplacement(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => PostToApprove(),
+                    //     ));
+                    await PostModel().updatePost(
+                        date: widget.date,
+                        postID: widget.post_id,
+                        title: widget.title,
+                        description: widget.Description,
+                        imageURL: widget.imageUrl,
+                        isApproved: false,
+                        YOM: widget.YOM,
+                        CC: widget.CC,
+                        companyname: widget.companyname);
+                    displayToastMessage("Post Rejected!", context);
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -160,17 +177,28 @@ class _AdminPosttileState extends State<AdminPosttile> {
                 )
               ],
             ),
-            Text(widget.title,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,decoration: TextDecoration.underline),),
-            Text(widget.Description,
-              style: TextStyle(fontSize: 16),),
+            Text(
+              widget.title,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  decoration: TextDecoration.underline),
+            ),
+            Text(
+              widget.Description,
+              style: TextStyle(fontSize: 16),
+            ),
             Row(
               children: [
                 Text("CompanyName: ${widget.companyname} ",
                     style:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                Text("Year ${widget.YOM} ",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                Text(widget.CC,style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                Text("Year ${widget.YOM} ",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(widget.CC,
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               ],
             ),
             FlutterCarousel(

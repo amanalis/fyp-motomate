@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:motomate/screens/Admin/all_posts.dart';
 import 'package:motomate/screens/Admin/all_users.dart';
 import 'package:motomate/screens/Admin/post_to_approve.dart';
+import 'package:motomate/screens/Admin/rejected_posts.dart';
 import 'package:motomate/utils/database.dart';
 
 class AdminDashBoard extends StatefulWidget {
@@ -29,7 +29,7 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
         actions: [
           IconButton(
               onPressed: () async => await UserModel().signOut(context),
-              icon: Icon(Icons.logout))
+              icon: const Icon(Icons.logout))
         ],
         elevation: 0,
         backgroundColor: Colors.deepOrange,
@@ -72,9 +72,9 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                     onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AllPosts(),
+                          builder: (context) => const AllPosts(),
                         )),
-                    child: Text(
+                    child: const Text(
                       "Veiw All Posts",
                       style: TextStyle(color: Colors.white),
                     ),
@@ -96,9 +96,9 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                     onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PostToApprove(),
+                          builder: (context) => const PostToApprove(),
                         )),
-                    child: Text(
+                    child: const Text(
                       "Posts To Approve",
                       style: TextStyle(color: Colors.white),
                     ),
@@ -128,9 +128,9 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                     onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AllUsers(),
+                          builder: (context) => const AllUsers(),
                         )),
-                    child: Text(
+                    child: const Text(
                       "All Users",
                       style: TextStyle(color: Colors.white),
                     ),
@@ -149,9 +149,13 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    onPressed: () {},
-                    child: Text(
-                      "Reports",
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RejectedPost(),
+                        )),
+                    child: const Text(
+                      "Rejected Posts",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
