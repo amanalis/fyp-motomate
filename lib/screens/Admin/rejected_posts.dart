@@ -20,7 +20,6 @@ class _RejectedPostState extends State<RejectedPost> {
   List<Map<String, dynamic>> Posts = [];
 
   void getData() async {
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       showDialog(
         context: context,
@@ -50,13 +49,13 @@ class _RejectedPostState extends State<RejectedPost> {
     });
     int count = await PostModel().getPostCount();
 
-    for (int i = count-1; i >= 0; i--) {
+    for (int i = count - 1; i >= 0; i--) {
       var doc = await PostModel().getPostDocument();
 
       String? name =
-      await UserModel().getUserData(doc[i]["userID"].toString(), "Name");
+          await UserModel().getUserData(doc[i]["userID"].toString(), "Name");
       String? user_image =
-      await UserModel().getUserData(doc[i]["userID"], "ImageURL");
+          await UserModel().getUserData(doc[i]["userID"], "ImageURL");
       if (doc[i]["isApproved"] == false) {
         Posts.add({
           "post_images": doc[i]["images"],
@@ -68,8 +67,9 @@ class _RejectedPostState extends State<RejectedPost> {
           "post_id": doc[i]["documentID"],
           "date": doc[i]["date"],
           "isApproved": doc[i]["isApproved"],
+          "isRejected": doc[i]["isRejected"],
           "YOM": doc[i]["YOM"],
-          "CC" : doc[i]["CC"],
+          "CC": doc[i]["CC"],
           "companyname": doc[i]['companyname'],
           "email": doc[i]['email'],
         });
@@ -130,7 +130,7 @@ class _RejectedPostState extends State<RejectedPost> {
                 child: Row(
                   children: [
                     Text(
-                      "All Approved Posts",
+                      "All Rejected Posts",
                       style: TextStyle(
                         fontFamily: ('GravisPersonal'),
                         fontSize: 24,
@@ -163,6 +163,7 @@ class _RejectedPostState extends State<RejectedPost> {
                         CC: Posts[index]['CC'],
                         companyname: Posts[index]['companyname'],
                         email: Posts[index]['email'],
+                        isRejected: Posts[index]["isRejected"],
                       );
                     },
                   ))

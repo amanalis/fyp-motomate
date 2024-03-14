@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -234,6 +235,7 @@ class PostDailog extends StatefulWidget {
   final bool isEdit;
   final String? post_id;
   final bool? isApproved;
+  final bool? isRejected;
   final String? YOM;
   final String? CC;
   final String? companyname;
@@ -246,6 +248,7 @@ class PostDailog extends StatefulWidget {
       required this.isEdit,
       this.post_id,
       this.isApproved,
+      this.isRejected,
       this.YOM,
       this.CC,
       this.companyname});
@@ -456,8 +459,7 @@ class _PostDailogState extends State<PostDailog> {
                       },
                     ),
                     DropdownButton<String>(
-                      hint: _CC == ""
-                          ? Text("Engine CC") : Text(_CC),
+                      hint: _CC == "" ? Text("Engine CC") : Text(_CC),
                       isExpanded: true,
                       items: <String>[
                         '70CC',
@@ -628,6 +630,7 @@ class _PostDailogState extends State<PostDailog> {
                                   YOM: widget.YOM!,
                                   CC: widget.CC!,
                                   companyname: widget.companyname!,
+                                  isRejected: widget.isRejected!,
                                 );
 
                                 Navigator.pushAndRemoveUntil(
@@ -647,17 +650,19 @@ class _PostDailogState extends State<PostDailog> {
                                     (await SharedPrefs().getData('email'))!;
                                 int count = await PostModel().getPostCount();
                                 await PostModel().addPost(
-                                    postID: count,
-                                    userID: Id,
-                                    title: titlecontroller.text,
-                                    description: descriptioncontroller.text,
-                                    imageURL: Db_images,
-                                    date: date,
-                                    isApproved: false,
-                                    YOM: _YOM,
-                                    CC: _CC,
-                                    email: email,
-                                    companyname: _companyname);
+                                  postID: count,
+                                  userID: Id,
+                                  title: titlecontroller.text,
+                                  description: descriptioncontroller.text,
+                                  imageURL: Db_images,
+                                  date: date,
+                                  isApproved: false,
+                                  isRejected: false,
+                                  YOM: _YOM,
+                                  CC: _CC,
+                                  email: email,
+                                  companyname: _companyname,
+                                );
 
                                 // displayToastMessage(
                                 //     "Post Send For Approval.", context);

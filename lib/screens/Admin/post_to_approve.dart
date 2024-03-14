@@ -60,7 +60,7 @@ class _PostToApproveState extends State<PostToApprove> {
           await UserModel().getUserData(doc[i]["userID"].toString(), "Name");
       String? user_image =
           await UserModel().getUserData(doc[i]["userID"], "ImageURL");
-      if (doc[i]["isApproved"] == false) {
+      if (doc[i]["isApproved"] == false && doc[i]["isRejected"] == false) {
         Posts.add({
           "post_images": doc[i]["images"],
           "userID": doc[i]["userID"],
@@ -71,6 +71,7 @@ class _PostToApproveState extends State<PostToApprove> {
           "post_id": doc[i]["documentID"],
           "date": doc[i]["date"],
           "isApproved": doc[i]["isApproved"],
+          "isRejected": doc[i]["isRejected"],
           "YOM": doc[i]["YOM"],
           "CC" : doc[i]["CC"],
           "companyname": doc[i]["companyname"],
@@ -143,6 +144,7 @@ class _PostToApproveState extends State<PostToApprove> {
                         userID: userID,
                         post_id: Posts[index]["post_id"],
                         isApproved: Posts[index]["isApproved"],
+                        isRejected: Posts[index]['isRejected'],
                         isApprovingPost: true,
                         YOM: Posts[index]["YOM"],
                         CC: Posts[index]['CC'],

@@ -7,6 +7,24 @@ import 'package:motomate/utils/flutter_toast.dart';
 import '../../utils/database.dart';
 
 class AdminPosttile extends StatefulWidget {
+  final List imageUrl;
+  final String name;
+  final String profileUrl;
+  final String title;
+  final String date;
+  final String Description;
+  final bool isHomeScreen;
+  final String userID;
+  final String post_id;
+  final bool? isLiked;
+  final bool isApproved;
+  final bool isRejected;
+  final bool isApprovingPost;
+  final String YOM;
+  final String CC;
+  final String companyname;
+  final String email;
+
   const AdminPosttile(
       {super.key,
       required this.imageUrl,
@@ -24,24 +42,8 @@ class AdminPosttile extends StatefulWidget {
       required this.YOM,
       required this.CC,
       required this.companyname,
-      required this.email});
-
-  final List imageUrl;
-  final String name;
-  final String profileUrl;
-  final String title;
-  final String date;
-  final String Description;
-  final bool isHomeScreen;
-  final String userID;
-  final String post_id;
-  final bool? isLiked;
-  final bool isApproved;
-  final bool isApprovingPost;
-  final String YOM;
-  final String CC;
-  final String companyname;
-  final String email;
+      required this.email,
+      required this.isRejected});
 
   @override
   State<AdminPosttile> createState() => _AdminPosttileState();
@@ -113,19 +115,21 @@ class _AdminPosttileState extends State<AdminPosttile> {
                     ),
                   ),
                 ),
-                widget.isApprovingPost == true
+                widget.isApprovingPost == true && widget.isRejected == false
                     ? IconButton(
                         onPressed: () async {
                           await PostModel().updatePost(
-                              date: widget.date,
-                              postID: widget.post_id,
-                              title: widget.title,
-                              description: widget.Description,
-                              imageURL: widget.imageUrl,
-                              isApproved: true,
-                              YOM: widget.YOM,
-                              CC: widget.CC,
-                              companyname: widget.companyname);
+                            date: widget.date,
+                            postID: widget.post_id,
+                            title: widget.title,
+                            description: widget.Description,
+                            imageURL: widget.imageUrl,
+                            isApproved: true,
+                            isRejected: false,
+                            YOM: widget.YOM,
+                            CC: widget.CC,
+                            companyname: widget.companyname,
+                          );
                           displayToastMessage("Post Approved!", context);
                           Navigator.pushReplacement(
                               context,
@@ -159,9 +163,10 @@ class _AdminPosttileState extends State<AdminPosttile> {
                         description: widget.Description,
                         imageURL: widget.imageUrl,
                         isApproved: false,
+                        isRejected: true,
                         YOM: widget.YOM,
                         CC: widget.CC,
-                        companyname: widget.companyname);
+                        companyname: widget.companyname,);
                     displayToastMessage("Post Rejected!", context);
                     Navigator.pushReplacement(
                         context,

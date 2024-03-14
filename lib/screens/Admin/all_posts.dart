@@ -69,6 +69,7 @@ class _AllPostsState extends State<AllPosts> {
           "post_id": doc[i]["documentID"],
           "date": doc[i]["date"],
           "isApproved": doc[i]["isApproved"],
+          "isRejected": doc[i]["isRejected"],
           "YOM": doc[i]["YOM"],
           "CC" : doc[i]["CC"],
           "companyname": doc[i]['companyname'],
@@ -164,6 +165,7 @@ class _AllPostsState extends State<AllPosts> {
                         CC: Posts[index]['CC'],
                         companyname: Posts[index]['companyname'],
                         email: Posts[index]['email'],
+                        isRejected: Posts[index]["isRejected"],
                       );
                     },
                   ))

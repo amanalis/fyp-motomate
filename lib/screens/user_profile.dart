@@ -1,26 +1,33 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:motomate/reusablewidgets/post_dailog.dart';
-import 'package:motomate/screens/edit_profile.dart';
-import 'package:motomate/utils/database.dart';
+import 'package:motomate/reusablewidgets/side_menu.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../reusablewidgets/posttile.dart';
-import '../reusablewidgets/side_menu.dart';
+import '../utils/database.dart';
 import '../utils/shared_prefs.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class UserProfile extends StatefulWidget {
+  final String otherUserEmail;
+  final String otherUserId;
+  final String otherUserName;
+  final String otherUserProfilePic;
+
+  const UserProfile(
+      {super.key,
+      required this.otherUserEmail,
+      required this.otherUserId,
+      required this.otherUserName,
+      required this.otherUserProfilePic});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<UserProfile> createState() => _UserProfileState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _UserProfileState extends State<UserProfile> {
+  //instance of auth
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  //Current User Details
   String name = "";
   String email = "";
   String imageUrl =
@@ -29,13 +36,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
   String userID = "";
 
-  // String tempUrl="";
   int tab = 0;
 
   void getData() async {
-    String tempName = (await SharedPrefs().getData("name"))!;
-    String tempEmail = (await SharedPrefs().getData("email"))!;
-    String tempURL = (await SharedPrefs().getData("imageURL"))!;
+    String tempName = widget.otherUserName;
+    String tempEmail = widget.otherUserEmail;
+    String tempURL = widget.otherUserProfilePic;
 
     setState(() {
       name = tempName;
@@ -72,10 +78,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
       );
     });
-    String tempName = (await SharedPrefs().getData("name"))!;
-    String tempEmail = (await SharedPrefs().getData("email"))!;
-    String tempURL = (await SharedPrefs().getData("imageURL"))!;
-    String tempID = (await SharedPrefs().getData("id"))!;
+    String tempName = widget.otherUserName;
+    String tempEmail = widget.otherUserEmail;
+    String tempURL = widget.otherUserProfilePic;
+    String tempID = widget.otherUserId;
     int count = await PostModel().getPostCount();
     for (int i = count - 1; i >= 0; i--) {
       var doc = await PostModel().getPostDocument();
@@ -147,15 +153,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      drawer: SideMenu(
-        name: name,
-        email: email,
-        imageUrl: imageUrl,
-      ),
+      // drawer: SideMenu(
+      //     name: name,
+      //     email: email,
+      //     imageUrl: imageUrl
+      // ),
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
         title: Image.asset(
@@ -179,7 +183,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
               height: size.height * 0.02,
@@ -188,86 +191,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               alignment: Alignment.topCenter,
               children: [
                 Container(
-                  margin: const EdgeInsets.only(top: 15),
+                  margin: EdgeInsets.only(top: 15),
                   child: CircleAvatar(
                     radius: 74,
-                    // backgroundColor: Colors.white,
                     backgroundColor: Colors.black,
                     child: CircleAvatar(
                       radius: 70,
-                      backgroundImage: NetworkImage(imageUrl),
+                      backgroundImage: NetworkImage(widget.otherUserProfilePic),
                     ),
                   ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 120),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                          padding: EdgeInsets.only(left: size.width * 0.175)),
-                      SizedBox(
-                        width: size.width * 0.07,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(0.1),
-                        decoration: const BoxDecoration(
-                            color: Colors.black,
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(100))),
-                        child: IconButton(
-                          onPressed: () async {
-                            ImagePicker imagePiker = ImagePicker();
-                            XFile? file = await imagePiker.pickImage(
-                                source: ImageSource.gallery);
-                            print('${file?.path}');
-
-                            if (file == null) return;
-                            String uniqueFileName = DateTime
-                                .now()
-                                .microsecondsSinceEpoch
-                                .toString();
-
-                            Reference referenceRoot =
-                            FirebaseStorage.instance.ref();
-                            Reference referenceDirImages =
-                            referenceRoot.child('images');
-
-                            Reference referenceImageToUpload =
-                            referenceDirImages.child(uniqueFileName);
-
-                            try {
-                              await referenceImageToUpload
-                                  .putFile(File(file.path));
-
-                              imageUrl =
-                              await referenceImageToUpload.getDownloadURL();
-
-                              String id = (await SharedPrefs().getData('id'))!;
-                              await UserModel().updateUser(
-                                  userID: id, key: 'ImageURL', data: imageUrl);
-                              await SharedPrefs().updateImageURL(imageUrl);
-                              setState(() {
-                                imageUrl = imageUrl;
-                              });
-                            } catch (error) {}
-                          },
-                          icon: Icon(
-                            Icons.camera_alt,
-                          ),
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                )
               ],
             ),
             SizedBox(
               height: size.height * 0.02,
             ),
             Text(
-              name,
+              widget.otherUserName,
               style: const TextStyle(
                   color: Colors.black,
                   fontSize: 23,
@@ -276,70 +216,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                email,
+                widget.otherUserEmail,
                 style: const TextStyle(color: Colors.black54, fontSize: 15),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[500],
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PostDailog(
-                            isEdit: false,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.add_circle_rounded,
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          width: size.width * 0.01,
-                        ),
-                        const Text(
-                          "Add Post",
-                          style: TextStyle(color: Colors.white),
-                        )
-                      ],
-                    )),
-                SizedBox(
-                  width: size.width * 0.04,
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[500],
-                  ),
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditProfileScreen(),
-                        ));
-                  },
-                  child: Row(
-                    children: [
-                      const Icon(Icons.edit, color: Colors.white),
-                      SizedBox(
-                        width: size.width * 0.01,
-                      ),
-                      const Text(
-                        "Edit Profile",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                ),
-              ],
             ),
             SizedBox(
               height: size.height * 0.015,
@@ -386,7 +265,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               width: size.width * 0.025,
                             ),
                             const Text(
-                              'My Feeds',
+                              'Feeds',
                             ),
                           ],
                         ),
@@ -487,20 +366,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
-            SingleChildScrollView(
-              child: SizedBox(
-                height: size.height * 0.5,
-                child: ListView.builder(
-                  itemCount: 3,
-                  itemBuilder: (context, index) =>
-                      Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(10),
-                        // child: const PostTile(),
-                      ),
-                ),
-              ),
-            )
           ],
         ),
       ),

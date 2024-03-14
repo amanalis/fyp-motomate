@@ -6,6 +6,7 @@ import 'package:flutter_custom_carousel_slider/flutter_custom_carousel_slider.da
 import 'package:motomate/reusablewidgets/post_dailog.dart';
 import 'package:motomate/screens/chat_page.dart';
 import 'package:motomate/screens/profile.dart';
+import 'package:motomate/screens/user_profile.dart';
 import 'package:motomate/utils/database.dart';
 import 'package:motomate/utils/shared_prefs.dart';
 
@@ -54,7 +55,9 @@ class _PostTile extends State<PostTile> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery
+        .of(context)
+        .size;
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5),
       height: size.height * 0.5,
@@ -72,13 +75,28 @@ class _PostTile extends State<PostTile> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  radius: 25,
-                  backgroundColor: Colors.black,
+                GestureDetector(
+                  onTap: () async {
+                    String? id = await UserModel().getUserID(widget.email);
+                    print(id);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>
+                            UserProfile(
+                                otherUserEmail: widget.email,
+                                otherUserId: id.toString(),
+                                otherUserName: widget.name,
+                                otherUserProfilePic: widget.profileUrl)
+                        ));
+                  },
                   child: CircleAvatar(
-                    radius: 23,
-                    backgroundColor: Colors.white,
-                    backgroundImage: NetworkImage(widget.profileUrl),
+                    radius: 25,
+                    backgroundColor: Colors.black,
+                    child: CircleAvatar(
+                      radius: 23,
+                      backgroundColor: Colors.white,
+                      backgroundImage: NetworkImage(widget.profileUrl),
+                    ),
                   ),
                 ),
                 // ),
@@ -145,51 +163,52 @@ class _PostTile extends State<PostTile> {
                 ),
                 PopupMenuButton(
                   itemBuilder: (context) =>
-                      [PopupMenuItem(child: Text("Report the post."))],
+                  [PopupMenuItem(child: Text("Report the post."))],
                 ),
                 widget.isHomeScreen
                     ? SizedBox(width: 0, height: 0)
                     : Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PostDailog(
-                                      title: widget.title,
-                                      Description: widget.Description,
-                                      Image: widget.imageUrl,
-                                      isEdit: true,
-                                      post_id: widget.post_id,
-                                      isApproved: widget.isApproved,
-                                    YOM: widget.YOM,
-                                    CC: widget.CC,
-                                    companyname: widget.companyname,
-                                  ),
-                                ),
-                              );
-                            },
-                            icon: const Icon(Icons.edit),
-                            color: _favIconColor,
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              UserModel().delete_liked_post_id(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                PostDailog(
+                                  title: widget.title,
+                                  Description: widget.Description,
+                                  Image: widget.imageUrl,
+                                  isEdit: true,
                                   post_id: widget.post_id,
-                                  userID: widget.userID);
-                              PostModel().delete_post(widget.post_id);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ProfileScreen(),
-                                  ));
-                            },
-                            icon: const Icon(Icons.delete_outline),
-                            color: _favIconColor,
+                                  isApproved: widget.isApproved,
+                                  YOM: widget.YOM,
+                                  CC: widget.CC,
+                                  companyname: widget.companyname,
+                                ),
                           ),
-                        ],
-                      ),
+                        );
+                      },
+                      icon: const Icon(Icons.edit),
+                      color: _favIconColor,
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        UserModel().delete_liked_post_id(
+                            post_id: widget.post_id,
+                            userID: widget.userID);
+                        PostModel().delete_post(widget.post_id);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileScreen(),
+                            ));
+                      },
+                      icon: const Icon(Icons.delete_outline),
+                      color: _favIconColor,
+                    ),
+                  ],
+                ),
               ],
             ),
             Text(
@@ -210,10 +229,10 @@ class _PostTile extends State<PostTile> {
                     TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 Text("Year: ${widget.YOM} ",
                     style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 Text(widget.CC,
                     style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               ],
             ),
             FlutterCarousel(
@@ -235,11 +254,12 @@ class _PostTile extends State<PostTile> {
               ),
               items: widget.imageUrl
                   .map(
-                    (item) => Padding(
+                    (item) =>
+                    Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 1),
                       child: ClipRRect(
                         borderRadius:
-                            const BorderRadius.all(Radius.circular(15)),
+                        const BorderRadius.all(Radius.circular(15)),
                         child: SizedBox(
                           width: size.width,
                           height: size.height * 0.2,
@@ -250,7 +270,7 @@ class _PostTile extends State<PostTile> {
                         ),
                       ),
                     ),
-                  )
+              )
                   .toList(),
             ),
             Row(
@@ -284,12 +304,13 @@ class _PostTile extends State<PostTile> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChatPage(
-                          recieveruserEmail: widget.email,
-                          recieverUserId: id.toString(),
-                          recieverName: widget.name,
-                          recieverProfilePic: widget.profileUrl,
-                        ),
+                        builder: (context) =>
+                            ChatPage(
+                              recieveruserEmail: widget.email,
+                              recieverUserId: id.toString(),
+                              recieverName: widget.name,
+                              recieverProfilePic: widget.profileUrl,
+                            ),
                       ),
                     );
                   },
