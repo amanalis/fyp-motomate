@@ -55,9 +55,7 @@ class _PostTile extends State<PostTile> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5),
       height: size.height * 0.5,
@@ -81,19 +79,18 @@ class _PostTile extends State<PostTile> {
                     print(id);
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) =>
-                            UserProfile(
+                        MaterialPageRoute(
+                            builder: (context) => UserProfile(
                                 otherUserEmail: widget.email,
                                 otherUserId: id.toString(),
                                 otherUserName: widget.name,
-                                otherUserProfilePic: widget.profileUrl)
-                        ));
+                                otherUserProfilePic: widget.profileUrl)));
                   },
                   child: CircleAvatar(
-                    radius: 25,
+                    radius: 27,
                     backgroundColor: Colors.black,
                     child: CircleAvatar(
-                      radius: 23,
+                      radius: 25,
                       backgroundColor: Colors.white,
                       backgroundImage: NetworkImage(widget.profileUrl),
                     ),
@@ -101,11 +98,11 @@ class _PostTile extends State<PostTile> {
                 ),
                 // ),
                 SizedBox(
-                  width: size.width * 0.01,
+                  width: size.width * 0.001,
                 ),
                 Expanded(
                   child: Container(
-                    margin: const EdgeInsets.only(top: 5),
+                    margin: const EdgeInsets.only(top: 6),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -163,59 +160,58 @@ class _PostTile extends State<PostTile> {
                 ),
                 PopupMenuButton(
                   itemBuilder: (context) =>
-                  [PopupMenuItem(child: Text("Report the post."))],
+                      [PopupMenuItem(child: Text("Report the post."))],
                 ),
                 widget.isHomeScreen
                     ? SizedBox(width: 0, height: 0)
                     : Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                PostDailog(
-                                  title: widget.title,
-                                  Description: widget.Description,
-                                  Image: widget.imageUrl,
-                                  isEdit: true,
-                                  post_id: widget.post_id,
-                                  isApproved: widget.isApproved,
-                                  YOM: widget.YOM,
-                                  CC: widget.CC,
-                                  companyname: widget.companyname,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PostDailog(
+                                    title: widget.title,
+                                    Description: widget.Description,
+                                    Image: widget.imageUrl,
+                                    isEdit: true,
+                                    post_id: widget.post_id,
+                                    isApproved: widget.isApproved,
+                                    YOM: widget.YOM,
+                                    CC: widget.CC,
+                                    companyname: widget.companyname,
+                                  ),
                                 ),
+                              );
+                            },
+                            icon: const Icon(Icons.edit),
+                            color: _favIconColor,
                           ),
-                        );
-                      },
-                      icon: const Icon(Icons.edit),
-                      color: _favIconColor,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        UserModel().delete_liked_post_id(
-                            post_id: widget.post_id,
-                            userID: widget.userID);
-                        PostModel().delete_post(widget.post_id);
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProfileScreen(),
-                            ));
-                      },
-                      icon: const Icon(Icons.delete_outline),
-                      color: _favIconColor,
-                    ),
-                  ],
-                ),
+                          IconButton(
+                            onPressed: () {
+                              UserModel().delete_liked_post_id(
+                                  post_id: widget.post_id,
+                                  userID: widget.userID);
+                              PostModel().delete_post(widget.post_id);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProfileScreen(),
+                                  ));
+                            },
+                            icon: const Icon(Icons.delete_outline),
+                            color: _favIconColor,
+                          ),
+                        ],
+                      ),
               ],
             ),
             Text(
               widget.title,
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 18,
                   decoration: TextDecoration.underline),
             ),
             Text(
@@ -224,15 +220,42 @@ class _PostTile extends State<PostTile> {
             ),
             Row(
               children: [
-                Text("CompanyName: ${widget.companyname} ",
-                    style:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                Text("Year: ${widget.YOM} ",
-                    style:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                Text(widget.CC,
-                    style:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                Container(
+                  //color: Colors.orange,
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Colors.orange,),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.5),
+                    child: Text("${widget.companyname} ",
+                        style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white)),
+                  ),
+                ),
+                SizedBox(
+                  width: size.width*0.02,
+                ),
+                Container(
+                  //color: Colors.orange,
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Colors.orange,),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.5),
+                    child: Text("${widget.YOM} ",
+                        style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white)),
+                  ),
+                ),
+                SizedBox(
+                  width: size.width*0.02,
+                ),
+                Container(
+                  //color: Colors.orange,
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Colors.orange,),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.5),
+                    child: Text("${widget.CC} ",
+                        style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white)),
+                  ),
+                ),
               ],
             ),
             FlutterCarousel(
@@ -254,12 +277,11 @@ class _PostTile extends State<PostTile> {
               ),
               items: widget.imageUrl
                   .map(
-                    (item) =>
-                    Padding(
+                    (item) => Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 1),
                       child: ClipRRect(
                         borderRadius:
-                        const BorderRadius.all(Radius.circular(15)),
+                            const BorderRadius.all(Radius.circular(15)),
                         child: SizedBox(
                           width: size.width,
                           height: size.height * 0.2,
@@ -270,7 +292,7 @@ class _PostTile extends State<PostTile> {
                         ),
                       ),
                     ),
-              )
+                  )
                   .toList(),
             ),
             Row(
@@ -304,13 +326,12 @@ class _PostTile extends State<PostTile> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ChatPage(
-                              recieveruserEmail: widget.email,
-                              recieverUserId: id.toString(),
-                              recieverName: widget.name,
-                              recieverProfilePic: widget.profileUrl,
-                            ),
+                        builder: (context) => ChatPage(
+                          recieveruserEmail: widget.email,
+                          recieverUserId: id.toString(),
+                          recieverName: widget.name,
+                          recieverProfilePic: widget.profileUrl,
+                        ),
                       ),
                     );
                   },
