@@ -55,6 +55,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
   String id = "";
   String imageUrl = "";
   bool _isRememberMe = false;
+  bool proaccount = false;
 
   Future<void> getData(String email) async {
     id = (await UserModel().getUserID(email))!;

@@ -10,6 +10,7 @@ class UserModel {
     required String email,
     required String phone,
     required String imageURL,
+    required bool proaccount
   }) async {
     try {
       CollectionReference users =
@@ -21,7 +22,8 @@ class UserModel {
         'Phone': phone,
         'ImageURL': imageURL,
         "liked_post_id": [],
-        "userID": userID
+        "userID": userID,
+        "proaccount" : proaccount
       });
       return 'success';
     } catch (e) {
@@ -43,7 +45,8 @@ class UserModel {
           'name': data['Name'],
           'email': data['Email'],
           'imageURL': data['ImageURL'],
-          'phone': data['Phone']
+          'phone': data['Phone'],
+          'proaccount' : data['proaccount'],
         },
       );
     }
