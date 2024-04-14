@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:motomate/utils/database.dart';
 import '../Components/chat_bubble.dart';
 import '../Components/my_text_field.dart';
 import '../services/chat/chat_service.dart';
@@ -26,6 +27,7 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messagesController = TextEditingController();
   final ChatService _chatService = ChatService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   void sendMessage() async {
     // only send message if there is something to send
@@ -36,12 +38,36 @@ class _ChatPageState extends State<ChatPage> {
       _messagesController.clear();
     }
   }
+  String Status = "";
 
+  /*String? getStatus(String recieverId) async {
+     Status = (await UserModel().getUserData(recieverId, 'status'))!;
+    print(Status);
+    return Status;
+  }*/
+
+  void getStatus() async {
+    Status = (await UserModel().getUserData(widget.recieverUserId, 'status'))!;
+    setState(() {
+
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getStatus();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.recieverName),
+        title: Text(widget.recieverName,),
+        leading: Status == 'Online'
+            ? Icon(Icons.circle,color: Colors.green,)
+            : Icon(Icons.circle,color: Colors.red,),
       ),
       body: Column(
         children: [
