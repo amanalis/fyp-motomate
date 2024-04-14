@@ -58,6 +58,7 @@ class _DashBoardState extends State<DashBoard> {
 
       String? name =
           await UserModel().getUserData(doc[i]["userID"].toString(), "Name");
+      // String? status= 'Online';
       String? user_image =
           await UserModel().getUserData(doc[i]["userID"], "ImageURL");
       if (doc[i]["isApproved"] == true) {

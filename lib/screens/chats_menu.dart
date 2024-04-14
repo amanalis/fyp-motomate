@@ -12,12 +12,37 @@ class ChatMenu extends StatefulWidget {
   State<ChatMenu> createState() => _ChatMenuState();
 }
 
-class _ChatMenuState extends State<ChatMenu> {
+class _ChatMenuState extends State<ChatMenu> with WidgetsBindingObserver {
   // instance of auth
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   //profile picture
   String imageURL =
       'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void setStat(String status) async {
+    await _firestore.collection('user_data').doc(_auth.currentUser!.uid).update({
+      'status' : status
+    });
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state){
+    if(state == AppLifecycleState.resumed){
+      //online
+      setStat('Online');
+    }
+    else{
+      // offline
+      setStat('Offline');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +110,10 @@ class _ChatMenuState extends State<ChatMenu> {
         //   color: Colors.deepOrangeAccent,
         // ),
         title: Text(data['Name']),
+        trailing:
+          data['status'] == 'Online'
+        ? Icon(Icons.circle,color: Colors.green,)
+        : Icon(Icons.circle,color: Colors.red,),
         onTap: () {
           // pass the clicked user's UID to the chat page
           Navigator.push(

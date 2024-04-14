@@ -108,7 +108,7 @@ class _OTPScreenState extends State<OTPScreen> {
         phone: widget.phone,
         imageURL:
             'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg',
-        proaccount: false);
+        proaccount: false, status: 'Online');
 
     SharedPrefs().saveUserDataInPrefs(
       widget.name,

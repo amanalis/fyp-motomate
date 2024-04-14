@@ -52,6 +52,8 @@ class PostTile extends StatefulWidget {
 
 class _PostTile extends State<PostTile> {
   Color _favIconColor = Colors.grey;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +164,7 @@ class _PostTile extends State<PostTile> {
                   itemBuilder: (context) =>
                       [PopupMenuItem(child: Text("Report the post."))],
                 ),
-                widget.isHomeScreen
+                widget.isHomeScreen && widget.userID == _auth.currentUser!.uid
                     ? SizedBox(width: 0, height: 0)
                     : Row(
                         children: [
