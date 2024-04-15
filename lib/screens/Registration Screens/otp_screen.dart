@@ -22,6 +22,7 @@ class OTPScreen extends StatefulWidget {
   // final EmailAuth Auth;
   final EmailOTP myAuth;
   // final AuthHandler authHandler;
+  final proaccount;
 
   const OTPScreen({
     super.key,
@@ -29,7 +30,7 @@ class OTPScreen extends StatefulWidget {
     required this.phone,
     required this.email,
     required this.password,
-     required this.myAuth,
+     required this.myAuth, this.proaccount,
   });
 
   @override
@@ -108,7 +109,7 @@ class _OTPScreenState extends State<OTPScreen> {
         phone: widget.phone,
         imageURL:
             'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg',
-        proaccount: false, status: 'Online');
+        proaccount: "false", status: 'Online');
 
     SharedPrefs().saveUserDataInPrefs(
       widget.name,
@@ -117,6 +118,7 @@ class _OTPScreenState extends State<OTPScreen> {
       widget.password,
       widget.phone,
       'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg',
+      widget.proaccount,
     );
 
     Navigator.pushAndRemoveUntil(

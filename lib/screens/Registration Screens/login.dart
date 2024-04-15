@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:motomate/screens/Admin/admin_dashboard.dart';
 import 'package:motomate/screens/Registration%20Screens/forget_password_mail.dart';
+import 'package:motomate/screens/Registration%20Screens/pro_account_confirmation.dart';
 import 'package:motomate/screens/Registration%20Screens/signup.dart';
 import 'package:motomate/screens/dashboard.dart';
 import 'package:motomate/utils/database.dart';
@@ -55,7 +56,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
   String id = "";
   String imageUrl = "";
   bool _isRememberMe = false;
-  bool proaccount = false;
+  String proaccount = "";
   String status = "";
 
   Future<void> getData(String email) async {
@@ -63,6 +64,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
     phoneNumber = (await UserModel().getUserData(id, "Phone"))!;
     name = (await UserModel().getUserData(id, "Name"))!;
     imageUrl = (await UserModel().getUserData(id, "ImageURL"))!;
+    proaccount = (await UserModel().getUserData(id, 'proaccount'))!;
     await SharedPrefs().saveUserDataInPrefs(
       name,
       id,
@@ -70,8 +72,23 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
       passwordController.text,
       phoneNumber,
       imageUrl,
+      proaccount,
     );
     await SharedPrefs().rememberMe(_isRememberMe);
+  }
+
+  /*String Pro = "";
+  String Id="";
+  void getProaccountStatus() async {
+    Id = (await UserModel().getUserID(emailController.text))!;
+    Pro = (await UserModel().getUserData(id, 'proaccount'))!;
+    setState(() {});
+  }*/
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -265,16 +282,42 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                                 (route) => false);
                             displayToastMessage("Welcome Admin!", context);
                           }
+                          //
+                          // else if( proaccount == "true"){
+                          //   Navigator.pushAndRemoveUntil(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => const DashBoard(),
+                          //     ),
+                          //         (route) => false,
+                          //   );
+                          //   displayToastMessage("Login", context);
+                          // }
                           else {
-                            getData(emailController.text);
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const DashBoard(),
-                              ),
-                              (route) => false,
-                            );
-                            displayToastMessage("Login", context);
+                            String Id = (await UserModel().getUserID(emailController.text))!;
+                            String pro = (await UserModel().getUserData(Id, 'proaccount'))!;
+                            print(pro);
+                            if( pro == "true"){
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const DashBoard(),
+                                ),
+                                    (route) => false,
+                              );
+                              displayToastMessage("Login", context);
+                            }
+                            else{
+                              getData(emailController.text);
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const Pro_Account_Confirmation(),
+                                ),
+                                    (route) => false,
+                              );
+                              displayToastMessage("Login", context);
+                            }
                           }
                         } else {
                           displayToastMessage("Login Fail", context);

@@ -10,7 +10,7 @@ class UserModel {
     required String email,
     required String phone,
     required String imageURL,
-    required bool proaccount,
+    required String proaccount,
     required String status,
   }) async {
     try {

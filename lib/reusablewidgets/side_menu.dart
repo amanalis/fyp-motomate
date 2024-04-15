@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:motomate/screens/Registration%20Screens/pro_account_confirmation.dart';
 import 'package:motomate/screens/chats_menu.dart';
 import 'package:motomate/screens/dashboard.dart';
 import 'package:motomate/screens/profile.dart';
@@ -62,6 +63,7 @@ class _SideMenuState extends State<SideMenu> {
                 ),
                 (route) => false),
           ),
+
           ListTile(
             leading: const Icon(Icons.chat),
             title: const Text('Chats'),
@@ -70,6 +72,15 @@ class _SideMenuState extends State<SideMenu> {
                 MaterialPageRoute(
                   builder: (context) => const ChatMenu(),
                 ),),
+          ),
+          ListTile(
+            leading: const Icon(Icons.rocket),
+            title: const Text('Get Pro-Account'),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Pro_Account_Confirmation(),
+                )),
           ),
           const Divider(),
           ListTile(

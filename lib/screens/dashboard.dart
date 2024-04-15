@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -15,6 +16,7 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final TextEditingController _searchController = TextEditingController();
   String name = "Loading...";
   String userID = "Loading...";
@@ -101,10 +103,19 @@ class _DashBoardState extends State<DashBoard> {
     Navigator.pop(context);
   }
 
+  String proAccountStatus = "";
+
+  void getAccountStatus() async {
+    proAccountStatus = (await UserModel()
+        .getUserData(_firebaseAuth.currentUser!.uid, 'proaccount'))!;
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
     getData();
+    getAccountStatus();
   }
 
   @override

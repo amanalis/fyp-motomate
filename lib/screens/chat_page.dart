@@ -40,12 +40,6 @@ class _ChatPageState extends State<ChatPage> {
   }
   String Status = "";
 
-  /*String? getStatus(String recieverId) async {
-     Status = (await UserModel().getUserData(recieverId, 'status'))!;
-    print(Status);
-    return Status;
-  }*/
-
   void getStatus() async {
     Status = (await UserModel().getUserData(widget.recieverUserId, 'status'))!;
     setState(() {

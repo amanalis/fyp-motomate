@@ -110,7 +110,7 @@ class _ForgetPasswordMailScreenState extends State<ForgetPasswordMailScreen> {
 
                       }
                     },
-                    child: const Text("Submit")),
+                    child: const Text("Submit", style: TextStyle(color: Colors.white),)),
               )
             ],
           ),

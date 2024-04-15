@@ -28,6 +28,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   bool _isEditable = false;
   String name = '';
   String email = '';
+  String proaccount = '';
   bool _isObscured = true;
   final _formKey = GlobalKey<FormState>();
 
@@ -37,6 +38,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     String tempPhone = (await SharedPrefs().getData("phonenumber"))!;
     String tempPassword = (await SharedPrefs().getData("password"))!;
     String tempURL = (await SharedPrefs().getData("imageURL"))!;
+    String tempPro = (await SharedPrefs().getData("proaccount"))!;
 
     setState(() {
       nameController.text = tempName;
@@ -46,6 +48,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       phoneController.text = tempPhone;
       passwordController.text = tempPassword;
       imageUrl = tempURL;
+      proaccount = tempPro;
     });
   }
 
@@ -297,7 +300,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   nameController.text,
                                   passwordController.text,
                                   phoneController.text,
-                                  imageUrl
+                                  imageUrl,
+                                  proaccount,
                                 );
                                 String id =
                                     (await SharedPrefs().getData('id'))!;
