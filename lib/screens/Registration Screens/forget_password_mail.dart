@@ -42,7 +42,7 @@ class _ForgetPasswordMailScreenState extends State<ForgetPasswordMailScreen> {
                 height: size.height * 0.1,
               ),
               Image.asset(
-                "images/forgetpassword.png",
+                "assets/images/forgetpassword.png",
                 height: 200,
                 fit: BoxFit.cover,
               ),

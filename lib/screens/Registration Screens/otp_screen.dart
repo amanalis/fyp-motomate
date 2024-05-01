@@ -19,8 +19,10 @@ class OTPScreen extends StatefulWidget {
   final String phone;
   final String email;
   final String password;
+
   // final EmailAuth Auth;
   final EmailOTP myAuth;
+
   // final AuthHandler authHandler;
   final proaccount;
 
@@ -30,7 +32,8 @@ class OTPScreen extends StatefulWidget {
     required this.phone,
     required this.email,
     required this.password,
-     required this.myAuth, this.proaccount,
+    required this.myAuth,
+    this.proaccount,
   });
 
   @override
@@ -55,7 +58,6 @@ class _OTPScreenState extends State<OTPScreen> {
   // ignore: non_constant_identifier_names
   Future<void> verifyOTP(String OTP) async {
     if (await widget.myAuth.verifyOTP(otp: OTP)) {
-
       displayToastMessage("OTP Verified", context);
       signup();
     } else {
@@ -64,7 +66,6 @@ class _OTPScreenState extends State<OTPScreen> {
         context,
       );
     }
-
   }
 
   void signup() async {
@@ -103,13 +104,16 @@ class _OTPScreenState extends State<OTPScreen> {
 
     //Save user information into Database
     await UserModel().addUser(
-        userID: await FirebaseAuth.instance.currentUser!.uid,
-        email: widget.email,
-        name: widget.name,
-        phone: widget.phone,
-        imageURL:
-            'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg',
-        proaccount: "false", status: 'Online');
+      userID: await FirebaseAuth.instance.currentUser!.uid,
+      email: widget.email,
+      name: widget.name,
+      phone: widget.phone,
+      imageURL:
+          'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg',
+      proaccount: "false",
+      status: 'Online',
+      creditcardno: '',
+    );
 
     SharedPrefs().saveUserDataInPrefs(
       widget.name,
@@ -141,8 +145,6 @@ class _OTPScreenState extends State<OTPScreen> {
       (route) => false,
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -215,10 +217,12 @@ class _OTPScreenState extends State<OTPScreen> {
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepOrange),
-                child: const Text("Next",
-                style: TextStyle(
-                  color: Colors.white,
-                ),),
+                child: const Text(
+                  "Next",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
             )
           ],

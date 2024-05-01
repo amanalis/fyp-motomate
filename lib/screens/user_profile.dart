@@ -163,7 +163,7 @@ class _UserProfileState extends State<UserProfile> {
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
         title: Image.asset(
-          "images/motomate.png",
+          "assets/images/motomate.png",
           height: size.height * 0.06,
         ),
         elevation: 0,
@@ -341,7 +341,7 @@ class _UserProfileState extends State<UserProfile> {
                                   title: User_LikedPosts[index]["title"],
                                   Description: User_LikedPosts[index]
                                   ["description"],
-                                  isHomeScreen: true,
+                                  isHomeScreen: false,
                                   userID: userID,
                                   post_id: User_LikedPosts[index]["post_id"],
                                   isLiked: User_LikedPosts[index]["isLiked"],

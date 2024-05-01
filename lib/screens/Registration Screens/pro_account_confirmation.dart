@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:motomate/screens/CreditCard/add_credit_card.dart';
 import 'package:motomate/screens/dashboard.dart';
 
 import '../../utils/database.dart';
+import '../../utils/flutter_toast.dart';
 
 class Pro_Account_Confirmation extends StatefulWidget {
   const Pro_Account_Confirmation({super.key});
@@ -38,10 +40,10 @@ class _Pro_Account_ConfirmationState extends State<Pro_Account_Confirmation> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
-        title: Image.asset(
-          "images/motomate.png",
-          height: size.height * 0.06,
-        ),
+        // title: Image.asset(
+        //   "assets/images/motomate.png",
+        //   height: size.height * 0.06,
+        // ),
         actions: [
           IconButton(
               onPressed: () async => await UserModel().signOut(context),
@@ -67,7 +69,7 @@ class _Pro_Account_ConfirmationState extends State<Pro_Account_Confirmation> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
-                        "images/motomate.png",
+                        "assets/images/motomate.png",
                         width: size.width * 0.65,
                         height: size.height * 0.65,
                       ),
@@ -77,128 +79,73 @@ class _Pro_Account_ConfirmationState extends State<Pro_Account_Confirmation> {
                 )
               ],
             )
-          : Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 10, top: 90),
-                  child: Container(
-                      height: size.height * 0.55,
-                      width: size.width * 0.75,
-                      color: Colors.orangeAccent,
-                      child: Column(
-                        children: [
-                          Text(
-                            "Convert Your Account to",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontFamily: ('')),
-                          ),
-                          Text(
-                            "PRO",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: ('GravisPersonal'),
-                              //color: Colors.white,
-                              fontSize: 80,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.star_border_outlined,
-                                  color: Colors.white),
-                              Text(
-                                "Chatting",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 35,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.star_border_outlined,
-                                  color: Colors.white),
-                              Text(
-                                "Posting",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 35,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0, left: 80),
-                      child: SizedBox(
-                        width: size.width * 0.6,
-                        height: size.height * 0.05,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepOrange,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          onPressed: () async {
-                            await UserModel().updateUser(
-                                userID: _firebaseAuth.currentUser!.uid,
-                                key: 'proaccount',
-                                data: "true");
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => DashBoard()),
+          : Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [Colors.deepOrange, Colors.orangeAccent],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    "assets/images/motomate.png",
+                    width: size.width * 0.55,
+                    height: size.height * 0.28,
+                  ),
+                  Text(
+                    "Get Yourself a",
+                    style: TextStyle(fontSize: 35,fontWeight: FontWeight.w200,),
+                  ),
+                  Text(
+                    "Pro Account",
+                    style: TextStyle(fontSize: 55,fontWeight: FontWeight.w700,),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.02,
+                  ),
+                  Text(
+                    "Perks:",
+                    style: TextStyle(fontSize: 35,fontWeight: FontWeight.w300),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.01,
+                  ),
+                  Text(
+                    "Chatting \n Posting \n Sharing",
+                    style: TextStyle(fontSize: 35,fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.02,
+                  ),
+                  Text(
+                    "In just 100Rs per Month!",
+                    style: TextStyle(fontSize: 35,fontWeight: FontWeight.w300),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.02,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 20),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepOrangeAccent,
+                        minimumSize: const Size(double.infinity, 56),
+                      ),
+                      onPressed: () async {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddCardScreen()),
                                 (route) => false);
-                          },
-                          child: const Text(
-                            "Upgrade",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(30.0),
-                      child: GestureDetector(
-                        onTap: () async {
-                          await UserModel().updateUser(
-                              userID: _firebaseAuth.currentUser!.uid,
-                              key: 'proaccount',
-                              data: "false");
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DashBoard()),
-                              (route) => false);
-                        },
-                        child: Text(
-                          "NOT NOW!",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline),
-                        ),
-                      ),
-                    )
-                  ],
-                )
-              ],
+                        displayToastMessage("Enter Your Details!", context);
+                      },
+                      child: Text("UPGRADE",style: TextStyle(color: Colors.white,),),),
+                  ),
+                ],
+              ),
             ),
     );
   }

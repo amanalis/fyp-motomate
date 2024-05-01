@@ -55,6 +55,14 @@ class _PostTile extends State<PostTile> {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -164,7 +172,8 @@ class _PostTile extends State<PostTile> {
                   itemBuilder: (context) =>
                       [PopupMenuItem(child: Text("Report the post."))],
                 ),
-                widget.isHomeScreen && widget.userID == _auth.currentUser!.uid
+
+                widget.isHomeScreen
                     ? SizedBox(width: 0, height: 0)
                     : Row(
                         children: [

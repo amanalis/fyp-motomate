@@ -361,7 +361,7 @@ class _PostDailogState extends State<PostDailog> {
                         shape: const CircleBorder(),
                       ),
                       child: Image.asset(
-                        "images/close_icon.png",
+                        "assets/images/close_icon.png",
                         color: Colors.white,
                       ))),
               Padding(
@@ -371,7 +371,7 @@ class _PostDailogState extends State<PostDailog> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Image.asset(
-                      "images/motomate.png",
+                      "assets/images/motomate.png",
                       width: 75,
                     ),
                     const SizedBox(

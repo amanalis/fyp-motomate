@@ -96,7 +96,7 @@ class _PostToApproveState extends State<PostToApprove> {
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
         title: Image.asset(
-          "images/motomate.png",
+          "assets/images/motomate.png",
           height: size.height * 0.06,
         ),
         elevation: 0,

@@ -12,6 +12,7 @@ class UserModel {
     required String imageURL,
     required String proaccount,
     required String status,
+    required String creditcardno,
   }) async {
     try {
       CollectionReference users =
@@ -26,6 +27,7 @@ class UserModel {
         "userID": userID,
         "proaccount" : proaccount,
         "status" : status,
+        'creditcardno': creditcardno
       });
       return 'success';
     } catch (e) {
@@ -49,7 +51,8 @@ class UserModel {
           'imageURL': data['ImageURL'],
           'phone': data['Phone'],
           'proaccount' : data['proaccount'],
-          'status' : data['status']
+          'status' : data['status'],
+          'creditcardno' : data['creditcardno'],
         },
       );
     }

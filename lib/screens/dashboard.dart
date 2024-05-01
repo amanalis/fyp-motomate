@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,8 +16,9 @@ class DashBoard extends StatefulWidget {
   State<DashBoard> createState() => _DashBoardState();
 }
 
-class _DashBoardState extends State<DashBoard> {
+class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver{
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _searchController = TextEditingController();
   String name = "Loading...";
   String userID = "Loading...";
@@ -111,8 +113,26 @@ class _DashBoardState extends State<DashBoard> {
     setState(() {});
   }
 
+  void setStat(String status) async {
+    await _firestore.collection('user_data').doc(_firebaseAuth.currentUser!.uid).update({
+      'status' : status
+    });
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state){
+    if(state == AppLifecycleState.resumed){
+      //online
+      setStat('Online');
+    }
+    else{
+      // offline
+      setStat('Offline');
+    }
+  }
+
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
     getData();
     getAccountStatus();
@@ -152,7 +172,7 @@ class _DashBoardState extends State<DashBoard> {
         //   color: Colors.black,
         // ),
         title: Image.asset(
-          "images/motomate.png",
+          "assets/images/motomate.png",
           height: size.height * 0.06,
         ),
         elevation: 0,

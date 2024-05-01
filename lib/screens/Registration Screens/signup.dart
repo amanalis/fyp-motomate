@@ -75,7 +75,7 @@ class _CustomSignUpFormState extends State<CustomSignUpForm> {
           ),
           Center(
             child: Image.asset(
-              "images/motomate.png", width: size.width * 0.5,
+              "assets/images/motomate.png", width: size.width * 0.5,
               // height: 220,
             ),
           ),

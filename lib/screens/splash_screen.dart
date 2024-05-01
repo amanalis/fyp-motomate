@@ -116,7 +116,7 @@ class _SplashScreenState extends State<SplashScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              "images/motomate.png",
+              "assets/images/motomate.png",
               width: size.width * 0.65,
               height: size.height * 0.65,
             ),

@@ -21,6 +21,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   String name = "";
   String email = "";
   String imageUrl =
@@ -42,13 +43,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       email = tempEmail;
       imageUrl = tempURL;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getData();
-    getPostData();
   }
 
   List<Map<String, dynamic>> Posts = [];
@@ -145,6 +139,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.pop(context);
   }
 
+  String ProfileStatus = "";
+  void getProfileStatus() async {
+    ProfileStatus = (await UserModel().getUserData(_firebaseAuth.currentUser!.uid, 'proaccount'))!;
+    setState(() {
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+    getPostData();
+    getProfileStatus();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery
@@ -159,7 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
         title: Image.asset(
-          "images/motomate.png",
+          "assets/images/motomate.png",
           height: size.height * 0.06,
         ),
         elevation: 0,
@@ -266,7 +275,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(
               height: size.height * 0.02,
             ),
-            Text(
+            ProfileStatus == "true"
+            ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  width: size.width*0.01,
+                ),
+                Image.asset(
+                  "assets/images/Premium_Bagde.png",
+                  height: size.height * 0.04,
+                ),
+              ],
+            )
+            : Text(
               name,
               style: const TextStyle(
                   color: Colors.black,

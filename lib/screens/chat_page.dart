@@ -43,7 +43,6 @@ class _ChatPageState extends State<ChatPage> {
   void getStatus() async {
     Status = (await UserModel().getUserData(widget.recieverUserId, 'status'))!;
     setState(() {
-
     });
   }
 

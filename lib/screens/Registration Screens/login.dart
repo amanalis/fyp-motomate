@@ -104,7 +104,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
           ),
           Center(
             child: Image.asset(
-              "images/motomate.png",
+              "assets/images/motomate.png",
               width: size.width * 0.75,
               // height: 220,
             ),
