@@ -145,7 +145,8 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver{
     return Scaffold(
         // proAccountStatus == 'true'
        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-       floatingActionButton: FloatingActionButton(
+       floatingActionButton: proAccountStatus == "true"
+       ? FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
@@ -159,7 +160,8 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver{
         child: Icon(Icons.add),
         backgroundColor: Colors.deepOrange,
         elevation: 0,
-      ),
+      )
+       : Container(),
       drawer: SideMenu(
         name: name,
         email: email,
