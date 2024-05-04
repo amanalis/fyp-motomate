@@ -55,12 +55,21 @@ class _PostTile extends State<PostTile> {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  String proAccountStatus = "";
+
+  void getAccountStatus() async {
+    proAccountStatus = (await UserModel()
+        .getUserData(_auth.currentUser!.uid, 'proaccount'))!;
+    setState(() {});
+  }
+
 
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getAccountStatus();
   }
 
   @override
@@ -121,7 +130,26 @@ class _PostTile extends State<PostTile> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              proAccountStatus == "true"
+                              ?Row(
+                                children: [
+                                  Text(
+                                    widget.name,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: size.width*0.01,
+                                  ),
+                                  Image.asset(
+                                    "assets/images/Premium_Bagde.png",
+                                    height: size.height * 0.02,
+                                  ),
+                                ],
+                              )
+                              :Text(
                                 widget.name,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -329,7 +357,8 @@ class _PostTile extends State<PostTile> {
                   icon: const Icon(Icons.favorite),
                   color: widget.isLiked ? Color(0xffFC0202) : _favIconColor,
                 ),
-                IconButton(
+                proAccountStatus == "true"
+                ?IconButton(
                   onPressed: () async {
                     String? id = await UserModel().getUserID(widget.email);
                     print(id);
@@ -348,7 +377,8 @@ class _PostTile extends State<PostTile> {
                   },
                   icon: const Icon(Icons.insert_comment_rounded),
                   color: Colors.grey,
-                ),
+                )
+                : Container(),
                 IconButton(
                   onPressed: () {},
                   icon: const Icon(Icons.share),

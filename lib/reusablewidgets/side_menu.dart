@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:motomate/screens/Registration%20Screens/pro_account_confirmation.dart';
 import 'package:motomate/screens/chats_menu.dart';
@@ -22,8 +23,25 @@ class SideMenu extends StatefulWidget {
 }
 
 class _SideMenuState extends State<SideMenu> {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  String proAccountStatus = "";
+
+  void getAccountStatus() async {
+    proAccountStatus = (await UserModel()
+        .getUserData(_firebaseAuth.currentUser!.uid, 'proaccount'))!;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getAccountStatus();
+  }
+
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Drawer(
       child: ListView(
         children: [
@@ -34,14 +52,46 @@ class _SideMenuState extends State<SideMenu> {
             accountEmail: Text(
               widget.email,
             ),
-            currentAccountPicture: CircleAvatar(
-              radius: 74,
-              backgroundColor: Colors.black,
-              child: CircleAvatar(
-                radius: 70,
-                backgroundImage: NetworkImage(widget.imageUrl),
+            currentAccountPicture: Stack(children: [
+              CircleAvatar(
+                radius: 74,
+                backgroundColor: Colors.black,
+                child: CircleAvatar(
+                  radius: 70,
+                  backgroundImage: NetworkImage(widget.imageUrl),
+                ),
               ),
-            ),
+              proAccountStatus == "true"
+              ? Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 50),
+                    child: Container(
+                      height: size.height * 0.03,
+                      decoration: const BoxDecoration(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(100))),
+                      child: Image.asset("assets/images/Premium_Bagde.png",height: size.height * 0.06,),
+                    ),
+                  ),
+                ],
+              )
+                  :Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 50),
+                    child: Container(
+                      height: size.height * 0.03,
+                      decoration: const BoxDecoration(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(100))),
+                    ),
+                  ),
+                ],
+              ),
+            ]),
             decoration: const BoxDecoration(color: Colors.deepOrangeAccent),
           ),
           ListTile(
@@ -63,16 +113,18 @@ class _SideMenuState extends State<SideMenu> {
                 ),
                 (route) => false),
           ),
-
-          ListTile(
+          proAccountStatus == "true"
+          ? ListTile(
             leading: const Icon(Icons.chat),
             title: const Text('Chats'),
             onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ChatMenu(),
-                ),),
-          ),
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ChatMenu(),
+              ),
+            ),
+          )
+          :Container(),
           ListTile(
             leading: const Icon(Icons.rocket),
             title: const Text('Get Pro-Account'),

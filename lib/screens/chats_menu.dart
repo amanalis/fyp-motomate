@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/database.dart';
 import 'chat_page.dart';
 import 'dashboard.dart';
 
@@ -20,11 +21,20 @@ class _ChatMenuState extends State<ChatMenu> with WidgetsBindingObserver {
   String imageURL =
       'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
 
+  String proAccountStatus = "";
+
+  void getAccountStatus() async {
+    proAccountStatus = (await UserModel()
+        .getUserData(_auth.currentUser!.uid, 'proaccount'))!;
+    setState(() {});
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     // TODO: implement initState
     super.initState();
+    getAccountStatus();
   }
 
   void setStat(String status) async {

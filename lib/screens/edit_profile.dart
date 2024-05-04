@@ -11,6 +11,7 @@ import 'package:motomate/utils/database.dart';
 import 'package:motomate/utils/flutter_toast.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 import '../utils/shared_prefs.dart';
+import 'CreditCard/add_credit_card.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -341,6 +342,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           fontSize: 15,
                           color: Colors.white,
                         ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepOrangeAccent,
+                      minimumSize: const Size(double.infinity, 56),
+                    ),
+                    onPressed: () async {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddCardScreen()),
+                              (route) => false);
+                      displayToastMessage("Enter Your Details!", context);
+                    },
+                    child: Text(
+                      "Change Card",
+                      style: TextStyle(
+                        color: Colors.white,
                       ),
                     ),
                   ),

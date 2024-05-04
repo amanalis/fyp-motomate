@@ -388,5 +388,21 @@ class PostModel {
     });
     return dataList;
   }
+
+  Future<List<Map<String, dynamic>>> getPostDocument_CC(String CC) async {
+    // Replace 'yourCollection' with the actual name of your Firestore collection
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+    await FirebaseFirestore.instance.collection('posts').where('CC',isEqualTo: CC).get();
+
+    List<Map<String, dynamic>> dataList = [];
+
+    querySnapshot.docs.forEach((DocumentSnapshot<Map<String, dynamic>> doc) {
+      Map<String, dynamic> data = doc.data()!;
+      // Add document ID to the data
+      data['documentID'] = doc.id;
+      dataList.add(data);
+    });
+    return dataList;
+  }
 }
 

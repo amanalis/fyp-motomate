@@ -143,8 +143,9 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver{
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
+        // proAccountStatus == 'true'
+       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,

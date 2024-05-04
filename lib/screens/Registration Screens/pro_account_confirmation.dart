@@ -40,10 +40,15 @@ class _Pro_Account_ConfirmationState extends State<Pro_Account_Confirmation> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
-        // title: Image.asset(
-        //   "assets/images/motomate.png",
-        //   height: size.height * 0.06,
-        // ),
+
+        leading:IconButton(
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => DashBoard()),
+                      (route) => false);
+            },
+            icon: Icon(Icons.arrow_back)),
         actions: [
           IconButton(
               onPressed: () async => await UserModel().signOut(context),
