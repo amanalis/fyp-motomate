@@ -74,9 +74,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     for (int i = count - 1; i >= 0; i--) {
       var doc = await PostModel().getPostDocument();
       String? name =
-      await UserModel().getUserData(doc[i]["userID"].toString(), "Name");
+          await UserModel().getUserData(doc[i]["userID"].toString(), "Name");
       String? user_image =
-      await UserModel().getUserData(doc[i]["userID"], "ImageURL");
+          await UserModel().getUserData(doc[i]["userID"], "ImageURL");
       if (doc[i]["isApproved"] == true) {
         Posts.add({
           "post_images": doc[i]["images"],
@@ -89,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           "date": doc[i]["date"],
           "isApproved": doc[i]["isApproved"],
           "YOM": doc[i]["YOM"],
-          "CC" : doc[i]["CC"],
+          "CC": doc[i]["CC"],
           "email": doc[i]["email"],
           "companyname": doc[i]["companyname"],
         });
@@ -101,8 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print(id);
       if (id.isEmpty) {
         Posts[i]["isLiked"] = false;
-      }
-      else {
+      } else {
         for (int j = 0; j < id.length; j++) {
           if (Posts[i]["post_id"] == id[j]) {
             Posts[i]["isLiked"] = true;
@@ -140,10 +139,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   String ProfileStatus = "";
+
   void getProfileStatus() async {
-    ProfileStatus = (await UserModel().getUserData(_firebaseAuth.currentUser!.uid, 'proaccount'))!;
-    setState(() {
-    });
+    ProfileStatus = (await UserModel()
+        .getUserData(_firebaseAuth.currentUser!.uid, 'proaccount'))!;
+    setState(() {});
   }
 
   @override
@@ -156,9 +156,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       drawer: SideMenu(
         name: name,
@@ -223,7 +221,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         decoration: const BoxDecoration(
                             color: Colors.black,
                             borderRadius:
-                            BorderRadius.all(Radius.circular(100))),
+                                BorderRadius.all(Radius.circular(100))),
                         child: IconButton(
                           onPressed: () async {
                             ImagePicker imagePiker = ImagePicker();
@@ -232,25 +230,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             print('${file?.path}');
 
                             if (file == null) return;
-                            String uniqueFileName = DateTime
-                                .now()
+                            String uniqueFileName = DateTime.now()
                                 .microsecondsSinceEpoch
                                 .toString();
 
                             Reference referenceRoot =
-                            FirebaseStorage.instance.ref();
+                                FirebaseStorage.instance.ref();
                             Reference referenceDirImages =
-                            referenceRoot.child('images');
+                                referenceRoot.child('images');
 
                             Reference referenceImageToUpload =
-                            referenceDirImages.child(uniqueFileName);
+                                referenceDirImages.child(uniqueFileName);
 
                             try {
                               await referenceImageToUpload
                                   .putFile(File(file.path));
 
                               imageUrl =
-                              await referenceImageToUpload.getDownloadURL();
+                                  await referenceImageToUpload.getDownloadURL();
 
                               String id = (await SharedPrefs().getData('id'))!;
                               await UserModel().updateUser(
@@ -276,32 +273,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
               height: size.height * 0.02,
             ),
             ProfileStatus == "true"
-            ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 23,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  width: size.width*0.01,
-                ),
-                Image.asset(
-                  "assets/images/Premium_Bagde.png",
-                  height: size.height * 0.04,
-                ),
-              ],
-            )
-            : Text(
-              name,
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 23,
-                  fontWeight: FontWeight.bold),
-            ),
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        name,
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 23,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        width: size.width * 0.01,
+                      ),
+                      Image.asset(
+                        "assets/images/Premium_Bagde.png",
+                        height: size.height * 0.04,
+                      ),
+                    ],
+                  )
+                : Text(
+                    name,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 23,
+                        fontWeight: FontWeight.bold),
+                  ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
@@ -335,10 +332,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SizedBox(
                           width: size.width * 0.01,
                         ),
-                        const Text(
-                          "Add Post",
-                          style: TextStyle(color: Colors.white),
-                        )
+                        ProfileStatus == "true"
+                            ? const Text(
+                                "Add Post",
+                                style: TextStyle(color: Colors.white),
+                              )
+                            : Container(),
                       ],
                     )),
                 SizedBox(
@@ -483,23 +482,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     horizontal: 10, vertical: 7),
                                 child: PostTile(
                                   imageUrl: User_LikedPosts[index]
-                                  ["post_images"],
+                                      ["post_images"],
                                   name: User_LikedPosts[index]["name"],
                                   date: User_LikedPosts[index]["date"],
                                   profileUrl: User_LikedPosts[index]
-                                  ["user_image"],
+                                      ["user_image"],
                                   title: User_LikedPosts[index]["title"],
                                   Description: User_LikedPosts[index]
-                                  ["description"],
+                                      ["description"],
                                   isHomeScreen: true,
                                   userID: userID,
                                   post_id: User_LikedPosts[index]["post_id"],
                                   isLiked: User_LikedPosts[index]["isLiked"],
-                                  isApproved: User_LikedPosts[index]["isApproved"],
+                                  isApproved: User_LikedPosts[index]
+                                      ["isApproved"],
                                   YOM: User_LikedPosts[index]["YOM"],
                                   CC: User_LikedPosts[index]["CC"],
                                   email: User_LikedPosts[index]["email"],
-                                  companyname: User_LikedPosts[index]["companyname"],
+                                  companyname: User_LikedPosts[index]
+                                      ["companyname"],
                                 ),
                               );
                             },
@@ -521,12 +522,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: size.height * 0.5,
                 child: ListView.builder(
                   itemCount: 3,
-                  itemBuilder: (context, index) =>
-                      Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(10),
-                        // child: const PostTile(),
-                      ),
+                  itemBuilder: (context, index) => Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(10),
+                    // child: const PostTile(),
+                  ),
                 ),
               ),
             )
