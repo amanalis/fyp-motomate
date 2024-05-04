@@ -38,6 +38,15 @@ class _UserProfileState extends State<UserProfile> {
 
   int tab = 0;
 
+  String proAccountStatus = "";
+
+  void getAccountStatus() async {
+    proAccountStatus = (await UserModel()
+        .getUserData(widget.otherUserId, 'proaccount'))!;
+    setState(() {});
+    print(widget.otherUserId);
+  }
+
   void getData() async {
     String tempName = widget.otherUserName;
     String tempEmail = widget.otherUserEmail;
@@ -55,6 +64,7 @@ class _UserProfileState extends State<UserProfile> {
     super.initState();
     getData();
     getPostData();
+    getAccountStatus();
   }
 
   List<Map<String, dynamic>> Posts = [];
@@ -206,7 +216,27 @@ class _UserProfileState extends State<UserProfile> {
             SizedBox(
               height: size.height * 0.02,
             ),
-            Text(
+            proAccountStatus == "true"
+            ?Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  widget.otherUserName,
+                  style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  width: size.width * 0.01,
+                ),
+                Image.asset(
+                  "assets/images/Premium_Bagde.png",
+                  height: size.height * 0.04,
+                ),
+              ],
+            )
+            :Text(
               widget.otherUserName,
               style: const TextStyle(
                   color: Colors.black,
@@ -341,7 +371,7 @@ class _UserProfileState extends State<UserProfile> {
                                   title: User_LikedPosts[index]["title"],
                                   Description: User_LikedPosts[index]
                                   ["description"],
-                                  isHomeScreen: false,
+                                  isHomeScreen: true,
                                   userID: userID,
                                   post_id: User_LikedPosts[index]["post_id"],
                                   isLiked: User_LikedPosts[index]["isLiked"],

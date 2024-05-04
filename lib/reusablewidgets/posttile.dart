@@ -201,7 +201,7 @@ class _PostTile extends State<PostTile> {
                       [PopupMenuItem(child: Text("Report the post."))],
                 ),
 
-                widget.isHomeScreen
+                widget.isHomeScreen == true
                     ? SizedBox(width: 0, height: 0)
                     : Row(
                         children: [
