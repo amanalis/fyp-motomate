@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:motomate/reusablewidgets/post_dailog.dart';
 import 'package:motomate/reusablewidgets/posttile.dart';
@@ -16,7 +15,7 @@ class DashBoard extends StatefulWidget {
   State<DashBoard> createState() => _DashBoardState();
 }
 
-class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver{
+class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _searchController = TextEditingController();
@@ -25,44 +24,59 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver{
   String email = "Loading...";
   String imageURL =
       'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
-  List<Map<String, dynamic>> Posts = [];
+  String PostimageURL =
+      'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
 
   void getData() async {
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return Center(
-            child: LoadingAnimationWidget.discreteCircle(
-              color: const Color(0XFF00B251),
-              size: 50,
-              secondRingColor: const Color(0XFFF8B32B),
-              thirdRingColor: const Color(0XFFF72A37),
-            ),
-          );
-        },
-      );
-    });
     String tempName = (await SharedPrefs().getData("name"))!;
     String tempEmail = (await SharedPrefs().getData("email"))!;
     String tempURL = (await SharedPrefs().getData("imageURL"))!;
     String tempID = (await SharedPrefs().getData("id"))!;
+
     setState(() {
       name = tempName;
       email = tempEmail;
       imageURL = tempURL;
       userID = tempID;
     });
-    int count = await PostModel().getPostCount();
+  }
 
-    for (int i = count-1; i >= 0; i--) {
+  List<Map<String, dynamic>> Posts = [];
+  List<Map<String, dynamic>> Searched_Posts = [];
+
+  // List<Map<String, dynamic>> Year_Posts = [];
+  // List<Map<String, dynamic>> Company_Posts = [];
+
+  void getPostData(bool _isChanged) async {
+    if (_isChanged == false) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return Center(
+              child: LoadingAnimationWidget.discreteCircle(
+                color: const Color(0XFF00B251),
+                size: 50,
+                secondRingColor: const Color(0XFFF8B32B),
+                thirdRingColor: const Color(0XFFF72A37),
+              ),
+            );
+          },
+        );
+      });
+    }
+    String tempName = (await SharedPrefs().getData("name"))!;
+    String tempEmail = (await SharedPrefs().getData("email"))!;
+    String tempURL = (await SharedPrefs().getData("imageURL"))!;
+    String tempID = (await SharedPrefs().getData("id"))!;
+
+    int count = await PostModel().getPostCount();
+    for (int i = count - 1; i >= 0; i--) {
       var doc = await PostModel().getPostDocument();
 
       String? name =
           await UserModel().getUserData(doc[i]["userID"].toString(), "Name");
-      // String? status= 'Online';
       String? user_image =
           await UserModel().getUserData(doc[i]["userID"], "ImageURL");
       if (doc[i]["isApproved"] == true) {
@@ -77,16 +91,16 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver{
           "date": doc[i]["date"],
           "isApproved": doc[i]["isApproved"],
           "YOM": doc[i]["YOM"],
-          "CC" : doc[i]["CC"],
+          "CC": doc[i]["CC"],
           "email": doc[i]["email"],
           "companyname": doc[i]["companyname"],
         });
       }
     }
+    //Searched_Posts = Posts;
     // Posts.removeAt(0);
     List id = await UserModel().getLikedPost(tempID);
     print(id);
-
     for (int i = 0; i < Posts.length; i++) {
       if (id.isEmpty) {
         Posts[i]["isLiked"] = false;
@@ -100,9 +114,78 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver{
         }
       }
     }
+    // String postID = (await PostModel().getNewestDocumentId())!;
+    // print(postID);
+    print(Posts);
+    print(_searchController.text);
+    print(Posts.length);
+    Searched_Posts.clear();
+    for (int i = 0; i < Posts.length; i++) {
+      if (Posts[i]["CC"].contains(_searchController.text)) {
+        Searched_Posts.add(Posts[i]);
+        print(Posts[i]["post_id"]);
+      } else if (Posts[i]["CC"] == _searchController.text) {
+        Searched_Posts.add(Posts[i]);
+      } else if (Posts[i]["YOM"].contains(_searchController.text)) {
+        Searched_Posts.add(Posts[i]);
+        print(Posts[i]["post_id"]);
+      } else if (Posts[i]["YOM"] == _searchController.text) {
+        Searched_Posts.add(Posts[i]);
+        print(Posts[i]["post_id"]);
+      } else if (Posts[i]["companyname"].contains(_searchController.text)) {
+        Searched_Posts.add(Posts[i]);
+        print(Posts[i]["post_id"]);
+      } else if (Posts[i]["companyname"] == _searchController.text) {
+        Searched_Posts.add(Posts[i]);
+        print(Posts[i]["post_id"]);
+      } else if (_searchController.text == "All") {
+        Searched_Posts.add(Posts[i]);
+      } else if (_searchController.text.isEmpty) {
+        Searched_Posts.add(Posts[i]);
+      } else if (Posts[i]["name"] == _searchController.text) {
+        Searched_Posts.add(Posts[i]);
+        print(Posts[i]["post_id"]);
+      } else if (Posts[i]["name"].contains(_searchController.text)) {
+        Searched_Posts.add(Posts[i]);
+        print(Posts[i]["post_id"]);
+      }
+    }
+
+    // for (int i = 0; i < Posts.length; i++) {
+    //   if (Posts[i]["CC"].contains(_searchController.text) ||
+    //       Posts[i]["YOM"].contains(_searchController.text) ||
+    //       Posts[i]["companyname"].contains(_searchController.text) ||
+    //       Posts[i]["title"].contains(_searchController.text) ||
+    //       Posts[i]["username"].contains(_searchController.text)
+    //   ) {
+    //     Searched_Posts.add(Posts[i]);
+    //   }
+    // }
+    Posts.length = 0;
+// Search using the indexed hashmap
+//     if (_searchController.text == "All") {
+//       Searched_Posts.addAll(Posts);
+//     } else {
+//       if (Search_Posts.containsKey(_searchController.text)) {
+//         Searched_Posts.addAll(Search_Posts[_searchController.text]!);
+//       }
+//     }
+
+// // Print post IDs of searched posts
+//     for (var post in Searched_Posts) {
+//       print(post["post_id"]);
+//     }
+
     setState(() {
+      name = tempName;
+      email = tempEmail;
+      PostimageURL = tempURL;
+      userID = tempID;
+      //Searched_Posts = Posts;
     });
-    Navigator.pop(context);
+    if (_isChanged == false) {
+      Navigator.pop(context);
+    }
   }
 
   String proAccountStatus = "";
@@ -114,17 +197,17 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver{
   }
 
   void setStat(String status) async {
-    await _firestore.collection('user_data').doc(_firebaseAuth.currentUser!.uid).update({
-      'status' : status
-    });
+    await _firestore
+        .collection('user_data')
+        .doc(_firebaseAuth.currentUser!.uid)
+        .update({'status': status});
   }
 
-  void didChangeAppLifecycleState(AppLifecycleState state){
-    if(state == AppLifecycleState.resumed){
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
       //online
       setStat('Online');
-    }
-    else{
+    } else {
       // offline
       setStat('Offline');
     }
@@ -135,6 +218,7 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver{
     WidgetsBinding.instance.addObserver(this);
     super.initState();
     getData();
+    getPostData(false);
     getAccountStatus();
   }
 
@@ -143,25 +227,25 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver{
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-        // proAccountStatus == 'true'
-       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-       floatingActionButton: proAccountStatus == "true"
-       ? FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PostDailog(
-                isEdit: false,
-              ),
-            ),
-          );
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.deepOrange,
-        elevation: 0,
-      )
-       : Container(),
+      // proAccountStatus == 'true'
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: proAccountStatus == "true"
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PostDailog(
+                      isEdit: false,
+                    ),
+                  ),
+                );
+              },
+              child: Icon(Icons.add),
+              backgroundColor: Colors.deepOrange,
+              elevation: 0,
+            )
+          : Container(),
       drawer: SideMenu(
         name: name,
         email: email,
@@ -216,6 +300,11 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver{
                   padding: const EdgeInsets.symmetric(horizontal: 1.0),
                   // Use a Material design search bar
                   child: TextField(
+                    onChanged: (a) {
+                      // Perform the search here
+                      getPostData(true);
+                      // LoadingAnimationWidget
+                    },
                     controller: _searchController,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
@@ -237,6 +326,7 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver{
                         icon: const Icon(Icons.search),
                         onPressed: () {
                           // Perform the search here
+                          getPostData(false);
                         },
                       ),
                       prefixIconColor: MaterialStateColor.resolveWith(
@@ -250,52 +340,147 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver{
                   ),
                 ),
               ),
+              Container(
+                height: 50,
+                color: Colors.white38,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                        width: 10,
+                      ),
+                      _allItems(""),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      _singleItems("70CC"),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      _singleItems("100CC"),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      _singleItems("110CC"),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      _singleItems("125CC"),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      _singleItems("150CC"),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      _singleItems("200CC"),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      _singleItems("Suzuki"),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      _singleItems("Honda"),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      _singleItems("Yamaha"),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Text(
+                  "Searched:${_searchController.text}",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
               SizedBox(
                 height: size.height * 0.02,
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: Row(
-                  children: [
-                    Text(
-                      "Home",
-                      style: TextStyle(
-                        fontFamily: ('GravisPersonal'),
-                        fontSize: 24,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  "Home",
+                  style: TextStyle(
+                    fontFamily: ('GravisPersonal'),
+                    fontSize: 24,
+                  ),
                 ),
               ),
               SizedBox(
-                  width: size.width,
-                  child: ListView.builder(
-                    itemCount: Posts.length,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return PostTile(
-                        imageUrl: Posts[index]["post_images"],
-                        name: Posts[index]["name"],
-                        date: Posts[index]['date'],
-                        profileUrl: Posts[index]["user_image"],
-                        title: Posts[index]["title"],
-                        Description: Posts[index]["description"],
-                        isHomeScreen: true,
-                        userID: userID,
-                        post_id: Posts[index]["post_id"],
-                        isLiked: Posts[index]["isLiked"],
-                        isApproved: Posts[index]["isApproved"],
-                        YOM: Posts[index]["YOM"],
-                        CC: Posts[index]["CC"],
-                        email: Posts[index]["email"],
-                        companyname: Posts[index]["companyname"],
-                      );
-                    },
-                  ))
+                width: size.width,
+                child: ListView.builder(
+                  itemCount: Searched_Posts.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Searched_Posts.isEmpty
+                        ? Text("No Posts Available.")
+                        : PostTile(
+                            imageUrl: Searched_Posts[index]["post_images"],
+                            name: Searched_Posts[index]["name"],
+                            date: Searched_Posts[index]['date'],
+                            profileUrl: Searched_Posts[index]["user_image"],
+                            title: Searched_Posts[index]["title"],
+                            Description: Searched_Posts[index]["description"],
+                            isHomeScreen: true,
+                            userID: userID,
+                            post_id: Searched_Posts[index]["post_id"],
+                            isLiked: Searched_Posts[index]["isLiked"],
+                            isApproved: Searched_Posts[index]["isApproved"],
+                            YOM: Searched_Posts[index]["YOM"],
+                            CC: Searched_Posts[index]["CC"],
+                            email: Searched_Posts[index]["email"],
+                            companyname: Searched_Posts[index]["companyname"],
+                          );
+                  },
+                ),
+              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _allItems(String searchText) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          elevation: 2, backgroundColor: Colors.deepOrangeAccent),
+      onPressed: () {
+        setState(() {
+          _searchController.text = "All";
+        });
+        getPostData(false);
+      },
+      child: Text(
+        "All",
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+  Widget _singleItems(String searchText) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          elevation: 2, backgroundColor: Colors.deepOrangeAccent),
+      onPressed: () {
+        setState(() {
+          _searchController.text = searchText;
+        });
+        getPostData(false);
+      },
+      child: Text(
+        searchText,
+        style: TextStyle(color: Colors.white),
       ),
     );
   }

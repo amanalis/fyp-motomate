@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -70,9 +68,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String tempEmail = (await SharedPrefs().getData("email"))!;
     String tempURL = (await SharedPrefs().getData("imageURL"))!;
     String tempID = (await SharedPrefs().getData("id"))!;
+
     int count = await PostModel().getPostCount();
     for (int i = count - 1; i >= 0; i--) {
       var doc = await PostModel().getPostDocument();
+
       String? name =
           await UserModel().getUserData(doc[i]["userID"].toString(), "Name");
       String? user_image =
@@ -111,6 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
       }
     }
+
     print(Posts);
     print(tempID);
     print(Posts.length);

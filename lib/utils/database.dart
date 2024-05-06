@@ -229,10 +229,50 @@ class UserModel {
 }
 
 class PostModel {
+  // Future<String?> addPost({
+  //   required String postID,
+  //   required String date,
+  //   required String userID,
+  //   required String username,
+  //   required String title,
+  //   required String description,
+  //   required List imageURL,
+  //   required bool isApproved,
+  //   required bool isRejected,
+  //   required String YOM,
+  //   required String CC,
+  //   required String companyname,
+  //   required String email,
+  // }) async {
+  //   try {
+  //     CollectionReference posts =
+  //         FirebaseFirestore.instance.collection('posts');
+  //     // Call the user's CollectionReference to add a new user
+  //     await posts.doc().set({
+  //       'userID': userID,
+  //       'username' : username,
+  //       'title': title,
+  //       'description': description,
+  //       'images': imageURL,
+  //       'date': date,
+  //       'isApproved': isApproved,
+  //       'isRejected': isRejected,
+  //       'YOM': YOM,
+  //       'CC': CC,
+  //       'companyname':companyname,
+  //       'email': email,
+  //       'postID': postID,
+  //     });
+  //     return 'Added post Successfully.';
+  //   } catch (e) {
+  //     return 'Error adding post.';
+  //   }
+  // }
+
   Future<String?> addPost({
     required String date,
-    required int postID,
     required String userID,
+    required String username,
     required String title,
     required String description,
     required List imageURL,
@@ -244,12 +284,12 @@ class PostModel {
     required String email,
   }) async {
     try {
-      CollectionReference posts =
-          FirebaseFirestore.instance.collection('posts');
-      // Call the user's CollectionReference to add a new user
-      await posts.doc(postID.toString()).set({
+      CollectionReference posts = FirebaseFirestore.instance.collection('posts');
+
+      // Add the document to the collection
+      DocumentReference newDocRef = await posts.add({
         'userID': userID,
-        'postID': postID,
+        'username' : username,
         'title': title,
         'description': description,
         'images': imageURL,
@@ -261,11 +301,22 @@ class PostModel {
         'companyname':companyname,
         'email': email,
       });
+
+      // Get the ID of the newly added document
+      String postID = newDocRef.id;
+
+      // Update the document with the postID
+      await newDocRef.update({
+        'postID': postID,
+      });
+
       return 'Added post Successfully.';
     } catch (e) {
+      print('Error adding post: $e');
       return 'Error adding post.';
     }
   }
+
 
   Future<List<String>> getPostIdsList() async {
     List<String> postIDs = [];
@@ -389,20 +440,29 @@ class PostModel {
     return dataList;
   }
 
-  Future<List<Map<String, dynamic>>> getPostDocument_CC(String CC) async {
-    // Replace 'yourCollection' with the actual name of your Firestore collection
-    QuerySnapshot<Map<String, dynamic>> querySnapshot =
-    await FirebaseFirestore.instance.collection('posts').where('CC',isEqualTo: CC).get();
+  Future<String?> getNewestDocumentId() async {
+    try {
+      // Reference to the Firestore collection
+      CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
 
-    List<Map<String, dynamic>> dataList = [];
+      // Query to get documents sorted by timestamp in descending order
+      QuerySnapshot querySnapshot = await postsCollection.orderBy('date', descending: true).limit(1).get();
+      print(postsCollection);
 
-    querySnapshot.docs.forEach((DocumentSnapshot<Map<String, dynamic>> doc) {
-      Map<String, dynamic> data = doc.data()!;
-      // Add document ID to the data
-      data['documentID'] = doc.id;
-      dataList.add(data);
-    });
-    return dataList;
+      // Check if there are any documents
+      if (querySnapshot.docs.isNotEmpty) {
+        // Get the document ID of the newest document
+        String newestDocumentId = querySnapshot.docs.first.id;
+        return newestDocumentId;
+      } else {
+        // If there are no documents in the collection
+        return 'Error fetching postid1';
+      }
+    } catch (e) {
+      print('Error getting newest document ID: $e');
+      return 'Error fetching postid2';
+    }
   }
+
 }
 

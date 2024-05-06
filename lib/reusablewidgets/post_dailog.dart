@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -258,6 +259,8 @@ class PostDailog extends StatefulWidget {
 }
 
 class _PostDailogState extends State<PostDailog> {
+  final _formKey = GlobalKey<FormState>();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   TextEditingController titlecontroller = TextEditingController();
   TextEditingController descriptioncontroller = TextEditingController();
   List? pickedImage;
@@ -273,6 +276,14 @@ class _PostDailogState extends State<PostDailog> {
       });
       print(images);
     }
+  }
+
+  Future<void> getDocumentId() async {
+    DocumentSnapshot snapshot = await FirebaseFirestore.instance
+        .doc('posts/document_id')
+        .get();
+
+    print(snapshot.id); // This prints the ID of the document
   }
 
   @override
@@ -366,322 +377,331 @@ class _PostDailogState extends State<PostDailog> {
                       ))),
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.asset(
-                      "assets/images/motomate.png",
-                      width: 75,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      controller: titlecontroller,
-                      validator: (value) {
-                        return value!.isNotEmpty ? null : "Invalid Field";
-                      },
-                      decoration: InputDecoration(
-                          hintText: "Please Enter Your Title",
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        "assets/images/motomate.png",
+                        width: 75,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        controller: titlecontroller,
+                        validator: (value) {
+                          return value!.isNotEmpty ? null : "Invalid Field";
+                        },
+                        decoration: InputDecoration(
+                            hintText: "Please Enter Your Title",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10))),
+                      ),
+                      const SizedBox(
+                        height: 6,
+                      ),
+                      TextFormField(
+                        controller: descriptioncontroller,
+                        validator: (value) {
+                          return value!.isNotEmpty ? null : "Invaild Feild";
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Please Enter Description",
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                    ),
-                    const SizedBox(
-                      height: 6,
-                    ),
-                    TextFormField(
-                      controller: descriptioncontroller,
-                      validator: (value) {
-                        return value!.isNotEmpty ? null : "Invaild Feild";
-                      },
-                      decoration: InputDecoration(
-                        hintText: "Please Enter Description",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 6,
-                    ),
-                    // widget.Image == null || widget.Image!.isEmpty
+                      const SizedBox(
+                        height: 6,
+                      ),
+                      // widget.Image == null || widget.Image!.isEmpty
 
-                    DropdownButton<String>(
-                      hint: _companyname == ""
-                          ? Text("Company Name")
-                          : Text(_companyname),
-                      isExpanded: true,
-                      items: <String>[
-                        'Suzuki',
-                        'Honda',
-                        'Unique',
-                        'Yamaha',
-                        'Crown',
-                        'SuperPower',
-                        'SuperStar',
-                        'Others',
-                      ].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _companyname = value!;
-                        });
-                      },
-                    ),
-                    DropdownButton<String>(
-                      hint: _YOM == ""
-                          ? Text("Year of Manufactured")
-                          : Text(_YOM),
-                      isExpanded: true,
-                      items: <String>[
-                        '2018',
-                        '2019',
-                        '2020',
-                        '2021',
-                        '2022',
-                        '2023',
-                        '2024',
-                      ].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _YOM = value!;
-                        });
-                      },
-                    ),
-                    DropdownButton<String>(
-                      hint: _CC == "" ? Text("Engine CC") : Text(_CC),
-                      isExpanded: true,
-                      items: <String>[
-                        '70CC',
-                        '100CC',
-                        '110CC',
-                        '125CC',
-                        '150CC',
-                        '200CC',
-                      ].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _CC = value!;
-                        });
-                      },
-                    ),
-                    images.isEmpty
-                        ? InkWell(
-                            onTap: () => pickImage(),
-                            child: Container(
-                                width: 200,
-                                height: 150,
-                                color: Colors.grey,
-                                // child: _image == null
-                                //     ?
-                                child: const Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.add,
-                                        size: 50,
-                                        color: Colors.white,
-                                      ),
-                                      Text("Add Images."),
-                                    ],
+                      DropdownButton<String>(
+                        hint: _companyname == ""
+                            ? Text("Company Name")
+                            : Text(_companyname),
+                        isExpanded: true,
+                        items: <String>[
+                          'Suzuki',
+                          'Honda',
+                          'Unique',
+                          'Yamaha',
+                          'Crown',
+                          'SuperPower',
+                          'SuperStar',
+                          'Others',
+                        ].map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _companyname = value!;
+                          });
+                        },
+                      ),
+                      DropdownButton<String>(
+                        hint: _YOM == ""
+                            ? Text("Year of Manufactured")
+                            : Text(_YOM),
+                        isExpanded: true,
+                        items: <String>[
+                          '2018',
+                          '2019',
+                          '2020',
+                          '2021',
+                          '2022',
+                          '2023',
+                          '2024',
+                        ].map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _YOM = value!;
+                          });
+                        },
+                      ),
+                      DropdownButton<String>(
+                        hint: _CC == "" ? Text("Engine CC") : Text(_CC),
+                        isExpanded: true,
+                        items: <String>[
+                          '70CC',
+                          '100CC',
+                          '110CC',
+                          '125CC',
+                          '150CC',
+                          '200CC',
+                        ].map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _CC = value!;
+                          });
+                        },
+                      ),
+                      images.isEmpty
+                          ? InkWell(
+                              onTap: () => pickImage(),
+                              child: Container(
+                                  width: 200,
+                                  height: 150,
+                                  color: Colors.grey,
+                                  // child: _image == null
+                                  //     ?
+                                  child: const Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.add,
+                                          size: 50,
+                                          color: Colors.white,
+                                        ),
+                                        Text("Add Images."),
+                                      ],
+                                    ),
+                                  )
+                                  //     : Image.file(
+                                  //   _image!,
+                                  //   width: 200,
+                                  //   height: 200,
+                                  //   fit: BoxFit.cover,
+                                  // ),
                                   ),
-                                )
-                                //     : Image.file(
-                                //   _image!,
-                                //   width: 200,
-                                //   height: 200,
-                                //   fit: BoxFit.cover,
-                                // ),
+                            )
+                          : FlutterCarousel(
+                              options: CarouselOptions(
+                                height: size.height * 0.2,
+                                initialPage: 0,
+                                viewportFraction: 1.0,
+                                enlargeCenterPage: false,
+                                autoPlay: false,
+                                enableInfiniteScroll: true,
+                                showIndicator: true,
+                                autoPlayInterval: const Duration(seconds: 2),
+                                slideIndicator: const CircularSlideIndicator(
+                                  currentIndicatorColor: Color(0XFF00B251),
+                                  indicatorBackgroundColor: Colors.white,
+                                  itemSpacing: 17.5,
                                 ),
-                          )
-                        : FlutterCarousel(
-                            options: CarouselOptions(
-                              height: size.height * 0.2,
-                              initialPage: 0,
-                              viewportFraction: 1.0,
-                              enlargeCenterPage: false,
-                              autoPlay: false,
-                              enableInfiniteScroll: true,
-                              showIndicator: true,
-                              autoPlayInterval: const Duration(seconds: 2),
-                              slideIndicator: const CircularSlideIndicator(
-                                currentIndicatorColor: Color(0XFF00B251),
-                                indicatorBackgroundColor: Colors.white,
-                                itemSpacing: 17.5,
                               ),
-                            ),
-                            items: images
-                                .map(
-                                  (item) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 1),
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(15)),
-                                      child: SizedBox(
-                                        width: size.width,
-                                        height: size.height * 0.2,
-                                        child: Image.network(
-                                          item,
-                                          fit: BoxFit.cover,
+                              items: images
+                                  .map(
+                                    (item) => Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 1),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(15)),
+                                        child: SizedBox(
+                                          width: size.width,
+                                          height: size.height * 0.2,
+                                          child: Image.network(
+                                            item,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
                                     ),
+                                  )
+                                  .toList(),
+                            ),
+                      // : FlutterCarousel(
+                      //     options: CarouselOptions(
+                      //       height: size.height * 0.2,
+                      //       initialPage: 0,
+                      //       viewportFraction: 1.0,
+                      //       enlargeCenterPage: false,
+                      //       autoPlay: false,
+                      //       enableInfiniteScroll: true,
+                      //       showIndicator: true,
+                      //       autoPlayInterval: const Duration(seconds: 2),
+                      //       slideIndicator: const CircularSlideIndicator(
+                      //         currentIndicatorColor: Color(0XFF00B251),
+                      //         indicatorBackgroundColor: Colors.white,
+                      //         itemSpacing: 17.5,
+                      //       ),
+                      //     ),
+                      //     items: images
+                      //         .map(
+                      //           (item) => Padding(
+                      //             padding: const EdgeInsets.symmetric(
+                      //                 horizontal: 1),
+                      //             child: ClipRRect(
+                      //               borderRadius: const BorderRadius.all(
+                      //                   Radius.circular(15)),
+                      //               child: SizedBox(
+                      //                 width: size.width,
+                      //                 height: size.height * 0.2,
+                      //                 child: Image.file(
+                      //                   File(item.path),
+                      //                   fit: BoxFit.cover,
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         )
+                      //         .toList(),
+                      //   ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 32,
                                   ),
-                                )
-                                .toList(),
-                          ),
-                    // : FlutterCarousel(
-                    //     options: CarouselOptions(
-                    //       height: size.height * 0.2,
-                    //       initialPage: 0,
-                    //       viewportFraction: 1.0,
-                    //       enlargeCenterPage: false,
-                    //       autoPlay: false,
-                    //       enableInfiniteScroll: true,
-                    //       showIndicator: true,
-                    //       autoPlayInterval: const Duration(seconds: 2),
-                    //       slideIndicator: const CircularSlideIndicator(
-                    //         currentIndicatorColor: Color(0XFF00B251),
-                    //         indicatorBackgroundColor: Colors.white,
-                    //         itemSpacing: 17.5,
-                    //       ),
-                    //     ),
-                    //     items: images
-                    //         .map(
-                    //           (item) => Padding(
-                    //             padding: const EdgeInsets.symmetric(
-                    //                 horizontal: 1),
-                    //             child: ClipRRect(
-                    //               borderRadius: const BorderRadius.all(
-                    //                   Radius.circular(15)),
-                    //               child: SizedBox(
-                    //                 width: size.width,
-                    //                 height: size.height * 0.2,
-                    //                 child: Image.file(
-                    //                   File(item.path),
-                    //                   fit: BoxFit.cover,
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         )
-                    //         .toList(),
-                    //   ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8,
-                                  horizontal: 32,
-                                ),
-                                foregroundColor: const Color(0xffEC5B5B),
-                                side:
-                                    const BorderSide(color: Color(0xffEC5B5B))),
-                            onPressed: () {
-                              setState(() {
-                                titlecontroller.clear();
-                                descriptioncontroller.clear();
-                                images.clear();
-                                widget.Image!.clear();
-                                pickedImage = null;
-                              });
-                            },
-                            child: const Text("Clear")),
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                foregroundColor: const Color(0xff2A303E),
-                                backgroundColor: const Color(0xff5BEC84),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 32, vertical: 8)),
-                            onPressed: () async {
-                              if (widget.isEdit == true) {
-                                DateTime now = DateTime.now();
-                                String date =
-                                    DateFormat("yyyy/MM/dd HH:mm").format(now);
-                                await PostModel().updatePost(
-                                  postID: widget.post_id!,
-                                  title: titlecontroller.text,
-                                  description: descriptioncontroller.text,
-                                  imageURL: Db_images,
-                                  date: date,
-                                  isApproved: widget.isApproved!,
-                                  YOM: widget.YOM!,
-                                  CC: widget.CC!,
-                                  companyname: widget.companyname!,
-                                  isRejected: widget.isRejected!,
-                                );
+                                  foregroundColor: const Color(0xffEC5B5B),
+                                  side: const BorderSide(
+                                      color: Color(0xffEC5B5B))),
+                              onPressed: () {
+                                setState(() {
+                                  titlecontroller.clear();
+                                  descriptioncontroller.clear();
+                                  images.clear();
+                                  widget.Image!.clear();
+                                  pickedImage = null;
+                                });
+                              },
+                              child: const Text("Clear")),
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  foregroundColor: const Color(0xff2A303E),
+                                  backgroundColor: const Color(0xff5BEC84),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 32, vertical: 8)),
+                              onPressed: () async {
+                                if (widget.isEdit == true) {
+                                  DateTime now = DateTime.now();
+                                  String date = DateFormat("yyyy/MM/dd HH:mm")
+                                      .format(now);
+                                  await PostModel().updatePost(
+                                    postID: widget.post_id!,
+                                    title: titlecontroller.text,
+                                    description: descriptioncontroller.text,
+                                    imageURL: Db_images,
+                                    date: date,
+                                    isApproved: widget.isApproved!,
+                                    YOM: widget.YOM!,
+                                    CC: widget.CC!,
+                                    companyname: widget.companyname!,
+                                    isRejected: false,
+                                  );
 
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const ProfileScreen(),
-                                  ),
-                                  (route) => false,
-                                );
-                              } else {
-                                DateTime now = DateTime.now();
-                                String date =
-                                    DateFormat("yyyy/MM/dd HH:mm").format(now);
-                                String Id =
-                                    (await SharedPrefs().getData('id'))!;
-                                String email =
-                                    (await SharedPrefs().getData('email'))!;
-                                int count = await PostModel().getPostCount();
-                                await PostModel().addPost(
-                                  postID: count,
-                                  userID: Id,
-                                  title: titlecontroller.text,
-                                  description: descriptioncontroller.text,
-                                  imageURL: Db_images,
-                                  date: date,
-                                  isApproved: false,
-                                  isRejected: false,
-                                  YOM: _YOM,
-                                  CC: _CC,
-                                  email: email,
-                                  companyname: _companyname,
-                                );
-
-                                // displayToastMessage(
-                                //     "Post Send For Approval.", context);
-                                NotificationService().pushNotification(
-                                    'Your post has been sent for Verification.');
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const DashBoard(),
-                                  ),
-                                  (route) => false,
-                                );
-                              }
-                            },
-                            child:
-                                Text(widget.isEdit == true ? "Update" : "Post"))
-                      ],
-                    ),
-                  ],
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ProfileScreen(),
+                                    ),
+                                    (route) => false,
+                                  );
+                                } else {
+                                  if (_formKey.currentState!.validate()) {
+                                    DateTime now = DateTime.now();
+                                    String date = DateFormat("yyyy/MM/dd HH:mm")
+                                        .format(now);
+                                    String Id =
+                                        (await SharedPrefs().getData('id'))!;
+                                    String email =
+                                        (await SharedPrefs().getData('email'))!;
+                                    String name =
+                                        (await SharedPrefs().getData('name'))!;
+                                    String postid = (await PostModel().getNewestDocumentId())!;
+                                    print("kia hoga ${postid}");
+                                    await PostModel().addPost(
+                                      userID: Id,
+                                      title: titlecontroller.text,
+                                      description: descriptioncontroller.text,
+                                      imageURL: Db_images,
+                                      date: date,
+                                      isApproved: false,
+                                      isRejected: false,
+                                      YOM: _YOM,
+                                      CC: _CC,
+                                      email: email,
+                                      companyname: _companyname,
+                                      username: name,
+                                    );
+                                    // displayToastMessage(
+                                    //     "Post Send For Approval.", context);
+                                    NotificationService().pushNotification(
+                                        'Your post has been sent for Verification.');
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const DashBoard(),
+                                      ),
+                                      (route) => false,
+                                    );
+                                  }
+                                }
+                              },
+                              child: Text(
+                                  widget.isEdit == true ? "Update" : "Post"))
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
