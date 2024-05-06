@@ -28,10 +28,21 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver {
       'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
 
   void getData() async {
-    String tempName = (await SharedPrefs().getData("name"))!;
-    String tempEmail = (await SharedPrefs().getData("email"))!;
-    String tempURL = (await SharedPrefs().getData("imageURL"))!;
-    String tempID = (await SharedPrefs().getData("id"))!;
+    String tempName = (await UserModel().getUserData(FirebaseAuth.instance.currentUser!.uid, 'Name'))!;
+    String tempEmail = (await UserModel().getUserData(FirebaseAuth.instance.currentUser!.uid, 'Email'))!;
+    String tempURL = (await UserModel().getUserData(FirebaseAuth.instance.currentUser!.uid, 'ImageURL'))!;
+    String tempID = (await FirebaseAuth.instance.currentUser!.uid)!;
+    String tempphonenumber = (await UserModel().getUserData(FirebaseAuth.instance.currentUser!.uid, 'Phone'))!;
+    String tempaccount = (await UserModel().getUserData(FirebaseAuth.instance.currentUser!.uid, 'proaccount'))!;
+    SharedPrefs().saveUserDataInPrefs(
+      tempName,
+      tempID,
+      tempEmail,
+      "password",
+      tempphonenumber,
+      tempURL,
+      tempaccount,
+    );
 
     setState(() {
       name = tempName;
@@ -70,7 +81,7 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver {
     String tempEmail = (await SharedPrefs().getData("email"))!;
     String tempURL = (await SharedPrefs().getData("imageURL"))!;
     String tempID = (await SharedPrefs().getData("id"))!;
-
+    print(tempID);
     int count = await PostModel().getPostCount();
     for (int i = count - 1; i >= 0; i--) {
       var doc = await PostModel().getPostDocument();
