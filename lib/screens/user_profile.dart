@@ -336,7 +336,7 @@ class _UserProfileState extends State<UserProfile> {
                                   profileUrl: User_Posts[index]["user_image"],
                                   title: User_Posts[index]["title"],
                                   Description: User_Posts[index]["description"],
-                                  isHomeScreen: false,
+                                  isHomeScreen: true,
                                   userID: userID,
                                   post_id: User_Posts[index]["post_id"],
                                   isLiked: User_Posts[index]["isLiked"],
