@@ -9,6 +9,8 @@ import 'package:motomate/screens/profile.dart';
 import 'package:motomate/screens/user_profile.dart';
 import 'package:motomate/utils/database.dart';
 import 'package:motomate/utils/shared_prefs.dart';
+import 'package:share/share.dart';
+
 
 class PostTile extends StatefulWidget {
   PostTile({
@@ -131,7 +133,7 @@ class _PostTile extends State<PostTile> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               proAccountStatus == "true"
-                              ?Row(
+                                  ?Row(
                                 children: [
                                   Text(
                                     widget.name,
@@ -149,7 +151,7 @@ class _PostTile extends State<PostTile> {
                                   ),
                                 ],
                               )
-                              :Text(
+                                  :Text(
                                 widget.name,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -198,52 +200,52 @@ class _PostTile extends State<PostTile> {
                 ),
                 PopupMenuButton(
                   itemBuilder: (context) =>
-                      [PopupMenuItem(child: Text("Report the post."))],
+                  [PopupMenuItem(child: Text("Report the post."))],
                 ),
 
                 widget.isHomeScreen == true
                     ? SizedBox(width: 0, height: 0)
                     : Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PostDailog(
-                                    title: widget.title,
-                                    Description: widget.Description,
-                                    Image: widget.imageUrl,
-                                    isEdit: true,
-                                    post_id: widget.post_id,
-                                    isApproved: widget.isApproved,
-                                    YOM: widget.YOM,
-                                    CC: widget.CC,
-                                    companyname: widget.companyname,
-                                  ),
-                                ),
-                              );
-                            },
-                            icon: const Icon(Icons.edit),
-                            color: _favIconColor,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PostDailog(
+                              title: widget.title,
+                              Description: widget.Description,
+                              Image: widget.imageUrl,
+                              isEdit: true,
+                              post_id: widget.post_id,
+                              isApproved: widget.isApproved,
+                              YOM: widget.YOM,
+                              CC: widget.CC,
+                              companyname: widget.companyname,
+                            ),
                           ),
-                          IconButton(
-                            onPressed: () {
-                              UserModel().delete_liked_post_id(
-                                  post_id: widget.post_id,
-                                  userID: widget.userID);
-                              PostModel().delete_post(widget.post_id);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ProfileScreen(),
-                                  ));
-                            },
-                            icon: const Icon(Icons.delete_outline),
-                            color: _favIconColor,
-                          ),
-                        ],
-                      ),
+                        );
+                      },
+                      icon: const Icon(Icons.edit),
+                      color: _favIconColor,
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        UserModel().delete_liked_post_id(
+                            post_id: widget.post_id,
+                            userID: widget.userID);
+                        PostModel().delete_post(widget.post_id);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileScreen(),
+                            ));
+                      },
+                      icon: const Icon(Icons.delete_outline),
+                      color: _favIconColor,
+                    ),
+                  ],
+                ),
               ],
             ),
             Text(
@@ -317,21 +319,21 @@ class _PostTile extends State<PostTile> {
               items: widget.imageUrl
                   .map(
                     (item) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 1),
-                      child: ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(15)),
-                        child: SizedBox(
-                          width: size.width,
-                          height: size.height * 0.2,
-                          child: Image.network(
-                            item,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                  padding: const EdgeInsets.symmetric(horizontal: 1),
+                  child: ClipRRect(
+                    borderRadius:
+                    const BorderRadius.all(Radius.circular(15)),
+                    child: SizedBox(
+                      width: size.width,
+                      height: size.height * 0.2,
+                      child: Image.network(
+                        item,
+                        fit: BoxFit.cover,
                       ),
                     ),
-                  )
+                  ),
+                ),
+              )
                   .toList(),
             ),
             Row(
@@ -358,7 +360,7 @@ class _PostTile extends State<PostTile> {
                   color: widget.isLiked ? Color(0xffFC0202) : _favIconColor,
                 ),
                 proAccountStatus == "true"
-                ?IconButton(
+                    ?IconButton(
                   onPressed: () async {
                     String? id = await UserModel().getUserID(widget.email);
                     print(id);
@@ -378,12 +380,16 @@ class _PostTile extends State<PostTile> {
                   icon: const Icon(Icons.insert_comment_rounded),
                   color: Colors.grey,
                 )
-                : Container(),
+                    : Container(),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Share post title, description, and first image
+                    Share.share('${widget.title}\n\n${widget.Description}\n\n${widget.imageUrl.isNotEmpty ? widget.imageUrl[0] : ''}');
+                  },
                   icon: const Icon(Icons.share),
                   color: Colors.grey,
                 ),
+
               ],
             )
           ],
