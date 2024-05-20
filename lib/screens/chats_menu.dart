@@ -146,6 +146,7 @@ class _ChatMenuState extends State<ChatMenu> with WidgetsBindingObserver {
                       recieverUserId: data['userID'],
                       recieverName: data['Name'],
                       recieverProfilePic: data['ImageURL'],
+                      recieverfcmtoken: data['fcm_token'],
                     ),
                   ),
                 );

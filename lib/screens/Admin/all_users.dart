@@ -84,6 +84,7 @@ class _AllUsersState extends State<AllUsers> {
                 recieverUserId: data['userID'],
                 recieverName: data['Name'],
                 recieverProfilePic: data['ImageURL'],
+                recieverfcmtoken: data['fcm_token'],
               ),
             ),
           );

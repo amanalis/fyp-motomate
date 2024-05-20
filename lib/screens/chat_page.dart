@@ -1,23 +1,27 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:motomate/services/notifications/notification_services.dart';
 import 'package:motomate/utils/database.dart';
 import '../Components/chat_bubble.dart';
 import '../Components/my_text_field.dart';
 import '../services/chat/chat_service.dart';
+import 'package:http/http.dart' as http;
 
 class ChatPage extends StatefulWidget {
   final String recieveruserEmail;
   final String recieverUserId;
   final String recieverName;
   final String recieverProfilePic;
+  final String recieverfcmtoken;
 
-  const ChatPage(
-      {super.key,
-      required this.recieveruserEmail,
-      required this.recieverUserId,
-      required this.recieverName,
-      required this.recieverProfilePic});
+  const ChatPage({super.key,
+    required this.recieveruserEmail,
+    required this.recieverUserId,
+    required this.recieverName,
+    required this.recieverProfilePic, required this.recieverfcmtoken});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -38,29 +42,38 @@ class _ChatPageState extends State<ChatPage> {
       _messagesController.clear();
     }
   }
+
   String Status = "";
 
   void getStatus() async {
     Status = (await UserModel().getUserData(widget.recieverUserId, 'status'))!;
-    setState(() {
-    });
+    setState(() {});
   }
+
+  NotificationServices notificationServices = NotificationServices();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getStatus();
+    notificationServices.requestNotificationPermission();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupIneractMessage(context);
+    notificationServices.getDeviceToken().then((value) {
+      print('device token');
+      print(value);
+    });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.recieverName,),
         leading: Status == 'Online'
-            ? Icon(Icons.circle,color: Colors.green,)
-            : Icon(Icons.circle,color: Colors.red,),
+            ? Icon(Icons.circle, color: Colors.green,)
+            : Icon(Icons.circle, color: Colors.red,),
       ),
       body: Column(
         children: [
@@ -120,13 +133,13 @@ class _ChatPageState extends State<ChatPage> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment:
-              (data['senderId'] == _firebaseAuth.currentUser!.uid)
-                  ? CrossAxisAlignment.end
-                  : CrossAxisAlignment.start,
+          (data['senderId'] == _firebaseAuth.currentUser!.uid)
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
           mainAxisAlignment:
-              (data['senderId'] == _firebaseAuth.currentUser!.uid)
-                  ? MainAxisAlignment.end
-                  : MainAxisAlignment.start,
+          (data['senderId'] == _firebaseAuth.currentUser!.uid)
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.start,
           children: [
             Text(data['senderEmail']),
             SizedBox(
@@ -156,7 +169,32 @@ class _ChatPageState extends State<ChatPage> {
 
           // send button
           IconButton(
-            onPressed: sendMessage,
+            onPressed: () {
+              sendMessage();
+              notificationServices.getDeviceToken().then((value) async {
+                var data = {
+                  'to': await UserModel().getUserData(widget.recieverUserId, 'fcm_token'),
+                  'priority': 'high',
+                  'notification': {
+                    'title': 'Message!!',
+                    'body': 'You Received a Message.'
+                  },
+                  'data' : {
+                    'type' : 'chat',
+                    'id' : 'aman1234'
+                  }
+                };
+                await http.post(Uri.parse(
+                    'https://fcm.googleapis.com/fcm/send'),
+                  body: jsonEncode(data),
+                  headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'Authorization': 'key=AAAAJJUtblI:APA91bHtxIczZC9R81P3bCkZXlRL16nKN95USHtidI4HG8E6xkJaTaCHWXArAyRnAvhiavSp5mYH0oniTHKBTb28N2Y-k_uAaCc9Y0QZbEVPsMLZg7aQu1xPDn8eu667_og-vZAGaoCa'
+                  },
+                );
+              });
+
+            },
             icon: Icon(
               Icons.arrow_upward,
               size: 40,

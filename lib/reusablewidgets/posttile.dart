@@ -364,7 +364,7 @@ class _PostTile extends State<PostTile> {
                   onPressed: () async {
                     String? id = await UserModel().getUserID(widget.email);
                     print(id);
-
+                    String? fcm_token = await UserModel().getUserData(id!, 'fcm_token');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -373,6 +373,7 @@ class _PostTile extends State<PostTile> {
                           recieverUserId: id.toString(),
                           recieverName: widget.name,
                           recieverProfilePic: widget.profileUrl,
+                          recieverfcmtoken: fcm_token.toString(),
                         ),
                       ),
                     );
