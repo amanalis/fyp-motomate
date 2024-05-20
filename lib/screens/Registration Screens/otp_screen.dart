@@ -104,15 +104,16 @@ class _OTPScreenState extends State<OTPScreen> {
 
     //Save user information into Database
     await UserModel().addUser(
-      userID: await FirebaseAuth.instance.currentUser!.uid,
-      email: widget.email,
-      name: widget.name,
-      phone: widget.phone,
-      imageURL:
-          'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg',
-      proaccount: "false",
-      status: 'Online',
-      creditcardno: '',
+        userID: await FirebaseAuth.instance.currentUser!.uid,
+        email: widget.email,
+        name: widget.name,
+        phone: widget.phone,
+        imageURL:
+            'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg',
+        proaccount: "false",
+        status: 'Online',
+        creditcardno: '',
+        fcm_token: ''
     );
 
     SharedPrefs().saveUserDataInPrefs(

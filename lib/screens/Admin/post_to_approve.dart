@@ -3,7 +3,9 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:motomate/reusablewidgets/posttile.dart';
 import 'package:motomate/screens/Admin/admin_posttile.dart';
 import 'package:motomate/utils/database.dart';
+import 'package:motomate/utils/notification.dart';
 
+import '../../services/notifications/notification_services.dart';
 import '../../utils/shared_prefs.dart';
 
 class PostToApprove extends StatefulWidget {
@@ -20,6 +22,7 @@ class _PostToApproveState extends State<PostToApprove> {
   String imageURL =
       'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
   List<Map<String, dynamic>> Posts = [];
+  NotificationServices notificationServices = NotificationServices();
 
   void getData() async {
 
@@ -87,6 +90,13 @@ class _PostToApproveState extends State<PostToApprove> {
   void initState() {
     super.initState();
     getData();
+    notificationServices.requestNotificationPermission();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupIneractMessage(context);
+    notificationServices.getDeviceToken().then((value){
+      print('device token');
+      print(value);
+    });
   }
 
   @override

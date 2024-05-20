@@ -5,6 +5,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:motomate/reusablewidgets/post_dailog.dart';
 import 'package:motomate/reusablewidgets/posttile.dart';
 import 'package:motomate/reusablewidgets/side_menu.dart';
+import 'package:motomate/services/notifications/notification_services.dart';
 import 'package:motomate/utils/database.dart';
 import 'package:motomate/utils/shared_prefs.dart';
 
@@ -26,6 +27,7 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver {
       'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
   String PostimageURL =
       'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
+  NotificationServices notificationServices = NotificationServices();
 
   void getData() async {
     String tempName = (await UserModel().getUserData(FirebaseAuth.instance.currentUser!.uid, 'Name'))!;
@@ -161,7 +163,7 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver {
         print(Posts[i]["post_id"]);
       }
     }
-
+    Posts.length = 0;
     // for (int i = 0; i < Posts.length; i++) {
     //   if (Posts[i]["CC"].contains(_searchController.text) ||
     //       Posts[i]["YOM"].contains(_searchController.text) ||
@@ -172,7 +174,7 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver {
     //     Searched_Posts.add(Posts[i]);
     //   }
     // }
-    Posts.length = 0;
+
 // Search using the indexed hashmap
 //     if (_searchController.text == "All") {
 //       Searched_Posts.addAll(Posts);
@@ -231,6 +233,15 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver {
     getData();
     getPostData(false);
     getAccountStatus();
+    notificationServices.requestNotificationPermission();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupIneractMessage(context);
+    notificationServices.isTokenRefresh();
+    notificationServices.getDeviceToken().then((value) async {
+      print('device token');
+      print(value);
+      await UserModel().updateUser(userID: FirebaseAuth.instance.currentUser!.uid, key: 'fcm_token', data: value.toString());
+    });
   }
 
   @override

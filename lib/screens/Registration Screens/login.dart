@@ -60,7 +60,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
   String status = "";
 
   Future<void> getData(String email) async {
-    id = (await UserModel().getUserID(email))!;
+    id = (await FirebaseAuth.instance.currentUser!.uid)!;
     phoneNumber = (await UserModel().getUserData(id, "Phone"))!;
     name = (await UserModel().getUserData(id, "Name"))!;
     imageUrl = (await UserModel().getUserData(id, "ImageURL"))!;

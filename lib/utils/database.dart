@@ -13,6 +13,7 @@ class UserModel {
     required String proaccount,
     required String status,
     required String creditcardno,
+    required String fcm_token,
   }) async {
     try {
       CollectionReference users =
@@ -27,7 +28,8 @@ class UserModel {
         "userID": userID,
         "proaccount" : proaccount,
         "status" : status,
-        'creditcardno': creditcardno
+        'creditcardno': creditcardno,
+        'fcm_token' : fcm_token,
       });
       return 'success';
     } catch (e) {
@@ -53,6 +55,7 @@ class UserModel {
           'proaccount' : data['proaccount'],
           'status' : data['status'],
           'creditcardno' : data['creditcardno'],
+          'fcm_token' : data['fcm_token'],
         },
       );
     }

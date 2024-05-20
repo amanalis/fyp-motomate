@@ -3,6 +3,7 @@ import 'package:motomate/screens/Admin/all_posts.dart';
 import 'package:motomate/screens/Admin/all_users.dart';
 import 'package:motomate/screens/Admin/post_to_approve.dart';
 import 'package:motomate/screens/Admin/rejected_posts.dart';
+import 'package:motomate/services/notifications/notification_services.dart';
 import 'package:motomate/utils/database.dart';
 
 class AdminDashBoard extends StatefulWidget {
@@ -13,9 +14,23 @@ class AdminDashBoard extends StatefulWidget {
 }
 
 class _AdminDashBoardState extends State<AdminDashBoard> {
+  NotificationServices notificationServices = NotificationServices();
   String imageURL =
       'https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg';
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    notificationServices.requestNotificationPermission();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupIneractMessage(context);
+    notificationServices.isTokenRefresh();
+    notificationServices.getDeviceToken().then((value){
+      print('device token');
+      print(value);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
