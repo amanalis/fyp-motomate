@@ -169,7 +169,9 @@ class _ChatPageState extends State<ChatPage> {
 
           // send button
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+              String? id = await _firebaseAuth.currentUser!.uid;
+              String? sendername = await UserModel().getUserData(id, 'Name');
               sendMessage();
               notificationServices.getDeviceToken().then((value) async {
                 var data = {
@@ -177,7 +179,7 @@ class _ChatPageState extends State<ChatPage> {
                   'priority': 'high',
                   'notification': {
                     'title': 'Message!!',
-                    'body': 'You Received a Message.'
+                    'body': 'You Received a Message from ${sendername}'
                   },
                   'data' : {
                     'type' : 'chat',
