@@ -23,7 +23,7 @@ class _AllUsersState extends State<AllUsers> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "All Users",
+          "Users",
           style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold
@@ -63,7 +63,7 @@ class _AllUsersState extends State<AllUsers> {
     Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
 
     // display all users except current user
-    if (_auth.currentUser!.email != data['Email']) {
+    if (_auth.currentUser!.email != data['Email'] && data["proaccount"] == "true") {
       return ListTile(
         leading: CircleAvatar(
           radius: 18,

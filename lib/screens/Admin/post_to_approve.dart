@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:motomate/reusablewidgets/posttile.dart';
 import 'package:motomate/screens/Admin/admin_posttile.dart';
 import 'package:motomate/utils/database.dart';
-import 'package:motomate/utils/notification.dart';
-
 import '../../services/notifications/notification_services.dart';
 import '../../utils/shared_prefs.dart';
 

@@ -138,13 +138,16 @@ class _AdminPosttileState extends State<AdminPosttile> {
                 widget.isApprovingPost == true && widget.isRejected == false
                     ? IconButton(
                   onPressed: () async {
+                    String? id = await PostModel().getPostData(widget.post_id, 'userID');
+                    print(id);
+                    String? fcm = await UserModel().getUserData(id!, 'fcm_token');
                     notificationServices.getDeviceToken().then((value) async {
                       var data = {
-                        'to': await UserModel().getUserData(widget.userID, 'fcm_token'),
+                        'to': fcm.toString(),
                         'priority': 'high',
                         'notification': {
                           'title': 'Post Accepted',
-                          'body': 'Thanks for posting'
+                          'body': 'Thanks for posting.'
                         },
                         'data' : {
                           'type' : 'chat',
