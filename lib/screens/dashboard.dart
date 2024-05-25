@@ -30,28 +30,23 @@ class _DashBoardState extends State<DashBoard> with WidgetsBindingObserver {
   NotificationServices notificationServices = NotificationServices();
 
   void getData() async {
-    String tempName = (await UserModel().getUserData(FirebaseAuth.instance.currentUser!.uid, 'Name'))!;
-    String tempEmail = (await UserModel().getUserData(FirebaseAuth.instance.currentUser!.uid, 'Email'))!;
-    String tempURL = (await UserModel().getUserData(FirebaseAuth.instance.currentUser!.uid, 'ImageURL'))!;
-    String tempID = (await FirebaseAuth.instance.currentUser!.uid)!;
-    String tempphonenumber = (await UserModel().getUserData(FirebaseAuth.instance.currentUser!.uid, 'Phone'))!;
-    String tempaccount = (await UserModel().getUserData(FirebaseAuth.instance.currentUser!.uid, 'proaccount'))!;
-    SharedPrefs().saveUserDataInPrefs(
-      tempName,
-      tempID,
-      tempEmail,
-      "password",
-      tempphonenumber,
-      tempURL,
-      tempaccount,
-    );
-
+    String tempName = (await SharedPrefs().getData("name"))!;
+    String tempEmail = (await SharedPrefs().getData("email"))!;
+    String tempURL = (await SharedPrefs().getData("imageURL"))!;
+    String tempID = (await SharedPrefs().getData("id"))!;
     setState(() {
       name = tempName;
       email = tempEmail;
       imageURL = tempURL;
       userID = tempID;
     });
+
+    // setState(() {
+    //   name = tempName;
+    //   email = tempEmail;
+    //   imageURL = tempURL;
+    //   userID = tempID;
+    // });
   }
 
   List<Map<String, dynamic>> Posts = [];

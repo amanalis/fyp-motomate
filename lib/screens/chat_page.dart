@@ -179,7 +179,7 @@ class _ChatPageState extends State<ChatPage> {
                   'priority': 'high',
                   'notification': {
                     'title': 'Message!!',
-                    'body': 'You Received a Message from ${sendername}'
+                    'body': 'You Received a Message from ${sendername}.',
                   },
                   'data' : {
                     'type' : 'chat',

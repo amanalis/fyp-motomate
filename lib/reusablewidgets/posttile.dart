@@ -65,8 +65,6 @@ class _PostTile extends State<PostTile> {
     setState(() {});
   }
 
-
-
   @override
   void initState() {
     // TODO: implement initState

@@ -60,11 +60,12 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
   String status = "";
 
   Future<void> getData(String email) async {
-    id = (await FirebaseAuth.instance.currentUser!.uid)!;
+    id = (await UserModel().getUserID(email))!;
     phoneNumber = (await UserModel().getUserData(id, "Phone"))!;
     name = (await UserModel().getUserData(id, "Name"))!;
     imageUrl = (await UserModel().getUserData(id, "ImageURL"))!;
     proaccount = (await UserModel().getUserData(id, 'proaccount'))!;
+    print(passwordController.text);
     await SharedPrefs().saveUserDataInPrefs(
       name,
       id,
@@ -275,6 +276,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                           if ((emailController.text == "motomate@gmail.com") &&
                               (passwordController.text == "motomate123")) {
                             print("asaf");
+                            getData(emailController.text);
                             Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
@@ -298,6 +300,7 @@ class _CustomLoginFormState extends State<CustomLoginForm> {
                             String pro = (await UserModel().getUserData(Id, 'proaccount'))!;
                             print(pro);
                             if( pro == "true"){
+                              getData(emailController.text);
                               Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
