@@ -20,6 +20,7 @@ class _AllUsersState extends State<AllUsers> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -60,10 +61,10 @@ class _AllUsersState extends State<AllUsers> {
 
   // build individual user list items
   Widget _buildUserListItem(DocumentSnapshot document) {
+    Size size = MediaQuery.of(context).size;
     Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-
     // display all users except current user
-    if (_auth.currentUser!.email != data['Email'] && data["proaccount"] == "true") {
+    if (_auth.currentUser!.email != data['Email']) {
       return ListTile(
         leading: CircleAvatar(
           radius: 18,
@@ -73,7 +74,16 @@ class _AllUsersState extends State<AllUsers> {
             backgroundImage: NetworkImage(data['ImageURL']),
           ),
         ),
-        title: Text(data['Name']),
+        trailing: data["proaccount"] == "true"
+        ?Image.asset(
+          "assets/images/Premium_Bagde.png",
+          height: size.height * 0.02,
+        )
+        : Container(),
+
+        title: Text(
+          data['Name'],
+        ),
         onTap: () {
           // pass the clicked user's UID to the chat page
           Navigator.push(
