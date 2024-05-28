@@ -159,17 +159,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      drawer: SideMenu(
-        name: name,
-        email: email,
-        imageUrl: imageUrl,
-      ),
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.black),
         title: Image.asset(
           "assets/images/motomate.png",
           height: size.height * 0.06,
         ),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back)),
         elevation: 0,
         backgroundColor: Colors.deepOrange,
         centerTitle: true,

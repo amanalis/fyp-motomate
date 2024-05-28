@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:motomate/screens/Registration%20Screens/pro_account_confirmation.dart';
 import 'package:motomate/screens/chats_menu.dart';
 import 'package:motomate/screens/dashboard.dart';
 import 'package:motomate/screens/profile.dart';
 import 'package:motomate/utils/database.dart';
+
+import '../screens/scan_feature.dart';
 
 class SideMenu extends StatefulWidget {
   final String name;
@@ -125,6 +128,11 @@ class _SideMenuState extends State<SideMenu> {
             ),
           )
           :Container(),
+          ListTile(
+            leading: SvgPicture.asset("assets/icons/scan.svg"),
+            title: const Text("Scan Parts"),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => Scan_Feature())),
+          ),
           ListTile(
             leading: const Icon(Icons.rocket),
             title: const Text('Get Pro-Account'),

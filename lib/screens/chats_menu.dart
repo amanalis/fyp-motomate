@@ -53,13 +53,10 @@ class _ChatMenuState extends State<ChatMenu> with WidgetsBindingObserver {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const DashBoard()),
-                (route) => false,
-          ),
-          icon: Icon(Icons.arrow_back),
-        ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back)),
         title: Text(
           "Chats",
           style: TextStyle(
