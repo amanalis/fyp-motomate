@@ -1,11 +1,13 @@
 import 'dart:io';
-
+import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:motomate/utils/images.dart';
 
+/*
 class Scan_Feature extends StatefulWidget {
   const Scan_Feature({super.key});
 
@@ -186,6 +188,156 @@ class _Scan_FeatureState extends State<Scan_Feature> {
           ],
         ),
       )),
+    );
+  }
+}
+*/
+
+class Scan_Feature extends StatefulWidget {
+  const Scan_Feature({super.key});
+
+  @override
+  State<Scan_Feature> createState() => _Scan_FeatureState();
+}
+
+class _Scan_FeatureState extends State<Scan_Feature> {
+  Uint8List? _file;
+
+  _imageSelect(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text("Select Image"),
+            children: [
+              SimpleDialogOption(
+                padding: EdgeInsets.all(20),
+                child: Text("Take a Photo"),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  Uint8List file = await pickImage(ImageSource.camera);
+                  setState(() {
+                    _file = file;
+                  });
+                },
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.all(20),
+                child: Text("Choose From Gallery"),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  Uint8List file = await pickImage(ImageSource.gallery);
+                  setState(() {
+                    _file = file;
+                  });
+                },
+              ),
+              SimpleDialogOption(
+                padding: EdgeInsets.all(20),
+                child: Text("Cancel"),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  void clearImage(){
+    setState(() {
+      _file = null;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back)),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            const Text("Scan Parts",
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
+            SizedBox(
+              width: 10,
+            ),
+            SvgPicture.asset("assets/icons/scan.svg",
+                colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+          ],
+        ),
+        elevation: 2,
+        backgroundColor: Colors.deepOrange,
+        centerTitle: true,
+      ),
+      body: _file == null
+          ? Center(
+              child: Column(
+                children: [
+                  IconButton(
+                    onPressed: () => _imageSelect(context),
+                    icon: Icon(Icons.photo),
+                    iconSize: 300,
+                  ),
+                  Text(
+                    "Scan",
+                    style: TextStyle(fontSize: 36.0),
+                  ),
+                ],
+              ),
+            )
+          : Center(
+              child: Column(
+                children: [
+                  Divider(),
+                  SizedBox(
+                    height: 300,
+                    width: 300,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: MemoryImage(_file!),
+                            fit: BoxFit.fill,
+                            alignment: FractionalOffset.topCenter),
+                      ),
+                    ),
+                  ),
+                  Divider(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: size.width * 0.65,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepOrangeAccent,
+                            ),
+                            onPressed: () {},
+                            child: Text("Scan",style: TextStyle(color: Colors.white),)),
+                      ),
+                      SizedBox(
+                        width: size.width * 0.65,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepOrangeAccent,
+                            ),
+                            onPressed: () => clearImage(),
+                            child: Text("Clear",style: TextStyle(color: Colors.white),)),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
     );
   }
 }
