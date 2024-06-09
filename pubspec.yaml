@@ -62,6 +62,7 @@ dependencies:
   app_settings: ^4.2.0
   http:
   uuid: ^4.4.0
+  dio: ^5.1.1
 
 #  auth_handler: ^1.0.0
 #  email_auth: ^1.0.0

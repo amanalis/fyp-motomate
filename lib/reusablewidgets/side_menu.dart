@@ -131,7 +131,7 @@ class _SideMenuState extends State<SideMenu> {
           ListTile(
             leading: SvgPicture.asset("assets/icons/scan.svg"),
             title: const Text("Scan Parts"),
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => Scan_Feature())),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ScanFeature())),
           ),
           ListTile(
             leading: const Icon(Icons.rocket),

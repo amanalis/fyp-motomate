@@ -1,0 +1,815 @@
+@startuml
+set namespaceSeparator ::
+
+class "motomate::Components::chat_bubble.dart::ChatBubble" {
+  +String messages
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "motomate::Components::chat_bubble.dart::ChatBubble"
+
+class "motomate::Components::my_button.dart::MyButton" {
+  +void Function()? onTap
+  +String text
+  +Widget build()
+}
+
+"motomate::Components::my_button.dart::MyButton" o-- "null::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "motomate::Components::my_button.dart::MyButton"
+
+class "motomate::Components::my_text_field.dart::MyTextField" {
+  +TextEditingController controller
+  +String hintText
+  +bool obscureText
+  +Widget build()
+}
+
+"motomate::Components::my_text_field.dart::MyTextField" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "motomate::Components::my_text_field.dart::MyTextField"
+
+class "motomate::Extras::controllers::product_controller.dart::ProductController" {
+  +RxBool isAddLoading
+  +void addToCart()
+}
+
+"motomate::Extras::controllers::product_controller.dart::ProductController" o-- "get::get_rx::src::rx_types::rx_types.dart::RxBool"
+"get::get_state_manager::src::simple::get_controllers.dart::GetxController" <|-- "motomate::Extras::controllers::product_controller.dart::ProductController"
+
+class "motomate::firebase_options.dart::DefaultFirebaseOptions" {
+  {static} +FirebaseOptions android
+  {static} +FirebaseOptions ios
+  {static} +FirebaseOptions currentPlatform
+}
+
+"motomate::firebase_options.dart::DefaultFirebaseOptions" o-- "firebase_core_platform_interface::firebase_core_platform_interface.dart::FirebaseOptions"
+
+class "motomate::model::message.dart::Message" {
+  +String senderId
+  +String senderEmail
+  +String receiverId
+  +String message
+  +Timestamp timestamp
+  +Map<String, dynamic> toMap()
+}
+
+"motomate::model::message.dart::Message" o-- "cloud_firestore_platform_interface::src::timestamp.dart::Timestamp"
+
+class "motomate::model::sm_product_model.dart::SmProduct" {
+  +String image
+}
+
+class "motomate::reusablewidgets::posttile.dart::PostTile" {
+  +List<dynamic> imageUrl
+  +String name
+  +String profileUrl
+  +String title
+  +String date
+  +String Description
+  +bool isHomeScreen
+  +String userID
+  +String post_id
+  +bool isLiked
+  +bool isApproved
+  +String YOM
+  +String CC
+  +String companyname
+  +String email
+  +State<StatefulWidget> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::reusablewidgets::posttile.dart::PostTile"
+
+class "motomate::reusablewidgets::posttile.dart::_PostTile" {
+  -Color _favIconColor
+  -FirebaseFirestore _firestore
+  -FirebaseAuth _auth
+  +String proAccountStatus
+  +void getAccountStatus()
+  +void initState()
+  +Widget build()
+}
+
+"motomate::reusablewidgets::posttile.dart::_PostTile" o-- "dart::ui::Color"
+"motomate::reusablewidgets::posttile.dart::_PostTile" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+"motomate::reusablewidgets::posttile.dart::_PostTile" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::reusablewidgets::posttile.dart::_PostTile"
+
+class "motomate::reusablewidgets::post_dailog.dart::PostDailog" {
+  +String? title
+  +String? Description
+  +List<dynamic>? Image
+  +bool isEdit
+  +String? post_id
+  +bool? isApproved
+  +bool? isRejected
+  +String? YOM
+  +String? CC
+  +String? companyname
+  +State<PostDailog> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::reusablewidgets::post_dailog.dart::PostDailog"
+
+class "motomate::reusablewidgets::post_dailog.dart::_PostDailogState" {
+  -GlobalKey<FormState> _formKey
+  -FirebaseFirestore _firestore
+  +TextEditingController titlecontroller
+  +TextEditingController descriptioncontroller
+  +List<dynamic>? pickedImage
+  +List<dynamic> images
+  +List<dynamic> Db_images
+  -String _YOM
+  -String _CC
+  -String _companyname
+  +void getdata()
+  +dynamic getDocumentId()
+  +void initState()
+  +void selectImages()
+  +void pickImage()
+  +Widget build()
+}
+
+"motomate::reusablewidgets::post_dailog.dart::_PostDailogState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"motomate::reusablewidgets::post_dailog.dart::_PostDailogState" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+"motomate::reusablewidgets::post_dailog.dart::_PostDailogState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::reusablewidgets::post_dailog.dart::_PostDailogState"
+
+class "motomate::reusablewidgets::side_menu.dart::SideMenu" {
+  +String name
+  +String email
+  +String imageUrl
+  +State<SideMenu> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::reusablewidgets::side_menu.dart::SideMenu"
+
+class "motomate::reusablewidgets::side_menu.dart::_SideMenuState" {
+  -FirebaseAuth _firebaseAuth
+  +String proAccountStatus
+  +void getAccountStatus()
+  +void initState()
+  +Widget build()
+}
+
+"motomate::reusablewidgets::side_menu.dart::_SideMenuState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::reusablewidgets::side_menu.dart::_SideMenuState"
+
+class "motomate::screens::Admin::admin_dashboard.dart::AdminDashBoard" {
+  +State<AdminDashBoard> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::Admin::admin_dashboard.dart::AdminDashBoard"
+
+class "motomate::screens::Admin::admin_dashboard.dart::_AdminDashBoardState" {
+  +NotificationServices notificationServices
+  +String imageURL
+  +void initState()
+  +Widget build()
+}
+
+"motomate::screens::Admin::admin_dashboard.dart::_AdminDashBoardState" o-- "motomate::services::notifications::notification_services.dart::NotificationServices"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::Admin::admin_dashboard.dart::_AdminDashBoardState"
+
+class "motomate::screens::Admin::admin_posttile.dart::AdminPosttile" {
+  +List<dynamic> imageUrl
+  +String name
+  +String profileUrl
+  +String title
+  +String date
+  +String Description
+  +bool isHomeScreen
+  +String userID
+  +String post_id
+  +bool? isLiked
+  +bool isApproved
+  +bool isRejected
+  +bool isApprovingPost
+  +String YOM
+  +String CC
+  +String companyname
+  +String email
+  +State<AdminPosttile> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::Admin::admin_posttile.dart::AdminPosttile"
+
+class "motomate::screens::Admin::admin_posttile.dart::_AdminPosttileState" {
+  +NotificationServices notificationServices
+  +void initState()
+  +Widget build()
+}
+
+"motomate::screens::Admin::admin_posttile.dart::_AdminPosttileState" o-- "motomate::services::notifications::notification_services.dart::NotificationServices"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::Admin::admin_posttile.dart::_AdminPosttileState"
+
+class "motomate::screens::Admin::all_posts.dart::AllPosts" {
+  +State<AllPosts> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::Admin::all_posts.dart::AllPosts"
+
+class "motomate::screens::Admin::all_posts.dart::_AllPostsState" {
+  +String name
+  +String userID
+  +String email
+  +String imageURL
+  +List<Map<String, dynamic>> Posts
+  +void getData()
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::Admin::all_posts.dart::_AllPostsState"
+
+class "motomate::screens::Admin::all_users.dart::AllUsers" {
+  +State<AllUsers> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::Admin::all_users.dart::AllUsers"
+
+class "motomate::screens::Admin::all_users.dart::_AllUsersState" {
+  -FirebaseAuth _auth
+  +String imageURL
+  +Widget build()
+  -Widget _buildUserList()
+  -Widget _buildUserListItem()
+}
+
+"motomate::screens::Admin::all_users.dart::_AllUsersState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::Admin::all_users.dart::_AllUsersState"
+
+class "motomate::screens::Admin::post_to_approve.dart::PostToApprove" {
+  +State<PostToApprove> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::Admin::post_to_approve.dart::PostToApprove"
+
+class "motomate::screens::Admin::post_to_approve.dart::_PostToApproveState" {
+  +String name
+  +String userID
+  +String email
+  +String imageURL
+  +List<Map<String, dynamic>> Posts
+  +NotificationServices notificationServices
+  +void getData()
+  +void initState()
+  +Widget build()
+}
+
+"motomate::screens::Admin::post_to_approve.dart::_PostToApproveState" o-- "motomate::services::notifications::notification_services.dart::NotificationServices"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::Admin::post_to_approve.dart::_PostToApproveState"
+
+class "motomate::screens::Admin::rejected_posts.dart::RejectedPost" {
+  +State<RejectedPost> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::Admin::rejected_posts.dart::RejectedPost"
+
+class "motomate::screens::Admin::rejected_posts.dart::_RejectedPostState" {
+  +String name
+  +String userID
+  +String email
+  +String imageURL
+  +List<Map<String, dynamic>> Posts
+  +void getData()
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::Admin::rejected_posts.dart::_RejectedPostState"
+
+class "motomate::screens::chats_menu.dart::ChatMenu" {
+  +State<ChatMenu> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::chats_menu.dart::ChatMenu"
+
+class "motomate::screens::chats_menu.dart::_ChatMenuState" {
+  -FirebaseFirestore _firestore
+  -FirebaseAuth _auth
+  +String imageURL
+  +String proAccountStatus
+  +void getAccountStatus()
+  +void initState()
+  +void setStat()
+  +void didChangeAppLifecycleState()
+  +Widget build()
+  -Widget _buildUserList()
+  -Widget _buildUserListItem()
+  -dynamic _hasChatRoom()
+}
+
+"motomate::screens::chats_menu.dart::_ChatMenuState" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+"motomate::screens::chats_menu.dart::_ChatMenuState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::chats_menu.dart::_ChatMenuState"
+"flutter::src::widgets::binding.dart::WidgetsBindingObserver" <|-- "motomate::screens::chats_menu.dart::_ChatMenuState"
+
+class "motomate::screens::chat_page.dart::ChatPage" {
+  +String recieveruserEmail
+  +String recieverUserId
+  +String recieverName
+  +String recieverProfilePic
+  +String recieverfcmtoken
+  +State<ChatPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::chat_page.dart::ChatPage"
+
+class "motomate::screens::chat_page.dart::_ChatPageState" {
+  -TextEditingController _messagesController
+  -ChatService _chatService
+  -FirebaseAuth _firebaseAuth
+  -FirebaseFirestore _firestore
+  +String Status
+  +NotificationServices notificationServices
+  +void sendMessage()
+  +void getStatus()
+  +void initState()
+  +Widget build()
+  -Widget _buildMessageList()
+  -Widget _buildMessageItem()
+  -Widget _buildMessageInput()
+}
+
+"motomate::screens::chat_page.dart::_ChatPageState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"motomate::screens::chat_page.dart::_ChatPageState" o-- "motomate::services::chat::chat_service.dart::ChatService"
+"motomate::screens::chat_page.dart::_ChatPageState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"motomate::screens::chat_page.dart::_ChatPageState" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+"motomate::screens::chat_page.dart::_ChatPageState" o-- "motomate::services::notifications::notification_services.dart::NotificationServices"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::chat_page.dart::_ChatPageState"
+
+class "motomate::screens::CreditCard::add_credit_card.dart::AddCardScreen" {
+  +State<AddCardScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::CreditCard::add_credit_card.dart::AddCardScreen"
+
+class "motomate::screens::CreditCard::add_credit_card.dart::_AddCardScreenState" {
+  -FirebaseAuth _firebaseAuth
+  -GlobalKey<FormState> _formKey
+  +TextEditingController cardNumberController
+  +TextEditingController cvvController
+  +CardType cardType
+  +void getCardTypeFrmNum()
+  +void initState()
+  +Widget build()
+}
+
+"motomate::screens::CreditCard::add_credit_card.dart::_AddCardScreenState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"motomate::screens::CreditCard::add_credit_card.dart::_AddCardScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"motomate::screens::CreditCard::add_credit_card.dart::_AddCardScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"motomate::screens::CreditCard::add_credit_card.dart::_AddCardScreenState" o-- "motomate::screens::CreditCard::Components::card_type.dart::CardType"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::CreditCard::add_credit_card.dart::_AddCardScreenState"
+
+class "motomate::screens::CreditCard::Components::card_strings.dart::Strings" {
+  {static} +String appName
+  {static} +String fieldReq
+  {static} +String numberIsInvalid
+  {static} +String pay
+}
+
+class "motomate::screens::CreditCard::Components::card_type.dart::CardType" {
+  +int index
+  {static} +List<CardType> values
+  {static} +CardType Master
+  {static} +CardType Visa
+  {static} +CardType Verve
+  {static} +CardType Discover
+  {static} +CardType AmericanExpress
+  {static} +CardType DinersClub
+  {static} +CardType Jcb
+  {static} +CardType Others
+  {static} +CardType Invalid
+}
+
+"motomate::screens::CreditCard::Components::card_type.dart::CardType" o-- "motomate::screens::CreditCard::Components::card_type.dart::CardType"
+"dart::core::Enum" <|-- "motomate::screens::CreditCard::Components::card_type.dart::CardType"
+
+class "motomate::screens::CreditCard::Components::card_utils.dart::PaymentCard" {
+  +CardType? type
+  +String? number
+  +String? name
+  +int? month
+  +int? year
+  +int? cvv
+  +String toString()
+}
+
+"motomate::screens::CreditCard::Components::card_utils.dart::PaymentCard" o-- "motomate::screens::CreditCard::Components::card_type.dart::CardType"
+
+class "motomate::screens::CreditCard::Components::card_utils.dart::CardUtils" {
+  {static} +String? validateCVV()
+  {static} +String? validateDate()
+  {static} +int convertYearTo4Digits()
+  {static} +bool hasDateExpired()
+  {static} +bool isNotExpired()
+  {static} +List<int> getExpiryDate()
+  {static} +bool hasMonthPassed()
+  {static} +bool hasYearPassed()
+  {static} +String getCleanedNumber()
+  {static} +Widget? getCardIcon()
+  {static} +String? validateCardNum()
+  {static} +CardType getCardTypeFrmNumber()
+}
+
+class "motomate::screens::CreditCard::Components::input_formatters.dart::CardMonthInputFormatter" {
+  +TextEditingValue formatEditUpdate()
+}
+
+"flutter::src::services::text_formatter.dart::TextInputFormatter" <|-- "motomate::screens::CreditCard::Components::input_formatters.dart::CardMonthInputFormatter"
+
+class "motomate::screens::CreditCard::Components::input_formatters.dart::CardNumberInputFormatter" {
+  +TextEditingValue formatEditUpdate()
+}
+
+"flutter::src::services::text_formatter.dart::TextInputFormatter" <|-- "motomate::screens::CreditCard::Components::input_formatters.dart::CardNumberInputFormatter"
+
+class "motomate::screens::dashboard.dart::DashBoard" {
+  +State<DashBoard> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::dashboard.dart::DashBoard"
+
+class "motomate::screens::dashboard.dart::_DashBoardState" {
+  -FirebaseFirestore _firestore
+  -TextEditingController _searchController
+  +String name
+  +String userID
+  +String email
+  +String imageURL
+  +String PostimageURL
+  +NotificationServices notificationServices
+  +List<Map<String, dynamic>> Posts
+  +List<Map<String, dynamic>> Searched_Posts
+  +String proAccountStatus
+  +void getData()
+  +void getPostData()
+  +void getAccountStatus()
+  +void setStat()
+  +void didChangeAppLifecycleState()
+  +void initState()
+  +Widget build()
+  -Widget _allItems()
+  -Widget _singleItems()
+  -FirebaseAuth _firebaseAuth
+}
+
+"motomate::screens::dashboard.dart::_DashBoardState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"motomate::screens::dashboard.dart::_DashBoardState" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+"motomate::screens::dashboard.dart::_DashBoardState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"motomate::screens::dashboard.dart::_DashBoardState" o-- "motomate::services::notifications::notification_services.dart::NotificationServices"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::dashboard.dart::_DashBoardState"
+"flutter::src::widgets::binding.dart::WidgetsBindingObserver" <|-- "motomate::screens::dashboard.dart::_DashBoardState"
+
+class "motomate::screens::edit_profile.dart::EditProfileScreen" {
+  +State<EditProfileScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::edit_profile.dart::EditProfileScreen"
+
+class "motomate::screens::edit_profile.dart::_EditProfileScreenState" {
+  +TextEditingController emailController
+  +TextEditingController passwordController
+  +TextEditingController phoneController
+  +TextEditingController nameController
+  +String imageUrl
+  -bool _isEditable
+  +String name
+  +String email
+  +String proaccount
+  -bool _isObscured
+  -GlobalKey<FormState> _formKey
+  +void getData()
+  +void initState()
+  +Widget build()
+}
+
+"motomate::screens::edit_profile.dart::_EditProfileScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"motomate::screens::edit_profile.dart::_EditProfileScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::edit_profile.dart::_EditProfileScreenState"
+
+class "motomate::screens::profile.dart::ProfileScreen" {
+  +State<ProfileScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::profile.dart::ProfileScreen"
+
+class "motomate::screens::profile.dart::_ProfileScreenState" {
+  -FirebaseAuth _firebaseAuth
+  +String name
+  +String email
+  +String imageUrl
+  +String PostimageURL
+  +String userID
+  +int tab
+  +List<Map<String, dynamic>> Posts
+  +List<Map<String, dynamic>> User_Posts
+  +List<Map<String, dynamic>> User_LikedPosts
+  +String ProfileStatus
+  +void getData()
+  +void getPostData()
+  +void getProfileStatus()
+  +void initState()
+  +Widget build()
+}
+
+"motomate::screens::profile.dart::_ProfileScreenState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::profile.dart::_ProfileScreenState"
+
+class "motomate::screens::Registration%20Screens::forget_password_mail.dart::ForgetPasswordMailScreen" {
+  +State<ForgetPasswordMailScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::Registration%20Screens::forget_password_mail.dart::ForgetPasswordMailScreen"
+
+class "motomate::screens::Registration%20Screens::forget_password_mail.dart::_ForgetPasswordMailScreenState" {
+  -GlobalKey<FormState> _formKey
+  +TextEditingController emailcontroller
+  +Widget build()
+  +void resetPassword()
+}
+
+"motomate::screens::Registration%20Screens::forget_password_mail.dart::_ForgetPasswordMailScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"motomate::screens::Registration%20Screens::forget_password_mail.dart::_ForgetPasswordMailScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::Registration%20Screens::forget_password_mail.dart::_ForgetPasswordMailScreenState"
+
+class "motomate::screens::Registration%20Screens::login.dart::Login" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "motomate::screens::Registration%20Screens::login.dart::Login"
+
+class "motomate::screens::Registration%20Screens::login.dart::CustomLoginForm" {
+  +State<CustomLoginForm> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::Registration%20Screens::login.dart::CustomLoginForm"
+
+class "motomate::screens::Registration%20Screens::login.dart::_CustomLoginFormState" {
+  -GlobalKey<FormState> _formKey
+  +FirebaseAuth firebaseAuth
+  +TextEditingController emailController
+  +TextEditingController passwordController
+  +String name
+  +String phoneNumber
+  +String id
+  +String imageUrl
+  -bool _isRememberMe
+  +String proaccount
+  +String status
+  +dynamic getData()
+  +void initState()
+  +Widget build()
+}
+
+"motomate::screens::Registration%20Screens::login.dart::_CustomLoginFormState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"motomate::screens::Registration%20Screens::login.dart::_CustomLoginFormState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"motomate::screens::Registration%20Screens::login.dart::_CustomLoginFormState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::Registration%20Screens::login.dart::_CustomLoginFormState"
+
+class "motomate::screens::Registration%20Screens::login.dart::BottomSheetWidget" {
+  +State<BottomSheetWidget> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::Registration%20Screens::login.dart::BottomSheetWidget"
+
+class "motomate::screens::Registration%20Screens::login.dart::_BottomSheetWidgetState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::Registration%20Screens::login.dart::_BottomSheetWidgetState"
+
+class "motomate::screens::Registration%20Screens::login.dart::ForgetPasswordBtnWidget" {
+  +IconData btnIcon
+  +String title
+  +String subTitle
+  +void Function() onTap
+  +Widget build()
+}
+
+"motomate::screens::Registration%20Screens::login.dart::ForgetPasswordBtnWidget" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"motomate::screens::Registration%20Screens::login.dart::ForgetPasswordBtnWidget" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "motomate::screens::Registration%20Screens::login.dart::ForgetPasswordBtnWidget"
+
+class "motomate::screens::Registration%20Screens::otp_screen.dart::OTPScreen" {
+  +String name
+  +String phone
+  +String email
+  +String password
+  +EmailOTP myAuth
+  +dynamic proaccount
+  +State<OTPScreen> createState()
+}
+
+"motomate::screens::Registration%20Screens::otp_screen.dart::OTPScreen" o-- "email_otp::email_otp.dart::EmailOTP"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::Registration%20Screens::otp_screen.dart::OTPScreen"
+
+class "motomate::screens::Registration%20Screens::otp_screen.dart::_OTPScreenState" {
+  +String otpCode
+  +int userIDFromDatabase
+  +dynamic verifyOTP()
+  +void signup()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::Registration%20Screens::otp_screen.dart::_OTPScreenState"
+
+class "motomate::screens::Registration%20Screens::pro_account_confirmation.dart::Pro_Account_Confirmation" {
+  +State<Pro_Account_Confirmation> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::Registration%20Screens::pro_account_confirmation.dart::Pro_Account_Confirmation"
+
+class "motomate::screens::Registration%20Screens::pro_account_confirmation.dart::_Pro_Account_ConfirmationState" {
+  -FirebaseAuth _firebaseAuth
+  -FirebaseFirestore _firestore
+  +String proAccountStatus
+  +void getAccountStatus()
+  +void initState()
+  +Widget build()
+}
+
+"motomate::screens::Registration%20Screens::pro_account_confirmation.dart::_Pro_Account_ConfirmationState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"motomate::screens::Registration%20Screens::pro_account_confirmation.dart::_Pro_Account_ConfirmationState" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::Registration%20Screens::pro_account_confirmation.dart::_Pro_Account_ConfirmationState"
+
+class "motomate::screens::Registration%20Screens::signup.dart::SignUp" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "motomate::screens::Registration%20Screens::signup.dart::SignUp"
+
+class "motomate::screens::Registration%20Screens::signup.dart::CustomSignUpForm" {
+  +State<CustomSignUpForm> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::Registration%20Screens::signup.dart::CustomSignUpForm"
+
+class "motomate::screens::Registration%20Screens::signup.dart::_CustomSignUpFormState" {
+  -GlobalKey<FormState> _formKey
+  +TextEditingController emailController
+  +TextEditingController passwordController
+  +TextEditingController phoneController
+  +TextEditingController nameController
+  +TextEditingController confirmPasswordController
+  +FirebaseAuth firebaseAuth
+  +EmailOTP myAuth
+  -bool _isObscured
+  +void initState()
+  +Widget build()
+}
+
+"motomate::screens::Registration%20Screens::signup.dart::_CustomSignUpFormState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"motomate::screens::Registration%20Screens::signup.dart::_CustomSignUpFormState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"motomate::screens::Registration%20Screens::signup.dart::_CustomSignUpFormState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"motomate::screens::Registration%20Screens::signup.dart::_CustomSignUpFormState" o-- "email_otp::email_otp.dart::EmailOTP"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::Registration%20Screens::signup.dart::_CustomSignUpFormState"
+
+class "motomate::screens::scan_feature.dart::ScanFeature" {
+  +_ScanFeatureState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::scan_feature.dart::ScanFeature"
+
+class "motomate::screens::scan_feature.dart::_ScanFeatureState" {
+  -File? _file
+  -ImagePicker _picker
+  -Dio _dio
+  -dynamic _pickImage()
+  -dynamic _scanImage()
+  -dynamic _sendImage()
+  +Widget build()
+}
+
+"motomate::screens::scan_feature.dart::_ScanFeatureState" o-- "dart::io::File"
+"motomate::screens::scan_feature.dart::_ScanFeatureState" o-- "image_picker::image_picker.dart::ImagePicker"
+"motomate::screens::scan_feature.dart::_ScanFeatureState" o-- "dio::src::dio.dart::Dio"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::scan_feature.dart::_ScanFeatureState"
+
+class "motomate::screens::splash_screen.dart::SplashScreen" {
+  +State<SplashScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::splash_screen.dart::SplashScreen"
+
+class "motomate::screens::splash_screen.dart::_SplashScreenState" {
+  +void getRememberMe()
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::splash_screen.dart::_SplashScreenState"
+"flutter::src::widgets::ticker_provider.dart::SingleTickerProviderStateMixin" <|-- "motomate::screens::splash_screen.dart::_SplashScreenState"
+
+class "motomate::screens::user_profile.dart::UserProfile" {
+  +String otherUserEmail
+  +String otherUserId
+  +String otherUserName
+  +String otherUserProfilePic
+  +State<UserProfile> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "motomate::screens::user_profile.dart::UserProfile"
+
+class "motomate::screens::user_profile.dart::_UserProfileState" {
+  -FirebaseAuth _auth
+  +String name
+  +String email
+  +String imageUrl
+  +String PostimageURL
+  +String userID
+  +int tab
+  +String proAccountStatus
+  +List<Map<String, dynamic>> Posts
+  +List<Map<String, dynamic>> User_Posts
+  +List<Map<String, dynamic>> User_LikedPosts
+  +void getAccountStatus()
+  +void getData()
+  +void initState()
+  +void getPostData()
+  +Widget build()
+}
+
+"motomate::screens::user_profile.dart::_UserProfileState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"flutter::src::widgets::framework.dart::State" <|-- "motomate::screens::user_profile.dart::_UserProfileState"
+
+class "motomate::services::chat::chat_service.dart::ChatService" {
+  -FirebaseAuth _firebaseAuth
+  -FirebaseFirestore _firestore
+  +dynamic sendMessage()
+  +Stream<QuerySnapshot<Object?>> getMessages()
+}
+
+"motomate::services::chat::chat_service.dart::ChatService" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"motomate::services::chat::chat_service.dart::ChatService" o-- "cloud_firestore::cloud_firestore.dart::FirebaseFirestore"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "motomate::services::chat::chat_service.dart::ChatService"
+
+class "motomate::services::notifications::notification_services.dart::NotificationServices" {
+  +FirebaseMessaging firebaseMessaging
+  -FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin
+  +void requestNotificationPermission()
+  +dynamic getDeviceToken()
+  +void isTokenRefresh()
+  +void firebaseInit()
+  +void initLocalNotifications()
+  +dynamic showNotification()
+  +void handleMessage()
+  +dynamic setupIneractMessage()
+}
+
+"motomate::services::notifications::notification_services.dart::NotificationServices" o-- "firebase_messaging::firebase_messaging.dart::FirebaseMessaging"
+"motomate::services::notifications::notification_services.dart::NotificationServices" o-- "flutter_local_notifications::src::flutter_local_notifications_plugin.dart::FlutterLocalNotificationsPlugin"
+
+class "motomate::utils::database.dart::UserModel" {
+  +dynamic addUser()
+  +dynamic usersList()
+  +dynamic getUserIdsList()
+  +dynamic updateUser()
+  +dynamic updateLikedPostId()
+  +dynamic delete_liked_post_id()
+  +dynamic getUserID()
+  +dynamic getUserData()
+  +dynamic getLikedPost()
+  +dynamic checkIfEmailExists()
+  +dynamic getUsersCount()
+  +dynamic signOut()
+}
+
+class "motomate::utils::database.dart::PostModel" {
+  +dynamic addPost()
+  +dynamic getPostIdsList()
+  +dynamic delete_post()
+  +dynamic updatePost()
+  +dynamic getPostID()
+  +dynamic getPostData()
+  +dynamic getPostCount()
+  +dynamic getPostDocument()
+  +dynamic getNewestDocumentId()
+}
+
+class "motomate::utils::images.dart::ImageStoreMethods" {
+  -FirebaseStorage _storage
+  +dynamic imageToStorage()
+}
+
+"motomate::utils::images.dart::ImageStoreMethods" o-- "firebase_storage::firebase_storage.dart::FirebaseStorage"
+
+class "motomate::utils::notification.dart::NotificationService" {
+  +void initAwesomeNotification()
+  +void requestPermission()
+  +void pushNotification()
+}
+
+class "motomate::utils::shared_prefs.dart::SharedPrefs" {
+  +dynamic sharedPrefsInit()
+  +dynamic saveUserDataInPrefs()
+  +dynamic updateUserDataInPrefs()
+  +dynamic rememberMe()
+  +dynamic isRememberMe()
+  +dynamic updateImageURL()
+  +dynamic getData()
+}
+
+
+@enduml
