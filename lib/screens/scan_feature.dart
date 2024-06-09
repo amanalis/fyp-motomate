@@ -89,7 +89,7 @@ class _ScanFeatureState extends State<ScanFeature> {
   }
 
   Future<Response> _sendImage() async {
-    final uri = 'http://192.168.0.110:5000/detect/image'; // Replace with your Flask server URL
+    final uri = 'http://192.168.0.108:5000/detect/image'; // Replace with your Flask server URL
     try {
       final formData = FormData.fromMap({
         'file': await MultipartFile.fromFile(_file!.path, filename: 'image.jpg'),
